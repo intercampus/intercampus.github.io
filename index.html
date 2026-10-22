@@ -372,11 +372,11 @@ const wingsLogo = (k='a') => `<svg viewBox="0 0 120 40" aria-hidden="true">
 /* =========================================================
    DADOS FICTÍCIOS — troque aqui pelos dados reais
    ========================================================= */
-const EVENTO = { nome:'Intercampus', datas:'27 a 29 de maio de 2027', sub:'Copa Universitária Multiesportiva', local:'Complexo Esportivo Intercampus — São Paulo, SP' };
+const EVENTO = { nome:'Intercampus', datas:'27 a 29 de maio de 2027', sub:'Copa Universitária Multiesportiva', local:'São Paulo, SP' };
 const DIAS = [
-  { n:1, sem:'Qui', dm:'27/05' },
-  { n:2, sem:'Sex', dm:'28/05' },
-  { n:3, sem:'Sáb', dm:'29/05' },
+  { n:1, sem:'Qui', dm:'27/05', tema:'Decolar' },
+  { n:2, sem:'Sex', dm:'28/05', tema:'Altitude' },
+  { n:3, sem:'Sáb', dm:'29/05', tema:'Fly High' },
 ];
 const FACS = [
   { id:'usp',      sigla:'USP',       ab:'USP',  atl:'Feras USP',          nome:'Universidade de São Paulo',        cor:'#2E7DF6' },
@@ -394,43 +394,45 @@ const FACS = [
 ];
 const FAC = Object.fromEntries(FACS.map(f=>[f.id,f]));
 const MODS = [
-  { id:'futsal',   nome:'Futsal',   emoji:'⚽', quadras:[1,2], cor:'#2FA84F' },
-  { id:'handebol', nome:'Handebol', emoji:'🤾', quadras:[3,4], cor:'#FF6B1A' },
-  { id:'basquete', nome:'Basquete', emoji:'🏀', quadras:[5,6], cor:'#E2242C' },
-  { id:'volei',    nome:'Vôlei',    emoji:'🏐', quadras:[7,8], cor:'#2E7DF6' },
+  { id:'futsal',   cod:'FUT', nome:'Futsal',   emoji:'⚽', quadras:['f1','f2','f3'], cor:'#2FA84F' },
+  { id:'handebol', cod:'HAN', nome:'Handebol', emoji:'🤾', quadras:['h1','h2','h3'], cor:'#FF6B1A' },
+  { id:'basquete', cod:'BAS', nome:'Basquete', emoji:'🏀', quadras:['b1','b2','b3'], cor:'#E2242C' },
+  { id:'volei',    cod:'VOL', nome:'Vôlei',    emoji:'🏐', quadras:['v1','v2','v3'], cor:'#2E7DF6' },
 ];
 const MOD = Object.fromEntries(MODS.map(m=>[m.id,m]));
 const GENS = [{ id:'f', nome:'Feminino' }, { id:'m', nome:'Masculino' }];
 const GEN = Object.fromEntries(GENS.map(g=>[g.id,g]));
 const LOCAIS = [
-  ...[1,2,3,4,5,6,7,8].map(n=>({ id:'q'+n, nome:'Quadra '+n, curto:'Q'+n, tipo:'quadra' })),
-  { id:'energy', nome:'Energy Zone',     curto:'Energy Zone', tipo:'area' },
-  { id:'arena',  nome:'Arena Ativações', curto:'Arena',       tipo:'area' },
-  { id:'palco',  nome:'Palco Principal', curto:'Palco',       tipo:'area' },
-  { id:'festa',  nome:'Arena Festa',     curto:'Arena Festa', tipo:'area' },
+  ...MODS.flatMap(m=>m.quadras.map(q=>({ id:q, nome:'Quadra '+q.toUpperCase(), tipo:'quadra', mod:m.id }))),
+  { id:'vila',  nome:'Vila Intercampus',     tipo:'area' },
+  { id:'rca',   nome:'Recharge · Área A',    tipo:'area' },
+  { id:'rcb',   nome:'Recharge · Área B',    tipo:'area' },
+  { id:'palco', nome:'Palco Central',        tipo:'area' },
+  { id:'festa', nome:'Arena da Festa',       tipo:'area' },
 ];
 const LOCAL = Object.fromEntries(LOCAIS.map(l=>[l.id,l]));
 const TIPOS = [{ id:'jogo', nome:'Jogos' }, { id:'ativ', nome:'Ativações' }, { id:'festa', nome:'Festas' }];
 
-/* Ativações e festas: [dia, início, duração(min), tipo, título, local, descrição] */
+/* Programação fora das quadras (Intercampus Cronograma Detalhado.pdf): [dia, início, duração(min), tipo, título, local, descrição] */
 const EXTRAS = [
-  [1,'08:00',60,'ativ','Cerimônia de Abertura','palco','Desfile das 12 atléticas, hino e acendimento da pira Intercampus.'],
-  [1,'10:00',480,'ativ','Energy Zone: Recovery Lounge','energy','Área de recuperação com hidratação, alongamento guiado e bebidas energéticas.'],
-  [1,'12:00',90,'ativ','DJ Set no Almoço','palco','Set ao vivo no intervalo dos jogos.'],
-  [1,'13:00',60,'ativ','Desafio 3 Pontos','arena','Quem acerta mais bolas de 3 em 60 segundos? Prêmios para o top 3.'],
-  [1,'18:00',90,'ativ','Batalha de Torcidas','palco','As baterias das atléticas se enfrentam. Júri popular pelo app.'],
-  [1,'22:00',300,'festa','Festa de Abertura — Noite das Atléticas','festa','A primeira noite do Intercampus com line-up de DJs e open de energia.'],
-  [2,'10:00',480,'ativ','Energy Zone: Recovery Lounge','energy','Área de recuperação com hidratação, alongamento guiado e bebidas energéticas.'],
-  [2,'12:00',60,'ativ','Clínica de Vôlei com Atleta Convidada','arena','Treino aberto e bate-papo com atleta profissional.'],
-  [2,'12:30',90,'ativ','DJ Set no Almoço','palco','Set ao vivo no intervalo dos jogos.'],
-  [2,'13:00',60,'ativ','Desafio do Pênalti','arena','Cobranças contra goleiro profissional. Quem marcar ganha brinde.'],
-  [2,'18:00',60,'ativ','Meet & Greet com Atletas','energy','Fotos e autógrafos com atletas convidados.'],
-  [2,'22:00',300,'festa','Baile das Torcidas','festa','A noite mais esperada: atléticas, baterias e muito funk.'],
-  [3,'09:00',480,'ativ','Energy Zone: Recovery Lounge','energy','Área de recuperação com hidratação, alongamento guiado e bebidas energéticas.'],
-  [3,'11:00',60,'ativ','Freestyle & Skills Show','palco','Apresentação de freestyle de futebol e basquete.'],
-  [3,'12:30',60,'ativ','Desafio da Enterrada','arena','Concurso de enterradas com tabela rebaixada. Voto da torcida no app.'],
-  [3,'18:00',60,'ativ','Cerimônia de Premiação','palco','Entrega das medalhas e do troféu de campeã geral.'],
-  [3,'20:00',360,'festa','Festa de Encerramento — Fly High','festa','O grande encerramento do Intercampus com headliner surpresa.'],
+  [1,'09:30',90,'ativ','Credenciamento e chegada das delegações','vila','Vila aberta, retirada de kits e do Energy Card.'],
+  [1,'09:30',750,'ativ','Vila Intercampus aberta','vila','Duas vilas de convivência com food trucks, bebidas e telão com os jogos ao vivo.'],
+  [1,'11:00',40,'ativ','Cerimônia de Abertura','palco','Regras do campeonato, apresentação das 12 faculdades e grito dos capitães no palco. 12 faculdades, 1 pergunta: quem voará mais alto?'],
+  [1,'11:40',50,'ativ','Almoço, preparação e aquecimento','vila','Participantes se alimentam antes da fase de grupos.'],
+  [1,'12:30',540,'ativ','Encontre o Mini Bull!','vila','Ache o Mini Cooper Red Bull pelo evento, poste uma foto marcando a Red Bull e concorra a pins, bucket hats e pochetes.'],
+  [1,'21:30',30,'ativ','Resultados do dia e saída escalonada','vila','Fechamento público às 22h.'],
+  [2,'08:30',30,'ativ','Acesso, vistoria e aquecimento','vila','Preparação para o início dos jogos às 9h.'],
+  [2,'08:30',810,'ativ','Vila Intercampus aberta','vila','Convivência, food trucks, bebidas e telão com os jogos ao vivo.'],
+  [2,'13:30',120,'ativ','Red Bull Recharge — Área A','rca','Momento exclusivo: nenhum jogo nas 12 quadras. Challenge (barra fixa, touro mecânico e potência), degustação, quiosque de grifes, cabine de fotos e telão com ranking.'],
+  [2,'13:30',120,'ativ','Red Bull Recharge — Área B','rcb','Mesmo conjunto de experiências da Área A: Challenge, degustação, quiosque, cabine de fotos e ranking sincronizado.'],
+  [2,'15:30',30,'ativ','Retorno às arenas e publicação das chaves','vila','Aquecimento para as quartas de final.'],
+  [2,'21:15',45,'ativ','Resultados e saída escalonada','vila','Fechamento público às 22h.'],
+  [3,'07:45',45,'ativ','Entrada de atletas e aquecimento','vila','Vistorias e serviços essenciais antes das semifinais.'],
+  [3,'07:45',810,'ativ','Vila Intercampus aberta','vila','Convivência, food trucks e telão com as decisões ao vivo.'],
+  [3,'08:30',705,'ativ','Transmissão ao vivo com narração','palco','Semifinais e finais transmitidas no YouTube e no telão da Vila, com narração.'],
+  [3,'12:00',120,'ativ','Alimentação, descanso e preparação das finais','vila','Intervalo para recuperação dos atletas.'],
+  [3,'20:30',45,'ativ','Premiação e melhores momentos','palco','Campeões por modalidade, melhor jogador ofensivo e defensivo, melhor bateria e campeões do Red Bull Recharge.'],
+  [3,'22:00',480,'festa','Festa de Encerramento — Fly High','festa','Abertura da pista às 22h, atração principal das 23h à 01h, DJs até 04h30 e encerramento às 06h de domingo (30/05).'],
 ];
 
 /* =========================================================
@@ -445,32 +447,67 @@ const hhmm = m => String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).p
 const EVENTS = [];
 const KEYS = {};
 let seq = 0;
-function addGame(o){ const e = Object.assign({ tipo:'jogo', dur:60 }, o); e.id = 'j'+(++seq); EVENTS.push(e); KEYS[e.mod+'-'+e.gen].games.push(e); return e; }
+function addGame(o){ const e = Object.assign({ tipo:'jogo' }, o); e.id = e.cod; EVENTS.push(e); KEYS[e.mod+'-'+e.gen].games.push(e); return e; }
 
+const GRADE = [
+  [1,'12:30','14:00','B1','BAS-F-GA1','U01 x U02'], [1,'12:30','14:00','B2','BAS-F-GB1','U04 x U05'], [1,'12:30','14:00','B3','BAS-F-GC1','U07 x U08'], [1,'12:30','14:00','F1','FUT-F-GA1','U01 x U02'],
+  [1,'12:30','14:00','F2','FUT-F-GB1','U04 x U05'], [1,'12:30','14:00','F3','FUT-F-GC1','U07 x U08'], [1,'12:30','14:00','H1','HAN-F-GA1','U01 x U02'], [1,'12:30','14:00','H2','HAN-F-GB1','U04 x U05'],
+  [1,'12:30','14:00','H3','HAN-F-GC1','U07 x U08'], [1,'12:30','14:00','V1','VOL-F-GA1','U01 x U02'], [1,'12:30','14:00','V2','VOL-F-GB1','U04 x U05'], [1,'12:30','14:00','V3','VOL-F-GC1','U07 x U08'],
+  [1,'14:00','15:30','B1','BAS-F-GD1','U10 x U11'], [1,'14:00','15:30','B2','BAS-M-GA1','U01 x U02'], [1,'14:00','15:30','B3','BAS-M-GB1','U04 x U05'], [1,'14:00','15:30','F1','FUT-F-GD1','U10 x U11'],
+  [1,'14:00','15:30','F2','FUT-M-GA1','U01 x U02'], [1,'14:00','15:30','F3','FUT-M-GB1','U04 x U05'], [1,'14:00','15:30','H1','HAN-F-GD1','U10 x U11'], [1,'14:00','15:30','H2','HAN-M-GA1','U01 x U02'],
+  [1,'14:00','15:30','H3','HAN-M-GB1','U04 x U05'], [1,'14:00','15:30','V1','VOL-F-GD1','U10 x U11'], [1,'14:00','15:30','V2','VOL-M-GA1','U01 x U02'], [1,'14:00','15:30','V3','VOL-M-GB1','U04 x U05'],
+  [1,'15:30','17:00','B1','BAS-M-GC1','U07 x U08'], [1,'15:30','17:00','B2','BAS-M-GD1','U10 x U11'], [1,'15:30','17:00','F1','FUT-M-GC1','U07 x U08'], [1,'15:30','17:00','F2','FUT-M-GD1','U10 x U11'],
+  [1,'15:30','17:00','H1','HAN-M-GC1','U07 x U08'], [1,'15:30','17:00','H2','HAN-M-GD1','U10 x U11'], [1,'15:30','17:00','V1','VOL-M-GC1','U07 x U08'], [1,'15:30','17:00','V2','VOL-M-GD1','U10 x U11'],
+  [1,'17:00','18:30','B1','BAS-F-GA2','U02 x U03'], [1,'17:00','18:30','B2','BAS-F-GB2','U05 x U06'], [1,'17:00','18:30','B3','BAS-F-GC2','U08 x U09'], [1,'17:00','18:30','F1','FUT-F-GA2','U02 x U03'],
+  [1,'17:00','18:30','F2','FUT-F-GB2','U05 x U06'], [1,'17:00','18:30','F3','FUT-F-GC2','U08 x U09'], [1,'17:00','18:30','H1','HAN-F-GA2','U02 x U03'], [1,'17:00','18:30','H2','HAN-F-GB2','U05 x U06'],
+  [1,'17:00','18:30','H3','HAN-F-GC2','U08 x U09'], [1,'17:00','18:30','V1','VOL-F-GA2','U02 x U03'], [1,'17:00','18:30','V2','VOL-F-GB2','U05 x U06'], [1,'17:00','18:30','V3','VOL-F-GC2','U08 x U09'],
+  [1,'18:30','20:00','B1','BAS-F-GD2','U11 x U12'], [1,'18:30','20:00','B2','BAS-M-GA2','U02 x U03'], [1,'18:30','20:00','B3','BAS-M-GB2','U05 x U06'], [1,'18:30','20:00','F1','FUT-F-GD2','U11 x U12'],
+  [1,'18:30','20:00','F2','FUT-M-GA2','U02 x U03'], [1,'18:30','20:00','F3','FUT-M-GB2','U05 x U06'], [1,'18:30','20:00','H1','HAN-F-GD2','U11 x U12'], [1,'18:30','20:00','H2','HAN-M-GA2','U02 x U03'],
+  [1,'18:30','20:00','H3','HAN-M-GB2','U05 x U06'], [1,'18:30','20:00','V1','VOL-F-GD2','U11 x U12'], [1,'18:30','20:00','V2','VOL-M-GA2','U02 x U03'], [1,'18:30','20:00','V3','VOL-M-GB2','U05 x U06'],
+  [1,'20:00','21:30','B1','BAS-M-GC2','U08 x U09'], [1,'20:00','21:30','B2','BAS-M-GD2','U11 x U12'], [1,'20:00','21:30','F1','FUT-M-GC2','U08 x U09'], [1,'20:00','21:30','F2','FUT-M-GD2','U11 x U12'],
+  [1,'20:00','21:30','H1','HAN-M-GC2','U08 x U09'], [1,'20:00','21:30','H2','HAN-M-GD2','U11 x U12'], [1,'20:00','21:30','V1','VOL-M-GC2','U08 x U09'], [1,'20:00','21:30','V2','VOL-M-GD2','U11 x U12'],
+  [2,'09:00','10:30','B1','BAS-F-GA3','U03 x U01'], [2,'09:00','10:30','B2','BAS-F-GB3','U06 x U04'], [2,'09:00','10:30','B3','BAS-F-GC3','U09 x U07'], [2,'09:00','10:30','F1','FUT-F-GA3','U03 x U01'],
+  [2,'09:00','10:30','F2','FUT-F-GB3','U06 x U04'], [2,'09:00','10:30','F3','FUT-F-GC3','U09 x U07'], [2,'09:00','10:30','H1','HAN-F-GA3','U03 x U01'], [2,'09:00','10:30','H2','HAN-F-GB3','U06 x U04'],
+  [2,'09:00','10:30','H3','HAN-F-GC3','U09 x U07'], [2,'09:00','10:30','V1','VOL-F-GA3','U03 x U01'], [2,'09:00','10:30','V2','VOL-F-GB3','U06 x U04'], [2,'09:00','10:30','V3','VOL-F-GC3','U09 x U07'],
+  [2,'10:30','12:00','B1','BAS-F-GD3','U12 x U10'], [2,'10:30','12:00','B2','BAS-M-GA3','U03 x U01'], [2,'10:30','12:00','B3','BAS-M-GB3','U06 x U04'], [2,'10:30','12:00','F1','FUT-F-GD3','U12 x U10'],
+  [2,'10:30','12:00','F2','FUT-M-GA3','U03 x U01'], [2,'10:30','12:00','F3','FUT-M-GB3','U06 x U04'], [2,'10:30','12:00','H1','HAN-F-GD3','U12 x U10'], [2,'10:30','12:00','H2','HAN-M-GA3','U03 x U01'],
+  [2,'10:30','12:00','H3','HAN-M-GB3','U06 x U04'], [2,'10:30','12:00','V1','VOL-F-GD3','U12 x U10'], [2,'10:30','12:00','V2','VOL-M-GA3','U03 x U01'], [2,'10:30','12:00','V3','VOL-M-GB3','U06 x U04'],
+  [2,'12:00','13:30','B1','BAS-M-GC3','U09 x U07'], [2,'12:00','13:30','B2','BAS-M-GD3','U12 x U10'], [2,'12:00','13:30','F1','FUT-M-GC3','U09 x U07'], [2,'12:00','13:30','F2','FUT-M-GD3','U12 x U10'],
+  [2,'12:00','13:30','H1','HAN-M-GC3','U09 x U07'], [2,'12:00','13:30','H2','HAN-M-GD3','U12 x U10'], [2,'12:00','13:30','V1','VOL-M-GC3','U09 x U07'], [2,'12:00','13:30','V2','VOL-M-GD3','U12 x U10'],
+  [2,'16:00','17:45','B1','BAS-F-Q1','1A x 2B'], [2,'16:00','17:45','B2','BAS-M-Q1','1A x 2B'], [2,'16:00','17:45','B3','BAS-F-Q2','1C x 2D'], [2,'16:00','17:45','F1','FUT-F-Q1','1A x 2B'],
+  [2,'16:00','17:45','F2','FUT-M-Q1','1A x 2B'], [2,'16:00','17:45','F3','FUT-F-Q2','1C x 2D'], [2,'16:00','17:45','H1','HAN-F-Q1','1A x 2B'], [2,'16:00','17:45','H2','HAN-M-Q1','1A x 2B'],
+  [2,'16:00','17:45','H3','HAN-F-Q2','1C x 2D'], [2,'16:00','17:45','V1','VOL-F-Q1','1A x 2B'], [2,'16:00','17:45','V2','VOL-M-Q1','1A x 2B'], [2,'16:00','17:45','V3','VOL-F-Q2','1C x 2D'],
+  [2,'17:45','19:30','B1','BAS-M-Q2','1C x 2D'], [2,'17:45','19:30','B2','BAS-F-Q3','1B x 2A'], [2,'17:45','19:30','B3','BAS-M-Q3','1B x 2A'], [2,'17:45','19:30','F1','FUT-M-Q2','1C x 2D'],
+  [2,'17:45','19:30','F2','FUT-F-Q3','1B x 2A'], [2,'17:45','19:30','F3','FUT-M-Q3','1B x 2A'], [2,'17:45','19:30','H1','HAN-M-Q2','1C x 2D'], [2,'17:45','19:30','H2','HAN-F-Q3','1B x 2A'],
+  [2,'17:45','19:30','H3','HAN-M-Q3','1B x 2A'], [2,'17:45','19:30','V1','VOL-M-Q2','1C x 2D'], [2,'17:45','19:30','V2','VOL-F-Q3','1B x 2A'], [2,'17:45','19:30','V3','VOL-M-Q3','1B x 2A'],
+  [2,'19:30','21:15','B1','BAS-F-Q4','1D x 2C'], [2,'19:30','21:15','B2','BAS-M-Q4','1D x 2C'], [2,'19:30','21:15','F1','FUT-F-Q4','1D x 2C'], [2,'19:30','21:15','F2','FUT-M-Q4','1D x 2C'],
+  [2,'19:30','21:15','H1','HAN-F-Q4','1D x 2C'], [2,'19:30','21:15','H2','HAN-M-Q4','1D x 2C'], [2,'19:30','21:15','V1','VOL-F-Q4','1D x 2C'], [2,'19:30','21:15','V2','VOL-M-Q4','1D x 2C'],
+  [3,'08:30','10:15','B1','BAS-F-S1','Vencedor Q1 x Vencedor Q2'], [3,'08:30','10:15','B2','BAS-M-S1','Vencedor Q1 x Vencedor Q2'], [3,'08:30','10:15','F1','FUT-F-S1','Vencedor Q1 x Vencedor Q2'], [3,'08:30','10:15','F2','FUT-M-S1','Vencedor Q1 x Vencedor Q2'],
+  [3,'08:30','10:15','H1','HAN-F-S1','Vencedor Q1 x Vencedor Q2'], [3,'08:30','10:15','H2','HAN-M-S1','Vencedor Q1 x Vencedor Q2'], [3,'08:30','10:15','V1','VOL-F-S1','Vencedor Q1 x Vencedor Q2'], [3,'08:30','10:15','V2','VOL-M-S1','Vencedor Q1 x Vencedor Q2'],
+  [3,'10:15','12:00','B1','BAS-F-S2','Vencedor Q3 x Vencedor Q4'], [3,'10:15','12:00','B2','BAS-M-S2','Vencedor Q3 x Vencedor Q4'], [3,'10:15','12:00','F1','FUT-F-S2','Vencedor Q3 x Vencedor Q4'], [3,'10:15','12:00','F2','FUT-M-S2','Vencedor Q3 x Vencedor Q4'],
+  [3,'10:15','12:00','H1','HAN-F-S2','Vencedor Q3 x Vencedor Q4'], [3,'10:15','12:00','H2','HAN-M-S2','Vencedor Q3 x Vencedor Q4'], [3,'10:15','12:00','V1','VOL-F-S2','Vencedor Q3 x Vencedor Q4'], [3,'10:15','12:00','V2','VOL-M-S2','Vencedor Q3 x Vencedor Q4'],
+  [3,'14:00','15:30','B2','BAS-F-3L','Perdedor S1 x Perdedor S2'], [3,'14:00','15:30','B3','BAS-M-3L','Perdedor S1 x Perdedor S2'], [3,'14:00','15:30','F2','FUT-F-3L','Perdedor S1 x Perdedor S2'], [3,'14:00','15:30','F3','FUT-M-3L','Perdedor S1 x Perdedor S2'],
+  [3,'14:00','15:30','H2','HAN-F-3L','Perdedor S1 x Perdedor S2'], [3,'14:00','15:30','H3','HAN-M-3L','Perdedor S1 x Perdedor S2'], [3,'14:00','15:30','V2','VOL-F-3L','Perdedor S1 x Perdedor S2'], [3,'14:00','15:30','V3','VOL-M-3L','Perdedor S1 x Perdedor S2'],
+  [3,'16:00','18:00','B1','BAS-F-FIN','Vencedor S1 x Vencedor S2'], [3,'16:00','18:00','F1','FUT-M-FIN','Vencedor S1 x Vencedor S2'], [3,'16:00','18:00','H1','HAN-M-FIN','Vencedor S1 x Vencedor S2'], [3,'16:00','18:00','V1','VOL-F-FIN','Vencedor S1 x Vencedor S2'],
+  [3,'18:15','20:15','B1','BAS-M-FIN','Vencedor S1 x Vencedor S2'], [3,'18:15','20:15','F1','FUT-F-FIN','Vencedor S1 x Vencedor S2'], [3,'18:15','20:15','H1','HAN-F-FIN','Vencedor S1 x Vencedor S2'], [3,'18:15','20:15','V1','VOL-M-FIN','Vencedor S1 x Vencedor S2'],
+];
+
+/* Os confrontos U01–U12 da grade são vagas-modelo: cada torneio recebe um sorteio fictício das 12 faculdades */
 MODS.forEach(m=>GENS.forEach(g=>{
   const key = m.id+'-'+g.id, r = rng(hashStr(key));
-  const t = shuffle(FACS.map(f=>f.id), r);
-  KEYS[key] = { mod:m.id, gen:g.id, groups:{ A:t.slice(0,3), B:t.slice(3,6), C:t.slice(6,9), D:t.slice(9,12) }, games:[] };
+  const t = shuffle(FACS.map(f=>f.id), r), umap = {};
+  t.forEach((id,i)=>umap['U'+String(i+1).padStart(2,'0')] = id);
+  KEYS[key] = { mod:m.id, gen:g.id, umap, groups:{ A:t.slice(0,3), B:t.slice(3,6), C:t.slice(6,9), D:t.slice(9,12) }, games:[] };
 }));
-
-/* 12 atléticas → 4 grupos de 3 (3 jogos por grupo) + quartas, semis, 3º e final = 20 jogos por chave, 160 no total */
-const ROUNDS = [[0,1],[2,0],[1,2]];
-const MANHA = ['09:00','10:00','11:00','12:00'].map(toMin), TARDE = ['14:00','15:00','16:00','17:00'].map(toMin);
-const ROUND_SLOTS = [{ dia:1, slots:MANHA }, { dia:1, slots:TARDE }, { dia:2, slots:MANHA }];
-MODS.forEach(m=>{
-  const q = m.quadras;
-  ROUND_SLOTS.forEach(({dia,slots},r)=>{
-    ['f','m'].forEach((gid,ci)=>{
-      const K = KEYS[m.id+'-'+gid], [i,j] = ROUNDS[r];
-      ['A','B','C','D'].forEach((G,s)=>addGame({ dia, ini:slots[s], mod:m.id, gen:gid, fase:'grupos', grupo:G, rodada:r+1, a:K.groups[G][i], b:K.groups[G][j], local:'q'+q[(ci+r)%2] }));
-    });
-  });
-  ['f','m'].forEach((gid,gi)=>{
-    for (let k=0;k<4;k++) addGame({ dia:2, ini:TARDE[gi*2+Math.floor(k/2)], mod:m.id, gen:gid, fase:'qf', n:k+1, local:'q'+q[k%2] });
-    for (let k=0;k<2;k++) addGame({ dia:3, ini:toMin(gi===0?'09:00':'10:00'), mod:m.id, gen:gid, fase:'sf', n:k+1, local:'q'+q[k] });
-    addGame({ dia:3, ini:toMin('12:00'), mod:m.id, gen:gid, fase:'3', local:'q'+q[gi] });
-    addGame({ dia:3, ini:toMin(gi===0?'14:00':'16:00'), mod:m.id, gen:gid, fase:'f', local:'q'+q[0] });
-  });
+const MOD_BY_COD = Object.fromEntries(MODS.map(m=>[m.cod,m.id]));
+GRADE.forEach(([dia,ini,fim,quadra,cod,conf])=>{
+  const [mc,gc,ph] = cod.split('-'), mod = MOD_BY_COD[mc], gen = gc.toLowerCase(), K = KEYS[mod+'-'+gen];
+  const o = { dia, ini:toMin(ini), dur:toMin(fim)-toMin(ini), mod, gen, local:quadra.toLowerCase(), cod, conf };
+  let m;
+  if ((m = ph.match(/^G([A-D])(\d)$/))){ const [ua,ub] = conf.split(' x '); Object.assign(o, { fase:'grupos', grupo:m[1], rodada:+m[2], a:K.umap[ua], b:K.umap[ub] }); }
+  else if ((m = ph.match(/^([QS])(\d)$/))) Object.assign(o, { fase:m[1]==='Q'?'qf':'sf', n:+m[2] });
+  else o.fase = ph==='3L' ? '3' : 'f';
+  addGame(o);
 });
 EXTRAS.forEach(([dia,ini,dur,tipo,titulo,local,desc],i)=>EVENTS.push({ id:'x'+(i+1), tipo, dia, ini:toMin(ini), dur, titulo, local, desc }));
 
@@ -505,18 +542,23 @@ function standings(key, onlyDone){
   Object.keys(K.groups).forEach(G=>groups[G]=Object.values(tab).filter(r=>r.G===G).sort(sortFn));
   return { groups, sortFn };
 }
-/* Resolve o mata-mata (times reais) a partir da fase de grupos */
+/* Resolve o mata-mata (times reais) a partir da fase de grupos e dos confrontos da grade */
 Object.keys(KEYS).forEach(key=>{
-  const K = KEYS[key], { groups, sortFn } = standings(key,false);
+  const K = KEYS[key], { groups } = standings(key,false);
   const P = {}; Object.keys(groups).forEach(G=>{ P['1'+G]=groups[G][0].t; P['2'+G]=groups[G][1].t; });
-  const qf = K.games.filter(g=>g.fase==='qf'), sf = K.games.filter(g=>g.fase==='sf');
-  const third = K.games.find(g=>g.fase==='3'), fin = K.games.find(g=>g.fase==='f');
-  const QF = [['1A','2B'],['1C','2D'],['1B','2A'],['1D','2C']];
-  qf.forEach((g,i)=>{ g.a=P[QF[i][0]]; g.b=P[QF[i][1]]; g.pa=QF[i][0][0]+'º Grupo '+QF[i][0][1]; g.pb=QF[i][1][0]+'º Grupo '+QF[i][1][1]; g.dep=K.games.filter(x=>x.fase==='grupos'); });
-  sf.forEach((g,i)=>{ const x=qf[i*2], y=qf[i*2+1]; g.a=winnerOf(x); g.b=winnerOf(y); g.pa='Venc. QF'+(i*2+1); g.pb='Venc. QF'+(i*2+2); g.dep=[x,y]; });
-  third.a=loserOf(sf[0]); third.b=loserOf(sf[1]); third.pa='Perd. SF1'; third.pb='Perd. SF2'; third.dep=sf;
-  fin.a=winnerOf(sf[0]); fin.b=winnerOf(sf[1]); fin.pa='Venc. SF1'; fin.pb='Venc. SF2'; fin.dep=sf;
-  K.third = third; K.fin = fin;
+  const grp = K.games.filter(g=>g.fase==='grupos');
+  const byPh = ph => K.games.find(g=>g.cod.endsWith('-'+ph));
+  const side = tok => {
+    let m;
+    if ((m = tok.match(/^([12])([A-D])$/))) return { t:P[tok], ph:`${m[1]}º Grupo ${m[2]}`, dep:grp };
+    if ((m = tok.match(/^Vencedor ([QS]\d)$/))){ const d=byPh(m[1]); return { t:winnerOf(d), ph:'Venc. '+m[1], dep:[d] }; }
+    m = tok.match(/^Perdedor ([QS]\d)$/); const d=byPh(m[1]); return { t:loserOf(d), ph:'Perd. '+m[1], dep:[d] };
+  };
+  ['qf','sf','3','f'].forEach(f=>K.games.filter(g=>g.fase===f).forEach(g=>{
+    const [x,y] = g.conf.split(' x ').map(side);
+    g.a=x.t; g.b=y.t; g.pa=x.ph; g.pb=y.ph; g.dep=[...new Set([...x.dep,...y.dep])];
+  }));
+  K.third = K.games.find(g=>g.fase==='3'); K.fin = K.games.find(g=>g.fase==='f');
 });
 EVENTS.sort((x,y)=> x.dia-y.dia || x.ini-y.ini || (x.tipo==='jogo')-(y.tipo==='jogo') || (x.local||'').localeCompare(y.local||'', 'pt', {numeric:true}));
 
@@ -524,17 +566,18 @@ EVENTS.sort((x,y)=> x.dia-y.dia || x.ini-y.ini || (x.tipo==='jogo')-(y.tipo==='j
    "AGORA" DA DEMO
    ========================================================= */
 const NOW_PRESETS = [
-  { id:'1-0930', dia:1, min:toMin('09:30'), nome:'Dia 1 · 09:30 — abertura dos jogos' },
-  { id:'1-1520', dia:1, min:toMin('15:20'), nome:'Dia 1 · 15:20 — fase de grupos' },
-  { id:'2-1620', dia:2, min:toMin('16:20'), nome:'Dia 2 · 16:20 — quartas de final' },
-  { id:'3-1420', dia:3, min:toMin('14:20'), nome:'Dia 3 · 14:20 — final feminina ao vivo' },
-  { id:'3-1900', dia:3, min:toMin('19:00'), nome:'Dia 3 · 19:00 — após a premiação' },
+  { id:'1-1110', dia:1, min:toMin('11:10'), nome:'Dia 1 · 11:10 — cerimônia de abertura' },
+  { id:'1-1440', dia:1, min:toMin('14:40'), nome:'Dia 1 · 14:40 — fase de grupos' },
+  { id:'2-1400', dia:2, min:toMin('14:00'), nome:'Dia 2 · 14:00 — Red Bull Recharge' },
+  { id:'2-1800', dia:2, min:toMin('18:00'), nome:'Dia 2 · 18:00 — quartas de final' },
+  { id:'3-1700', dia:3, min:toMin('17:00'), nome:'Dia 3 · 17:00 — finais ao vivo' },
+  { id:'3-2330', dia:3, min:toMin('23:30'), nome:'Dia 3 · 23:30 — festa de encerramento' },
 ];
 const store = {
   get(k,d){ try{ const v=localStorage.getItem('ic_'+k); return v===null?d:JSON.parse(v); }catch(_){ return d; } },
   set(k,v){ try{ localStorage.setItem('ic_'+k, JSON.stringify(v)); }catch(_){} },
 };
-let NOW = NOW_PRESETS.find(p=>p.id===store.get('now','1-1520')) || NOW_PRESETS[1];
+let NOW = NOW_PRESETS.find(p=>p.id===store.get('now','1-1440')) || NOW_PRESETS[1];
 const nowAbs = () => NOW.dia*1440 + NOW.min;
 function status(e){ const s=e.dia*1440+e.ini, n=nowAbs(); return n>=s+e.dur ? 'fim' : n>=s ? 'live' : 'prox'; }
 function known(e){ return e.fase==='grupos' || e.dep.every(d=>status(d)==='fim'); }
@@ -563,7 +606,7 @@ function avatar(name, color, size=34){
   const ini = name.split(' ').map(p=>p[0]).slice(0,2).join('');
   return `<span class="avatar" style="width:${size}px;height:${size}px;background:linear-gradient(140deg,${color},#0b1d4f);font-size:${size*.38}px">${ini}</span>`;
 }
-const faseNome = e => ({ grupos:`Fase de Grupos · Grupo ${e.grupo} · Rodada ${e.rodada}`, qf:`Quartas de final · QF${e.n}`, sf:`Semifinal · SF${e.n}`, '3':'Disputa de 3º lugar', f:'Grande Final' })[e.fase];
+const faseNome = e => ({ grupos:`Fase de Grupos · Grupo ${e.grupo} · Rodada ${e.rodada}`, qf:`Quartas de final · Q${e.n}`, sf:`Semifinal · S${e.n}`, '3':'Disputa de 3º lugar', f:'Grande Final' })[e.fase];
 const faseCurta = e => ({ grupos:`Fase de Grupos ${e.grupo}`, qf:'Quartas de final', sf:'Semifinal', '3':'Disputa de 3º', f:'Final' })[e.fase];
 const diaLabel = d => { const x=DIAS[d-1]; return `Dia ${d} · ${x.sem} ${x.dm}`; };
 function evTitle(e){ return e.tipo==='jogo' ? `${MOD[e.mod].nome} ${GEN[e.gen].nome}` : e.titulo; }
@@ -626,7 +669,7 @@ function openNotifs(){
   const live = EVENTS.filter(e=>e.tipo==='jogo' && status(e)==='live').slice(0,1)[0];
   openSheet(`<div class="sh"><div class="ptitle">Notificações</div><button class="iconbtn" data-close>${I.x}</button></div><div class="sb"><div class="panel">
     ${live?`<a class="row" href="#/cronograma?dia=${live.dia}&ev=${live.id}">${I.bolt}<div class="grow"><b>Ao vivo agora: ${evTitle(live)}</b><small>${FAC[live.a].sigla} × ${FAC[live.b].sigla} · ${LOCAL[live.local].nome}</small></div></a>`:''}
-    <a class="row" href="#/cronograma?tipo=festa">${I.users}<div class="grow"><b>Lista da festa liberada 🎉</b><small>Garanta seu nome na lista pelo app.</small></div></a>
+    <a class="row" href="#/recharge">${I.bolt}<div class="grow"><b>Inscrições do Recharge abertas ⚡</b><small>Garanta seu horário no Challenge.</small></div></a>
     <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card: +R$ 20 de bônus</b><small>Recarregue até 23h e ganhe bônus.</small></div></a>
   </div></div>`);
 }
@@ -684,9 +727,10 @@ ROUTES[''] = sc => {
   </div>
   <div class="sect">Destaques</div>
   <div class="carousel">
-    <a class="banner" href="#/cronograma?tipo=ativ"><b>FLY HIGH</b><span>Dentro e fora das quadras</span></a>
-    <a class="banner alt" href="#/cronograma?dia=3&tipo=jogo"><b>AS FINAIS</b><span>Dia 3 · todas as modalidades</span></a>
-    <a class="banner" href="#/cronograma?tipo=festa"><b>3 NOITES</b><span>Festas oficiais Intercampus</span></a>
+    <a class="banner" href="#/cronograma?tipo=ativ&dia=all"><b>FLY HIGH</b><span>Dentro e fora das quadras</span></a>
+    <a class="banner" href="#/cronograma?dia=3&tipo=jogo"><b>AS FINAIS</b><span>Sábado · 8 decisões</span></a>
+    <a class="banner alt" href="#/recharge"><b>RECHARGE</b><span>Sexta · 13h30 às 15h30</span></a>
+    <a class="banner" href="#/cronograma?tipo=festa"><b>22H–06H</b><span>Festa de encerramento</span></a>
   </div>
   <p class="note">Protótipo com dados fictícios · ${NOW.nome.split(' — ')[0]}</p>`;
 };
@@ -790,7 +834,7 @@ function drawCrono(sc){
       <button class="fbtn" data-openf>${I.filter}Filtros${nActive()?`<span class="n">${nActive()}</span>`:''}</button>
     </div>
     ${chipsHtml()}
-    <div class="count"><span>${list.length} evento${list.length===1?'':'s'}${F.dia!=='all'?' no '+diaLabel(F.dia):''}${F.fav?' · minha agenda':''}</span>${(nActive()||F.q||F.fav)?'<button data-clear>Limpar filtros</button>':''}</div>`;
+    <div class="count"><span>${list.length} evento${list.length===1?'':'s'}${F.dia!=='all'?' · Dia '+F.dia+' — '+DIAS[F.dia-1].tema.toUpperCase():''}${F.fav?' · minha agenda':''}</span>${(nActive()||F.q||F.fav)?'<button data-clear>Limpar filtros</button>':''}</div>`;
   if (!list.length){
     html += `<div class="empty"><b>Nada por aqui</b>Nenhum evento com esses filtros${F.dia!=='all'?' neste dia':''}.${F.dia!=='all'?'<br><br><button class="pill" data-dia="all">Ver todos os dias</button>':''}</div>`;
   } else {
@@ -842,7 +886,7 @@ function drawFilters(){
     <div class="fgroup"><h4>Gênero</h4><div class="opts">${GENS.map(g=>opt('gen',g.id,g.nome)).join('')}</div></div>
     <div class="fgroup"><h4>Faculdade</h4><div class="opts">${FACS.map(f=>opt('fac',f.id,f.sigla,f.cor)).join('')}</div></div>
     <div class="fgroup"><h4>Quadra / Local</h4><div class="opts">${LOCAIS.map(l=>opt('local',l.id,l.nome)).join('')}</div>
-      <p style="font-size:11.5px;color:var(--dim);margin:8px 0 0">Q1–2 Futsal · Q3–4 Handebol · Q5–6 Basquete · Q7–8 Vôlei</p></div>
+      <p style="font-size:11.5px;color:var(--dim);margin:8px 0 0">F = Futsal · H = Handebol · B = Basquete · V = Vôlei</p></div>
   </div>
   <div class="sf"><button class="btn ghost" data-fclear>Limpar</button><button class="btn primary" data-fapply>Ver ${n} evento${n===1?'':'s'}</button></div>`;
   const keep = $('#sheet .sb') ? $('#sheet .sb').scrollTop : 0;
@@ -878,7 +922,7 @@ function openEvent(id){
       <div style="text-align:center">${stLabel}</div>
       <div class="board">${tm(t.a,e.pa)}<div class="sc">${s?`${s.a}<i>×</i>${s.b}`:`<span style="font-size:22px;color:var(--muted)">${hhmm(e.ini)}</span>`}</div>${tm(t.b,e.pb)}</div>
       ${e.mod==='volei'&&s?'<p class="note" style="margin-top:-6px">Placar em sets (melhor de 3)</p>':''}
-      <div class="kv"><span>Fase</span><b>${faseNome(e)}${st==='fim'&&e.sc.extra?' · '+e.sc.extra:''}</b><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)}</b><span>Onde</span><b>${LOCAL[e.local].nome}</b></div>
+      <div class="kv"><span>Fase</span><b>${faseNome(e)}${st==='fim'&&e.sc.extra?' · '+e.sc.extra:''}</b><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)}</b><span>Onde</span><b>${LOCAL[e.local].nome}</b><span>Código</span><b>${e.cod}</b></div>
       ${e.fase==='grupos'?`<a class="btn ghost" style="margin-bottom:4px" href="#/ranking?v=grupos&mod=${e.mod}&gen=${e.gen}">${I.trophy.replace('class="ic"','')}Ver classificação do grupo</a>`:''}
     </div>
     <div class="sf">${favBtn}${mapBtn}</div>`);
@@ -901,8 +945,10 @@ function generalRanking(){
 }
 ROUTES['ranking'] = (sc, p) => {
   const v = p.get('v')||'geral', mod = p.get('mod')||'futsal', gen = p.get('gen')||'f';
-  let html = innerHead('Ranking') + `<div class="seg"><button class="${v==='geral'?'on':''}" onclick="location.hash='#/ranking'">Geral das atléticas</button><button class="${v==='grupos'?'on':''}" onclick="location.hash='#/ranking?v=grupos&mod=${mod}&gen=${gen}'">Grupos</button></div>`;
-  if (v==='geral'){
+  let html = innerHead('Ranking') + `<div class="seg"><button class="${v==='geral'?'on':''}" onclick="location.hash='#/ranking'">Geral das atléticas</button><button class="${v==='grupos'?'on':''}" onclick="location.hash='#/ranking?v=grupos&mod=${mod}&gen=${gen}'">Grupos</button><button class="${v==='recharge'?'on':''}" onclick="location.hash='#/ranking?v=recharge'">Recharge</button></div>`;
+  if (v==='recharge'){
+    html += rechargeRankingHtml();
+  } else if (v==='geral'){
     const r = generalRanking();
     html += `<div class="panel"><table class="rank"><thead><tr><th>#</th><th>Atlética</th><th>V</th><th>🥇</th><th>🥈</th><th>🥉</th><th>Pts</th></tr></thead><tbody>
       ${r.map((x,i)=>`<tr class="top${i+1}"><td class="pos">${i+1}</td><td class="tn"><div>${badge(x.t,28)}<span>${FAC[x.t].sigla}<small>${FAC[x.t].atl}</small></span></div></td><td>${x.v}</td><td>${x.o}</td><td>${x.p}</td><td>${x.b}</td><td class="pts">${x.pts}</td></tr>`).join('')}
@@ -925,46 +971,48 @@ ROUTES['ranking'] = (sc, p) => {
    MAPA
    ========================================================= */
 const MAP_SPOTS = [
-  ...[1,2,3,4].map((n,i)=>({ id:'q'+n, x:14+i*84, y:60, w:76, h:96 })),
-  ...[5,6,7,8].map((n,i)=>({ id:'q'+n, x:14+i*84, y:170, w:76, h:96 })),
-  { id:'palco',  x:14,  y:286, w:110, h:70, label:'Palco Principal', fill:'#7a1222' },
-  { id:'arena',  x:134, y:286, w:110, h:70, label:'Arena Ativações', fill:'#6b4c00' },
-  { id:'energy', x:254, y:286, w:96,  h:70, label:'Energy Zone',     fill:'#8a6400' },
-  { id:'festa',  x:14,  y:370, w:160, h:62, label:'Arena Festa',     fill:'#3d1160' },
-  { id:'food',   x:184, y:370, w:166, h:62, label:'Praça de Alimentação', fill:'#14325f' },
+  ...MODS.flatMap((m,r)=>m.quadras.map((q,i)=>({ id:q, x:14+i*78, y:56+r*70, w:72, h:62, court:true }))),
+  { id:'rca',   x:254, y:56,  w:96,  h:100, label:'Recharge A', fill:'#8a6400' },
+  { id:'rcb',   x:254, y:162, w:96,  h:100, label:'Recharge B', fill:'#8a6400' },
+  { id:'palco', x:254, y:268, w:96,  h:64,  label:'Palco Central', fill:'#7a1222' },
+  { id:'vila1', loc:'vila', x:14,  y:344, w:164, h:56, label:'Vila Intercampus 1', fill:'#14325f' },
+  { id:'vila2', loc:'vila', x:186, y:344, w:164, h:56, label:'Vila Intercampus 2', fill:'#14325f' },
+  { id:'festa', x:14,  y:408, w:164, h:52, label:'Arena da Festa', fill:'#3d1160' },
+  { id:'food',  x:186, y:408, w:164, h:52, label:'Food trucks', fill:'#1d3d70' },
 ];
 function courtSvg(s){
-  const n = +s.id.slice(1), m = MODS.find(m=>m.quadras.includes(n));
+  const m = MOD[LOCAL[s.id].mod];
   const cx=s.x+s.w/2, cy=s.y+s.h/2;
   return `<g class="spot" data-spot="${s.id}"><rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="6" fill="${m.cor}" fill-opacity=".85" stroke="rgba(255,255,255,.6)" stroke-width="1.2"/>
-    <rect x="${s.x+7}" y="${s.y+7}" width="${s.w-14}" height="${s.h-14}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
-    <line x1="${s.x+7}" y1="${cy}" x2="${s.x+s.w-7}" y2="${cy}" stroke="rgba(255,255,255,.7)"/>
-    <circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="rgba(255,255,255,.7)"/>
-    <text x="${cx}" y="${s.y+24}" text-anchor="middle" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="17">Q${n}</text>
-    <text x="${cx}" y="${s.y+s.h-12}" text-anchor="middle" fill="#fff" font-size="15">${m.emoji}</text></g>`;
+    <rect x="${s.x+6}" y="${s.y+6}" width="${s.w-12}" height="${s.h-12}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
+    <line x1="${cx}" y1="${s.y+6}" x2="${cx}" y2="${s.y+s.h-6}" stroke="rgba(255,255,255,.7)"/>
+    <circle cx="${cx}" cy="${cy}" r="8" fill="none" stroke="rgba(255,255,255,.7)"/>
+    <text x="${s.x+10}" y="${s.y+22}" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="16">${s.id.toUpperCase()}</text>
+    <text x="${s.x+s.w-10}" y="${s.y+s.h-10}" text-anchor="end" fill="#fff" font-size="13">${m.emoji}</text></g>`;
 }
 ROUTES['mapa'] = (sc, p) => {
   const sel = p.get('local');
   sc.innerHTML = innerHead('Mapa do evento') + `
-    <div class="map"><svg viewBox="0 0 364 480" role="img" aria-label="Mapa do complexo">
-      <rect x="4" y="4" width="356" height="472" rx="14" fill="#0a1a44" stroke="rgba(120,170,255,.35)"/>
+    <div class="map"><svg viewBox="0 0 364 510" role="img" aria-label="Mapa do complexo">
+      <rect x="4" y="4" width="356" height="502" rx="14" fill="#0a1a44" stroke="rgba(120,170,255,.35)"/>
       <text x="182" y="40" text-anchor="middle" fill="#B4C3E8" font-size="12" font-weight="600" letter-spacing="2">COMPLEXO ESPORTIVO INTERCAMPUS</text>
-      ${MAP_SPOTS.map(s=>s.id.startsWith('q')?courtSvg(s):`<g class="spot" data-spot="${s.id}"><rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="8" fill="${s.fill}" stroke="rgba(255,255,255,.45)"/><text x="${s.x+s.w/2}" y="${s.y+s.h/2+5}" text-anchor="middle" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="15">${s.label.toUpperCase()}</text></g>`).join('')}
-      <rect x="140" y="446" width="84" height="24" rx="12" fill="#F5B800"/><text x="182" y="462" text-anchor="middle" fill="#1a1200" font-size="11.5" font-weight="700">ENTRADA</text>
-      <text x="40" y="462" fill="#7F92C4" font-size="10">🚻 WC</text><text x="350" y="462" text-anchor="end" fill="#7F92C4" font-size="10">⛑️ Posto médico</text>
+      ${MAP_SPOTS.map(s=>s.court?courtSvg(s):`<g class="spot" data-spot="${s.id}"><rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="8" fill="${s.fill}" stroke="rgba(255,255,255,.45)"/><text x="${s.x+s.w/2}" y="${s.y+s.h/2+5}" text-anchor="middle" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="14">${s.label.toUpperCase()}</text></g>`).join('')}
+      <rect x="140" y="474" width="84" height="24" rx="12" fill="#F5B800"/><text x="182" y="490" text-anchor="middle" fill="#1a1200" font-size="11.5" font-weight="700">ENTRADA</text>
+      <text x="40" y="490" fill="#7F92C4" font-size="10">🚻 WC</text><text x="350" y="490" text-anchor="end" fill="#7F92C4" font-size="10">⛑️ Posto médico</text>
     </svg></div>
-    <div class="legend">${MODS.map(m=>`<span><i style="background:${m.cor}"></i>${m.nome} (Q${m.quadras.join('–')})</span>`).join('')}</div>
+    <div class="legend">${MODS.map(m=>`<span><i style="background:${m.cor}"></i>${m.nome} (${m.quadras.join(', ').toUpperCase()})</span>`).join('')}</div>
     <p class="note">Toque em uma quadra ou área para ver o que está rolando.</p>`;
   sc.querySelectorAll('[data-spot]').forEach(g=>g.addEventListener('click',()=>openSpot(g.dataset.spot)));
-  if (sel) { sc.querySelector(`[data-spot="${sel}"]`)?.classList.add('sel'); setTimeout(()=>openSpot(sel),80); }
+  if (sel) { const sp = MAP_SPOTS.find(s=>s.id===sel || s.loc===sel); if (sp){ sc.querySelector(`[data-spot="${sp.id}"]`).classList.add('sel'); setTimeout(()=>openSpot(sp.id),80); } }
 };
 function openSpot(id){
-  if (id==='food'){ openSheet(`<div class="sh"><div class="ptitle">Praça de Alimentação</div><button class="iconbtn" data-close>${I.x}</button></div><div class="sb"><p style="color:#dbe4ff;line-height:1.5">Food trucks, hidratação e pontos de recarga do Energy Card. Aberta das 08:00 às 20:00.</p></div>`); return; }
+  if (id==='food'){ openSheet(`<div class="sh"><div class="ptitle">Food trucks</div><button class="iconbtn" data-close>${I.x}</button></div><div class="sb"><p style="color:#dbe4ff;line-height:1.5">Food trucks, barracas de bebidas e pontos de recarga do Energy Card, ao lado das Vilas Intercampus.</p></div>`); return; }
+  id = MAP_SPOTS.find(s=>s.id===id)?.loc || id;
   const l = LOCAL[id];
   const here = EVENTS.filter(e=>e.local===id && e.dia===NOW.dia);
   const now = here.filter(e=>status(e)==='live'), next = here.filter(e=>status(e)==='prox').slice(0,2);
   const line = e => e.tipo==='jogo' ? (()=>{ const t=teamsOf(e); return `${hhmm(e.ini)} · ${evTitle(e)} — ${t.a?FAC[t.a].sigla:e.pa} × ${t.b?FAC[t.b].sigla:e.pb}`; })() : `${hhmm(e.ini)} · ${esc(e.titulo)}`;
-  const m = l.tipo==='quadra' ? MODS.find(m=>m.quadras.includes(+id.slice(1))) : null;
+  const m = l.tipo==='quadra' ? MOD[l.mod] : null;
   openSheet(`<div class="sh"><div class="ptitle">${l.nome}</div><button class="iconbtn" data-close>${I.x}</button></div>
     <div class="sb">${m?`<p style="color:var(--muted);margin:0 0 10px">${m.emoji} Quadra de ${m.nome}</p>`:''}
       <div class="panel">
@@ -979,9 +1027,9 @@ function openSpot(id){
    ========================================================= */
 ROUTES['ingressos'] = sc => {
   sc.innerHTML = innerHead('Meu ingresso') + `
-    <div class="ticket"><div class="tt"><small>Intercampus 2027 · ${EVENTO.sub}</small><h2>Passaporte 3 dias</h2>
+    <div class="ticket"><div class="tt"><small>Intercampus 2027 · Ingresso único</small><h2>Passaporte 3 dias</h2>
       <div class="kv" style="background:rgba(0,0,0,.18);border-color:rgba(255,255,255,.25);margin:10px 0 0">
-        <span>Titular</span><b>Maria</b><span>Atlética</span><b>Feras USP</b><span>Datas</span><b>${EVENTO.datas}</b><span>Acesso</span><b>Jogos, ativações e festas</b><span>Local</span><b>${EVENTO.local}</b>
+        <span>Titular</span><b>Maria</b><span>Atlética</span><b>Feras USP</b><span>Datas</span><b>${EVENTO.datas}</b><span>Acesso</span><b>Jogos, Vilas, Recharge e festa de encerramento</b><span>Local</span><b>${EVENTO.local}</b>
       </div></div>
       <div class="tb" style="flex-direction:column;gap:10px;padding:20px 16px"><div class="qr" id="tqr"></div><div style="text-align:center"><b style="font-size:16px">Nº IC-2027-04817</b><br><small style="color:#51608a">Apresente este QR code na entrada</small></div></div></div>`;
   makeQR(sc.querySelector('#tqr'), 'INTERCAMPUS-IC-2027-04817', 200);
@@ -993,12 +1041,12 @@ ROUTES['energy'] = sc => {
     <div style="display:flex;gap:8px;margin-bottom:12px">${['+ R$ 20','+ R$ 50','+ R$ 100'].map(v=>`<button class="btn gold" data-act="demo">${v}</button>`).join('')}</div>
     <div class="sect">Benefícios</div>
     <div class="panel">
-      <div class="row">${I.bolt}<div class="grow"><b>Pague tudo com aproximação</b><small>Bares, food trucks e lojinha oficial</small></div></div>
-      <div class="row">${I.bolt}<div class="grow"><b>Fura-fila na Energy Zone</b><small>Acesso prioritário ao Recovery Lounge</small></div></div>
-      <div class="row">${I.bolt}<div class="grow"><b>Pontos para sua atlética</b><small>Cada recarga soma no ranking de torcida</small></div></div>
+      <div class="row">${I.bolt}<div class="grow"><b>Pague tudo com aproximação</b><small>Vilas, food trucks, bebidas e quiosque de grifes</small></div></div>
+      <div class="row">${I.bolt}<div class="grow"><b>Prioridade no Recharge Challenge</b><small>Fila preferencial na barra fixa, touro e potência</small></div></div>
+      <div class="row">${I.bolt}<div class="grow"><b>Destaques ganham bônus</b><small>Melhores jogadores recebem crédito no Energy Card</small></div></div>
     </div>
     <div class="sect">Extrato</div>
-    <div class="panel">${[['Recarga','+ R$ 100,00','Dia 1 · 09:12'],['Food Truck Burger','− R$ 32,00','Dia 1 · 12:40'],['Energy Zone · bebida','− R$ 12,00','Dia 1 · 15:05'],['Recarga bônus','+ R$ 64,00','Dia 2 · 08:50']].map(x=>`<div class="row"><div class="grow"><b>${x[0]}</b><small>${x[2]}</small></div><b style="color:${x[1].startsWith('+')?'var(--ok)':'#fff'}">${x[1]}</b></div>`).join('')}</div>`;
+    <div class="panel">${[['Recarga','+ R$ 100,00','Dia 1 · 09:42'],['Food Truck Burger','− R$ 32,00','Dia 1 · 12:40'],['Vila Intercampus · bebida','− R$ 12,00','Dia 1 · 15:05'],['Recarga bônus','+ R$ 64,00','Dia 2 · 08:50']].map(x=>`<div class="row"><div class="grow"><b>${x[0]}</b><small>${x[2]}</small></div><b style="color:${x[1].startsWith('+')?'var(--ok)':'#fff'}">${x[1]}</b></div>`).join('')}</div>`;
 };
 ROUTES['conexoes'] = sc => {
   const ppl = [['Lucas Andrade','Feras USP · Futsal','#2E7DF6',true],['Juliana Costa','Fúria Mackenzie · Vôlei','#E2242C',true],['Rafael Lima','R.A. São Judas · Basquete','#9A6234',true],['Ana Lima','Corujas PUC · Handebol','#7E3FBF',false],['Pedro Reis','Águias FGV · Futsal','#1446A0',false],['Bia Souza','Tritões Insper · Vôlei','#E6197A',false],['Gabriel Nunes','Furacão Unicamp · Basquete','#FF6B1A',false],['Larissa Melo','Raposas ESPM · Torcida','#00B7D4',false]];
@@ -1007,10 +1055,10 @@ ROUTES['conexoes'] = sc => {
   sc.querySelectorAll('[data-conn]').forEach(b=>b.addEventListener('click',()=>{ const on=!b.classList.contains('on'); b.classList.toggle('on',on); b.textContent=on?'✓ Conectado':'Conectar'; if(on) toast('Conexão enviada!'); }));
 };
 const CHATS = [
-  { id:'geral', nome:'Intercampus · Geral', sub:'12.480 participantes', cor:'#F5B800', msgs:[['Organização','Bem-vindos ao Intercampus! Fiquem de olho no cronograma pelo app 🔥'],['Pedro','Alguém sabe se a Energy Zone abre cedo?'],['Organização','Abre às 10h, e no Dia 3 às 9h!']] },
-  { id:'usp', nome:'Feras USP', sub:'Atlética · 860 membros', cor:'#2E7DF6', msgs:[['Lucas','Bora lotar a quadra 7 no vôlei feminino!'],['Carol','Bateria concentra no portão às 14h 🥁']] },
-  { id:'volei', nome:'Vôlei Feminino', sub:'Modalidade · 340 membros', cor:'#E2242C', msgs:[['Juliana','Quem pega a final no domingo? 👀']] },
-  { id:'festa', nome:'Festas Intercampus', sub:'Avisos das festas', cor:'#b04cff', msgs:[['Organização','Lista da Neon Party liberada no app!']] },
+  { id:'geral', nome:'Intercampus · Geral', sub:'12.480 participantes', cor:'#F5B800', msgs:[['Organização','Bem-vindos ao Intercampus! Fiquem de olho no cronograma pelo app 🔥'],['Pedro','Que horas é o Recharge?'],['Organização','Sexta, das 13h30 às 15h30, nas Áreas A e B. Nenhum jogo acontece nesse horário. Inscreva-se no Challenge pelo app! ⚡']] },
+  { id:'usp', nome:'Feras USP', sub:'Atlética · 860 membros', cor:'#2E7DF6', msgs:[['Lucas','Bora lotar a quadra V1 no vôlei feminino!'],['Carol','Bateria concentra no portão às 14h 🥁']] },
+  { id:'volei', nome:'Vôlei Feminino', sub:'Modalidade · 340 membros', cor:'#E2242C', msgs:[['Juliana','Quem pega a final no sábado? 👀']] },
+  { id:'festa', nome:'Festa de Encerramento', sub:'Sábado, 22h às 06h', cor:'#b04cff', msgs:[['Organização','A festa Fly High começa às 22h de sábado e vai até as 06h de domingo. Planeje sua volta: ônibus fretados e pontos de embarque no app.']] },
 ];
 ROUTES['chat'] = (sc, p) => {
   const id = p.get('c');
@@ -1028,10 +1076,10 @@ ROUTES['chat'] = (sc, p) => {
   draw();
 };
 ROUTES['noticias'] = sc => {
-  const n = [['🏐','Vôlei feminino tem rodada eletrizante no Dia 2','Três jogos decididos no tie-break e torcida lotando a Quadra 7.','há 25 min','linear-gradient(135deg,#2E7DF6,#0b1d4f)'],
-    ['⚡','Energy Zone bate recorde de visitantes','Mais de 3 mil atletas passaram pelo Recovery Lounge no primeiro dia.','há 1 h','linear-gradient(135deg,#F5B800,#C58500)'],
-    ['🎉','Neon Party: line-up confirmado','DJs convidados e pintura corporal na Arena Festa a partir das 22h.','há 3 h','linear-gradient(135deg,#b04cff,#E5283F)'],
-    ['🏆','Como funciona o ranking geral das atléticas','Vitórias e medalhas somam pontos para a campeã geral do Intercampus.','ontem','linear-gradient(135deg,#E5283F,#A30D24)']];
+  const n = [['⚡','Red Bull Recharge: inscrições abertas no app','Sexta, 13h30–15h30: barra fixa, touro mecânico e potência nas Áreas A e B. Nenhum jogo nas quadras durante o Recharge.','há 20 min','linear-gradient(135deg,#F5B800,#C58500)'],
+    ['🚗','Encontre o Mini Bull!','Ache o Mini Cooper Red Bull, poste uma foto marcando a Red Bull e concorra a pins, bucket hats e pochetes.','há 1 h','linear-gradient(135deg,#E5283F,#A30D24)'],
+    ['📺','Semis e finais ao vivo no YouTube','Transmissão com narração no sábado, também no telão das Vilas Intercampus.','há 3 h','linear-gradient(135deg,#2E7DF6,#0b1d4f)'],
+    ['🥁','Vote na torcida que voa mais alto','A melhor bateria do Intercampus é escolhida pelo público. Vote pelo app!','ontem','linear-gradient(135deg,#b04cff,#E5283F)']];
   sc.innerHTML = innerHead('Notícias') + `<div class="panel">${n.map(x=>`<button class="news" data-act="demo" style="text-align:left;width:100%"><div class="th" style="background:${x[4]}">${x[0]}</div><div><b>${x[1]}</b><small>${x[2]}<br>${x[3]}</small></div></button>`).join('')}</div>`;
 };
 ROUTES['perfil'] = sc => {
@@ -1051,26 +1099,69 @@ ROUTES['mais'] = sc => {
   sc.innerHTML = innerHead('Mais') + `
     <div class="panel">
       <a class="row" href="#/qr">${I.qr}<div class="grow"><b>Compartilhar o app</b><small>QR code para projetar na apresentação</small></div>${I.chev}</a>
-      <a class="row" href="#/cronograma">${I.cal}<div class="grow"><b>Cronograma</b><small>Jogos, ativações e festas</small></div>${I.chev}</a>
-      <a class="row" href="#/mapa">${I.pin}<div class="grow"><b>Mapa do evento</b><small>8 quadras + áreas de ativação</small></div>${I.chev}</a>
-      <a class="row" href="#/ranking">${I.trophy}<div class="grow"><b>Ranking das atléticas</b><small>Geral e por grupos</small></div>${I.chev}</a>
+      <a class="row" href="#/cronograma">${I.cal}<div class="grow"><b>Cronograma</b><small>160 jogos, ativações e festa</small></div>${I.chev}</a>
+      <a class="row" href="#/recharge">${I.bolt}<div class="grow"><b>Red Bull Recharge</b><small>Sexta, 13h30–15h30 · inscrições no Challenge</small></div>${I.chev}</a>
+      <a class="row" href="#/votacao">${I.users}<div class="grow"><b>Votação</b><small>Torcida que voa mais alto</small></div>${I.chev}</a>
+      <a class="row" href="#/mapa">${I.pin}<div class="grow"><b>Mapa do evento</b><small>12 quadras, Vilas e Recharge</small></div>${I.chev}</a>
+      <a class="row" href="#/ranking">${I.trophy}<div class="grow"><b>Ranking das atléticas</b><small>Geral, grupos e Recharge</small></div>${I.chev}</a>
       <a class="row" href="#/regulamento">${I.book}<div class="grow"><b>Formato e regulamento</b><small>Como funciona a competição</small></div>${I.chev}</a>
     </div>
     <div class="sect">Modo demonstração</div>
     <p style="color:var(--muted);font-size:12.5px;margin:0 2px 8px">Escolha o "momento" do evento para mostrar jogos ao vivo, resultados e finais.</p>
     <div class="panel">${NOW_PRESETS.map(p=>`<button class="row" data-now="${p.id}">${I.clock}<div class="grow"><b>${p.nome.split(' — ')[0]}</b><small>${p.nome.split(' — ')[1]}</small></div>${p.id===NOW.id?'<span class="st prox">Atual</span>':''}</button>`).join('')}</div>
-    <p class="note">${EVENTO.nome} · protótipo com dados fictícios</p>`;
+    <p class="note">${EVENTO.nome} · protótipo · faculdades e placares fictícios</p>`;
   sc.querySelectorAll('[data-now]').forEach(b=>b.addEventListener('click',()=>{ NOW = NOW_PRESETS.find(p=>p.id===b.dataset.now); store.set('now',NOW.id); F.dia = NOW.dia; toast('Agora: '+NOW.nome.split(' — ')[0]); route(); }));
 };
 ROUTES['regulamento'] = sc => {
   sc.innerHTML = innerHead('Formato','#/mais') + `
     <div class="panel"><div style="padding:14px;line-height:1.55;color:#dbe4ff;font-size:13.5px">
-      <b style="color:#fff">12 faculdades · 4 modalidades · 2 gêneros · 3 dias</b><br>${EVENTO.datas}<br><br>
-      <b style="color:var(--gold2)">Fase de grupos (Dias 1–2)</b><br>Em cada modalidade/gênero, as 12 atléticas são divididas em 4 grupos de 3, todos contra todos.<br><br>
-      <b style="color:var(--gold2)">Mata-mata (Dias 2–3)</b><br>1º e 2º de cada grupo → quartas (Dia 2 à tarde), semis, disputa de 3º e final (Dia 3).<br><br>
-      <b style="color:var(--gold2)">Estrutura</b><br>${EVENTS.filter(e=>e.tipo==='jogo').length} jogos em 8 quadras (2 por modalidade), jogos de 1h entre 9h e 18h. Ativações durante o dia e festas todas as noites.<br><br>
+      <b style="color:#fff">12 faculdades · 4 modalidades · F/M · 3 dias · 160 jogos</b><br>${EVENTO.datas} · ${EVENTO.local}<br><br>
+      <b style="color:var(--gold2)">Fase de grupos · 96 jogos</b><br>8 torneios (4 modalidades × 2 categorias). Cada torneio tem 4 grupos de 3 equipes. 64 jogos na quinta e 32 na sexta de manhã.<br><br>
+      <b style="color:var(--gold2)">Mata-mata · 64 jogos</b><br>2 classificados por grupo. Quartas na sexta após o Recharge (1A×2B, 1C×2D, 1B×2A, 1D×2C); semis, 3º lugar e finais no sábado.<br><br>
+      <b style="color:var(--gold2)">Quadras e tempos</b><br>12 quadras, 3 por modalidade (F, H, B, V). Blocos de 90 min nos grupos e 3º lugar, 105 min nas quartas e semis e 120 min nas finais.<br><br>
+      <b style="color:var(--gold2)">Red Bull Recharge</b><br>Sexta, 13h30–15h30: momento exclusivo, sem jogos em nenhuma quadra.<br><br>
       <b style="color:var(--gold2)">Pontuação geral</b><br>Vitória 3 · empate 1 · ouro +15 · prata +10 · bronze +6.
     </div></div>`;
+};
+/* Red Bull Recharge (sexta 13h30–15h30) */
+const RC_INI = 2*1440 + toMin('13:30'), RC_FIM = 2*1440 + toMin('15:30');
+const RC_DESAFIOS = [['barra','Barra fixa','Quantas repetições você aguenta?'],['touro','Touro mecânico','Quem fica mais tempo em cima?'],['potencia','Potência','Máquina de soco: quem bate mais forte?']];
+const RC_AREA = Object.fromEntries(FACS.map((f,i)=>[f.id, i<6?'A':'B']));
+function rechargeRankingHtml(){
+  if (nowAbs() < RC_INI) return `<div class="empty"><b>Ranking do Recharge</b>Abre sexta, 28/05, às 13h30, com placares sincronizados nos telões das Áreas A e B.<br><br><a class="pill" href="#/recharge">Inscreva-se no Challenge</a></div>`;
+  const f = Math.min(1, (nowAbs()-RC_INI)/(RC_FIM-RC_INI));
+  const r = FACS.map(x=>({ t:x.id, pts:Math.round((400+rng(hashStr('rc'+x.id))()*900)*f) })).sort((a,b)=>b.pts-a.pts);
+  return `<div class="panel"><table class="rank"><thead><tr><th>#</th><th>Atlética</th><th>Área</th><th>Pts</th></tr></thead><tbody>
+    ${r.map((x,i)=>`<tr class="top${i+1}"><td class="pos">${i+1}</td><td class="tn"><div>${badge(x.t,28)}<span>${FAC[x.t].sigla}<small>${FAC[x.t].atl}</small></span></div></td><td>${RC_AREA[x.t]}</td><td class="pts">${x.pts}</td></tr>`).join('')}
+  </tbody></table></div><p class="note">${f<1?'● Ao vivo · ':''}Soma de barra fixa, touro mecânico e potência · os campeões do Recharge são premiados no sábado</p>`;
+}
+ROUTES['recharge'] = sc => {
+  const insc = new Set(store.get('rc', []));
+  const st = nowAbs()>=RC_FIM ? 'fim' : nowAbs()>=RC_INI ? 'live' : 'prox';
+  const prog = [['13:20','Avisos finais das arenas e deslocamento'],['13:30','Entrada escalonada nas Áreas A e B'],['13:45','Boas-vindas e explicação dos desafios'],['14:00','Desafios, grifes, fotos, degustação e música'],['15:10','Atualização do ranking e chamadas finais'],['15:20','Encerramento e dispersão'],['15:30','Retorno às arenas']];
+  const exp = [['Challenge','Barra fixa, touro mecânico e potência (soco)'],['Degustação','Balcão supervisionado de drinks Red Bull'],['Quiosque','Grifes das faculdades e seleção Red Bull'],['Cabine fotográfica','Fotos impressas e digitais'],['Ranking','Telão com placares sincronizados'],['Convivência','Mesas, água, sombra e monitores']];
+  sc.innerHTML = innerHead('Red Bull Recharge') + `
+    <div class="banner alt" style="height:auto;padding:18px;margin-bottom:12px"><b style="font-size:38px">RECHARGE</b><span>Sexta, 28/05 · 13h30 às 15h30</span>
+      <span style="font-family:var(--body);font-style:normal;font-weight:500;font-size:12.5px;text-transform:none;margin-top:6px;max-width:62%">Momento exclusivo: nenhum jogo nas 12 quadras. Todo o público nas Áreas A e B.</span></div>
+    <div style="margin-bottom:12px">${st==='live'?'<span class="st live">● Acontecendo agora</span>':st==='fim'?'<span class="st fim">Encerrado</span>':'<span class="st prox">Sexta às 13h30</span>'}
+      <span style="color:var(--muted);font-size:12.5px;margin-left:6px">Sua área: <b style="color:#fff">Área ${RC_AREA.usp}</b> (Feras USP)</span></div>
+    <div class="sect" style="margin-top:4px">Inscrição no Challenge</div>
+    <div class="panel">${RC_DESAFIOS.map(([id,n,d])=>`<div class="row">${I.bolt}<div class="grow"><b>${n}</b><small>${d}</small></div><button class="pill ${insc.has(id)?'on':''}" data-rc="${id}">${insc.has(id)?'✓ Inscrita':'Inscrever'}</button></div>`).join('')}</div>
+    <div style="display:flex;margin-bottom:4px"><a class="btn ghost" href="#/ranking?v=recharge">${I.trophy.replace('class="ic"','')}Ranking do Recharge</a></div>
+    <div class="sect">Em cada área (A e B)</div>
+    <div class="panel">${exp.map(([n,d])=>`<div class="row"><div class="grow"><b>${n}</b><small>${d}</small></div></div>`).join('')}</div>
+    <div class="sect">Programação</div>
+    <div class="panel">${prog.map(([h,t])=>`<div class="row"><b style="font-family:var(--head);font-size:17px;font-style:italic;width:48px">${h}</b><div class="grow"><small style="color:#e5ecff;font-size:13px">${t}</small></div></div>`).join('')}</div>`;
+  sc.querySelectorAll('[data-rc]').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.rc; insc.has(id)?insc.delete(id):insc.add(id); store.set('rc',[...insc]); if (insc.has(id)) toast('Inscrição confirmada! Área '+RC_AREA.usp+' ⚡'); ROUTES['recharge'](sc); }));
+};
+ROUTES['votacao'] = sc => {
+  const voto = store.get('voto', null);
+  sc.innerHTML = innerHead('Votação','#/mais') + `
+    <div class="ptitle" style="font-size:22px;margin:4px 2px 4px">Torcida que voa mais alto 🥁</div>
+    <p style="color:var(--muted);margin:0 2px 12px;font-size:13px">Escolha a melhor bateria do Intercampus. Resultado anunciado na premiação de sábado.</p>
+    <div class="panel">${FACS.map(f=>`<button class="row" data-vote="${f.id}">${badge(f.id,30)}<div class="grow"><b>${f.atl}</b><small>${f.nome}</small></div>${voto===f.id?'<span class="st prox">Seu voto</span>':''}</button>`).join('')}</div>
+    <p class="note">Melhor jogador ofensivo e defensivo: votação abre após as semifinais.</p>`;
+  sc.querySelectorAll('[data-vote]').forEach(b=>b.addEventListener('click',()=>{ store.set('voto', b.dataset.vote); toast('Voto registrado: '+FAC[b.dataset.vote].atl); ROUTES['votacao'](sc); }));
 };
 ROUTES['qr'] = sc => {
   const url = appUrl();
