@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07112A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Intercampus App — Copa Universitária Multiesportiva">
+<title>Intercampus App</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1B44'/%3E%3Cpath d='M20 14h24v8a12 12 0 0 1-24 0z' fill='%23F5B800'/%3E%3Cpath d='M28 34h8v8h6v6H22v-6h6z' fill='%23F5B800'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg0:#06102A; --bg1:#0A1A44; --bg2:#10265C;
+  --navy1:#173373; --navy2:#0C1D4A; --line:rgba(120,170,255,.32);
+  --red1:#E5283F; --red2:#A30D24;
+  --gold:#F5B800; --gold2:#FFD54A; --gold3:#C58500;
+  --text:#FFFFFF; --muted:#B4C3E8; --dim:#7F92C4;
+  --live:#FF3B4E; --ok:#2FD07A;
+  --radius:14px;
+  --head:'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --body:'Inter', system-ui, -apple-system, sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--bg0);color:var(--text);font-family:var(--body);font-size:14px;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+input{font:inherit;color:inherit}
+
+/* ---------- layout ---------- */
+.stage{height:100dvh;display:flex;justify-content:center;align-items:center;gap:56px}
+.side{display:none}
+.phone{position:relative;width:100%;height:100dvh;max-width:480px;overflow:hidden;background:
+  radial-gradient(120% 60% at 100% 0%, rgba(40,90,200,.35), transparent 60%),
+  radial-gradient(90% 50% at 0% 100%, rgba(30,70,170,.35), transparent 60%),
+  linear-gradient(180deg,var(--bg1),var(--bg0));display:flex;flex-direction:column}
+.phone::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(115deg, rgba(255,255,255,.025) 0 2px, transparent 2px 22px)}
+@media (min-width:960px){
+  body{background:radial-gradient(80% 80% at 70% 30%, #12296a, #050c22 70%)}
+  .side{display:flex;flex-direction:column;gap:22px;max-width:380px}
+  .phone{width:400px;height:min(860px,94dvh);border-radius:46px;border:11px solid #05070d;
+    box-shadow:0 0 0 2px #2a3550, 0 40px 90px rgba(0,0,0,.6)}
+}
+.side .logo{transform:scale(1.25);transform-origin:left center}
+.side h2{font-family:var(--head);font-style:italic;font-weight:900;font-size:40px;line-height:1;margin:6px 0 0;text-transform:uppercase}
+.side h2 span{color:var(--gold)}
+.side p{color:var(--muted);line-height:1.5;margin:0}
+.side .qrbox{display:flex;gap:18px;align-items:center;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:18px;padding:16px}
+.qr{background:#fff;padding:10px;border-radius:12px;line-height:0}
+.qr img,.qr canvas{display:block}
+.side .url{font-family:var(--head);font-size:18px;font-weight:700;color:var(--gold2);word-break:break-all}
+
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;padding:0 14px 96px;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+
+/* ---------- top bar ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 12px) 2px 6px}
+.iconbtn{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;position:relative}
+.iconbtn:active{background:rgba(255,255,255,.08)}
+.iconbtn svg{width:24px;height:24px}
+.dotbadge{position:absolute;top:3px;right:3px;background:var(--live);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:grid;place-items:center;border:2px solid var(--bg1)}
+.logo{display:flex;flex-direction:column;align-items:center;line-height:1}
+.logo svg{width:92px;height:30px;margin-bottom:-3px}
+.logo .name{font-family:var(--head);font-style:italic;font-weight:900;font-size:27px;letter-spacing:.3px;text-transform:uppercase;
+  background:linear-gradient(180deg,#fff 40%,#cfd9f5);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 #071233) drop-shadow(0 0 1px #000)}
+.logo .sub{font-family:var(--head);font-weight:700;font-size:10.5px;letter-spacing:.9px;color:var(--gold2);margin-top:3px;text-transform:uppercase;
+  border-top:1px solid rgba(245,184,0,.5);border-bottom:1px solid rgba(245,184,0,.5);padding:2px 8px}
+.ptitle{font-family:var(--head);font-style:italic;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.3px}
+
+/* ---------- greeting ---------- */
+.hello{display:flex;gap:14px;align-items:center;margin:10px 2px 16px}
+.avatar{border-radius:50%;display:grid;place-items:center;font-weight:700;flex:none;position:relative;overflow:hidden}
+.avatar.big{width:66px;height:66px;border:3px solid var(--gold);box-shadow:0 0 0 3px rgba(245,184,0,.18)}
+.hello h1{margin:0;font-size:21px;font-weight:700}
+.hello p{margin:3px 0 0;color:#dfe7ff;font-size:13.5px}
+.hello b{color:var(--gold);font-weight:700}
+
+/* ---------- home grid ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{position:relative;border-radius:var(--radius);padding:10px 10px 9px;min-height:92px;overflow:hidden;
+  background:linear-gradient(160deg,var(--navy1),var(--navy2));border:1px solid var(--line);
+  box-shadow:0 6px 16px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);display:flex;flex-direction:column;text-align:left}
+.card:active{transform:scale(.98)}
+.card.red{background:linear-gradient(150deg,var(--red1),var(--red2));border-color:rgba(255,140,150,.45)}
+.card.red::after,.card.gold::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(120deg, rgba(255,255,255,.07) 0 3px, transparent 3px 16px);mix-blend-mode:overlay}
+.card.gold{background:linear-gradient(140deg,var(--gold2),var(--gold) 55%,var(--gold3));border-color:#ffe28a;color:#fff}
+.card h3{margin:0 0 7px;font-family:var(--head);font-style:italic;font-weight:800;font-size:15px;white-space:nowrap;letter-spacing:.2px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.card h3 .link{font-family:var(--body);font-style:normal;font-weight:600;font-size:10px;color:var(--gold2);text-decoration:underline;text-transform:none}
+.card .body{display:flex;gap:10px;align-items:center;flex:1}
+.card .body svg.ic{width:32px;height:32px;flex:none}
+.card .body p{margin:0;font-size:11px;line-height:1.35;color:#e5ecff;flex:1}
+.card .chev{width:14px;height:14px;flex:none;opacity:.9}
+.card.wide{grid-column:1/-1;min-height:0}
+.tag-new{background:var(--live);color:#fff;font-family:var(--body);font-style:normal;font-weight:700;font-size:10.5px;padding:2px 8px;border-radius:10px;text-transform:none}
+
+.nextgame{background:rgba(70,0,10,.35);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:3px;flex:1}
+.nextgame .when{font-size:10.5px;color:var(--gold2);font-weight:600}
+.nextgame .row{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.nextgame .t{font-weight:700;font-size:12.5px;line-height:1.15}
+.nextgame .ph{font-size:11px;color:#ffe3e6}
+.nextgame .where{font-size:10.5px;color:#ffe3e6;display:flex;align-items:center;gap:3px}
+.vs{display:flex;align-items:center;gap:3px;font-size:9px;font-weight:700}
+
+.friends{margin-top:10px;padding:10px 11px}
+.friends .list{display:flex;justify-content:space-between;gap:6px}
+.friend{display:flex;align-items:center;gap:7px;min-width:0}
+.friend .avatar{width:34px;height:34px;border:2px solid rgba(255,255,255,.7)}
+.friend b{font-size:12.5px;display:flex;align-items:center;gap:4px}
+.friend b::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.friend small{display:block;color:var(--muted);font-size:10.5px;white-space:nowrap}
+.sect{font-family:var(--head);font-style:italic;font-weight:800;font-size:15px;text-transform:uppercase;margin:16px 2px 8px;display:flex;justify-content:space-between;align-items:center}
+.sect .link{font-family:var(--body);font-style:normal;font-weight:600;font-size:11.5px;color:var(--gold2);text-decoration:underline;text-transform:none}
+.banner{position:relative;border-radius:var(--radius);overflow:hidden;height:118px;border:1px solid var(--line);
+  background:linear-gradient(100deg,#0e2a6e 0%,#123a8e 45%,#0d2560 100%);display:flex;flex-direction:column;justify-content:center;padding:0 18px}
+.banner::before{content:"";position:absolute;right:-30px;top:-20px;bottom:-20px;width:58%;transform:skewX(-22deg);
+  background:linear-gradient(90deg,transparent 0 8%,var(--red1) 8% 30%,transparent 30% 36%,var(--gold) 36% 50%,transparent 50% 56%,var(--red2) 56% 100%);opacity:.95}
+.banner b{position:relative;font-family:var(--head);font-style:italic;font-weight:900;font-size:44px;line-height:.9;color:var(--gold);text-shadow:0 3px 0 #5a3c00}
+.banner span{position:relative;font-family:var(--head);font-style:italic;font-weight:800;font-size:16px;letter-spacing:.5px;text-transform:uppercase}
+.carousel{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -14px;padding:0 14px}
+.carousel::-webkit-scrollbar{display:none}
+.carousel>*{flex:0 0 92%;scroll-snap-align:center}
+.banner.alt{background:linear-gradient(100deg,#5b0a17,#a30d24 55%,#c8102e)}
+.banner.alt::before{background:linear-gradient(90deg,transparent 0 10%,var(--gold) 10% 22%,transparent 22% 30%,#fff 30% 34%,transparent 34%);opacity:.55}
+.banner.alt b{color:#fff;text-shadow:0 3px 0 #4a0010}
+
+/* ---------- bottom nav ---------- */
+.nav{position:absolute;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:space-around;
+  padding:8px 6px calc(env(safe-area-inset-bottom) + 8px);background:linear-gradient(180deg,rgba(10,26,68,.92),#071233);
+  border-top:1px solid var(--line);backdrop-filter:blur(10px)}
+.nav a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:#dfe6ff;min-width:58px;padding:2px 0}
+.nav a svg{width:23px;height:23px}
+.nav a.on{color:var(--gold)}
+
+/* ---------- inner screens ---------- */
+.ihead{display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 12px) 0 10px;position:sticky;top:0;z-index:5;
+  background:linear-gradient(180deg,var(--bg1) 75%,rgba(10,26,68,0));margin:0 -14px;padding-left:10px;padding-right:10px}
+.ihead .ptitle{flex:1}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:600;
+  background:rgba(255,255,255,.06);border:1px solid var(--line);white-space:nowrap}
+.pill.on{background:var(--gold);color:#1a1200;border-color:var(--gold)}
+.pill .x{opacity:.7;margin-left:2px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block;border:1px solid rgba(255,255,255,.6)}
+
+/* cronograma */
+.days{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+.day{border-radius:12px;padding:7px 2px 6px;text-align:center;background:linear-gradient(160deg,var(--navy1),var(--navy2));border:1px solid var(--line)}
+.day b{display:block;font-family:var(--head);font-style:italic;font-weight:800;font-size:17px;text-transform:uppercase;line-height:1}
+.day small{font-size:10.5px;color:var(--muted)}
+.day.on{background:linear-gradient(150deg,var(--red1),var(--red2));border-color:rgba(255,160,170,.6)}
+.day.on small{color:#ffe3e6}
+.day .today{display:block;font-size:9px;font-weight:700;color:var(--gold2);height:11px;line-height:11px}
+.seg{display:flex;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:3px;margin-bottom:10px}
+.seg button{flex:1;padding:7px 4px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--navy1);color:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.toolbar{display:flex;gap:8px;margin-bottom:10px}
+.search{flex:1;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:0 10px;min-width:0}
+.search input{flex:1;background:none;border:0;outline:0;padding:9px 0;font-size:13.5px;min-width:0}
+.search input::placeholder{color:var(--dim)}
+.search svg{width:17px;height:17px;opacity:.7;flex:none}
+.fbtn{display:flex;align-items:center;gap:6px;padding:0 12px;border-radius:12px;font-weight:700;font-size:13px;background:linear-gradient(150deg,var(--red1),var(--red2));position:relative}
+.fbtn svg{width:17px;height:17px}
+.fbtn .n{background:var(--gold);color:#1a1200;border-radius:9px;font-size:10.5px;min-width:18px;height:18px;display:grid;place-items:center}
+.favbtn{width:40px;border-radius:12px;display:grid;place-items:center;background:rgba(0,0,0,.25);border:1px solid var(--line)}
+.favbtn svg{width:19px;height:19px}
+.favbtn.on{background:var(--gold);border-color:var(--gold);color:#1a1200}
+.chips{display:flex;gap:6px;overflow-x:auto;margin:0 -14px 10px;padding:0 14px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.count{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px;margin:2px 2px 6px}
+.count button{color:var(--gold2);font-weight:600;text-decoration:underline}
+.tgroup{display:flex;align-items:center;gap:8px;margin:14px 2px 8px;font-family:var(--head);font-weight:800;font-size:18px;font-style:italic}
+.tgroup::after{content:"";flex:1;height:1px;background:var(--line)}
+.tgroup .nowtag{font-family:var(--body);font-style:normal;font-size:10px;font-weight:700;background:var(--live);padding:2px 7px;border-radius:8px}
+.ev{display:block;width:100%;text-align:left;border-radius:var(--radius);padding:10px 11px;margin-bottom:8px;background:linear-gradient(160deg,var(--navy1),var(--navy2));border:1px solid var(--line);position:relative;overflow:hidden}
+.ev:active{transform:scale(.99)}
+.ev.live{border-color:rgba(255,80,95,.8);box-shadow:0 0 0 1px rgba(255,59,78,.4),0 6px 18px rgba(255,59,78,.18)}
+.ev .meta{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.ev .meta .sp{flex:1}
+.ev .loc{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.08);border-radius:7px;padding:2px 6px;color:#e5ecff;text-transform:none;letter-spacing:0}
+.ev .loc svg{width:11px;height:11px}
+.st{font-size:10px;font-weight:700;padding:2px 7px;border-radius:7px;text-transform:uppercase;letter-spacing:.3px}
+.st.live{background:var(--live);color:#fff;animation:pulse 1.4s infinite}
+.st.fim{background:rgba(255,255,255,.12);color:#cfd8f5}
+.st.prox{background:rgba(245,184,0,.16);color:var(--gold2)}
+@keyframes pulse{50%{opacity:.55}}
+.match{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:9px 0 6px}
+.team{display:flex;align-items:center;gap:8px;min-width:0;font-weight:700;font-size:14px}
+.team.r{flex-direction:row-reverse;text-align:right}
+.team span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.team.win span{color:var(--gold2)}
+.team.tbd span{color:var(--dim);font-weight:600;font-size:12.5px;white-space:normal;line-height:1.15}
+.score{font-family:var(--head);font-weight:800;font-size:24px;display:flex;align-items:center;gap:6px;min-width:62px;justify-content:center}
+.score i{font-style:normal;color:var(--dim);font-size:15px}
+.score.time{font-size:15px;color:var(--muted);font-weight:700}
+.ev .phase{font-size:11.5px;color:var(--muted)}
+.ev .star{position:absolute;right:8px;bottom:6px;width:30px;height:30px;display:grid;place-items:center;color:var(--dim)}
+.ev .star svg{width:18px;height:18px}
+.ev .star.on{color:var(--gold)}
+.ev.ativ{background:linear-gradient(150deg,#2a2a0a 0%,#3a2f05 0%, #1d2e66 0%, #10265c 100%);border-color:rgba(245,184,0,.45)}
+.ev.ativ::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+.ev.festa{background:linear-gradient(150deg,#4b0b2e,#22134f);border-color:rgba(255,90,170,.45)}
+.ev.festa::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--red1),#b04cff)}
+.ev .title{font-weight:700;font-size:15px;margin:6px 0 3px;padding-right:26px}
+.ev .desc{font-size:12px;color:#cdd8f5;line-height:1.35;padding-right:26px}
+.typetag{font-size:10px;font-weight:800;padding:2px 7px;border-radius:7px;letter-spacing:.4px}
+.typetag.ativ{background:var(--gold);color:#1a1200}
+.typetag.festa{background:linear-gradient(90deg,var(--red1),#b04cff);color:#fff}
+.empty{text-align:center;color:var(--muted);padding:40px 20px}
+.empty b{display:block;font-family:var(--head);font-style:italic;font-size:22px;color:#fff;margin-bottom:6px}
+
+/* badge (shield) */
+.bdg{width:var(--s,30px);height:var(--s,30px);flex:none;position:relative;display:grid;place-items:center;color:#fff;font-weight:800;font-family:var(--head);letter-spacing:-.2px}
+.bdg svg{position:absolute;inset:0;width:100%;height:100%}
+.bdg b{position:relative;font-size:calc(var(--s,30px) * .30);text-shadow:0 1px 1px rgba(0,0,0,.6);line-height:1}
+
+/* sheet */
+.sheet-wrap{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:flex-end;background:rgba(2,6,20,.6);opacity:0;pointer-events:none;transition:opacity .2s}
+.sheet-wrap.open{opacity:1;pointer-events:auto}
+.sheet{background:linear-gradient(180deg,#132c6a,#0a1a44);border-top:1px solid var(--line);border-radius:22px 22px 0 0;max-height:88%;display:flex;flex-direction:column;transform:translateY(30px);transition:transform .22s}
+.sheet-wrap.open .sheet{transform:none}
+.sheet .grab{width:42px;height:5px;border-radius:3px;background:rgba(255,255,255,.3);margin:8px auto 2px}
+.sheet .sh{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 8px}
+.sheet .sh .ptitle{font-size:22px}
+.sheet .sb{overflow-y:auto;padding:0 16px 16px}
+.sheet .sf{display:flex;gap:10px;padding:12px 16px calc(env(safe-area-inset-bottom) + 14px);border-top:1px solid var(--line)}
+.fgroup{margin-bottom:14px}
+.fgroup h4{margin:0 0 7px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.fgroup .opts{display:flex;flex-wrap:wrap;gap:6px}
+.btn{flex:1;border-radius:13px;padding:13px 14px;font-weight:700;font-size:14px;text-align:center;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn.primary{background:linear-gradient(150deg,var(--red1),var(--red2))}
+.btn.gold{background:linear-gradient(140deg,var(--gold2),var(--gold));color:#1a1200}
+.btn.ghost{background:rgba(255,255,255,.07);border:1px solid var(--line)}
+.btn svg{width:18px;height:18px}
+
+.board{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;text-align:center;margin:8px 0 14px}
+.board .tm{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700}
+.board .tm small{color:var(--muted);font-weight:500;font-size:11px}
+.board .sc{font-family:var(--head);font-weight:900;font-size:44px;line-height:1}
+.board .sc i{font-style:normal;color:var(--dim);font-size:26px;margin:0 6px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;font-size:13px;background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+.kv span{color:var(--muted)}
+
+/* list rows */
+.panel{background:linear-gradient(160deg,var(--navy1),var(--navy2));border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid rgba(120,170,255,.14);width:100%;text-align:left}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .grow b{display:block;font-size:14px}
+.row .grow small{color:var(--muted);font-size:11.5px}
+.row svg.ic{width:20px;height:20px;flex:none;color:var(--gold)}
+.row .chev{width:16px;height:16px;opacity:.6}
+table.rank{width:100%;border-collapse:collapse;font-size:13px}
+table.rank th{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;padding:8px 4px;text-align:center}
+table.rank th:nth-child(2){text-align:left}
+table.rank td{padding:8px 4px;text-align:center;border-top:1px solid rgba(120,170,255,.14)}
+table.rank td.tn{text-align:left}
+table.rank td.tn div{display:flex;align-items:center;gap:8px;font-weight:700}
+table.rank td.tn small{display:block;font-weight:500;color:var(--muted);font-size:10.5px}
+table.rank td.pos{font-family:var(--head);font-weight:800;font-size:17px;font-style:italic;width:26px}
+table.rank tr.top1 td.pos{color:var(--gold)} table.rank tr.top2 td.pos{color:#d6dce8} table.rank tr.top3 td.pos{color:#e09a5a}
+table.rank td.pts{font-weight:800;color:var(--gold2)}
+table.rank tr.q td{background:rgba(47,208,122,.06)}
+.gtitle{font-family:var(--head);font-style:italic;font-weight:800;font-size:16px;text-transform:uppercase;padding:9px 12px 0}
+
+/* misc screens */
+.ticket{border-radius:18px;overflow:hidden;background:linear-gradient(150deg,var(--red1),var(--red2));position:relative;margin-bottom:14px;border:1px solid rgba(255,160,170,.5)}
+.ticket .tt{padding:16px}
+.ticket .tt small{color:#ffe3e6;font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+.ticket .tt h2{margin:2px 0 4px;font-family:var(--head);font-style:italic;font-weight:900;font-size:28px;text-transform:uppercase}
+.ticket .tb{background:#fff;color:#0a1a44;display:flex;gap:14px;align-items:center;padding:14px 16px;border-top:2px dashed rgba(10,26,68,.3)}
+.ticket .tb .qr{padding:0}
+.ecard{border-radius:18px;aspect-ratio:1.6;padding:18px;position:relative;overflow:hidden;color:#fff;
+  background:linear-gradient(135deg,#1a3a8f,#0b1d4f 55%,#06102a);border:2px solid var(--gold);box-shadow:0 14px 30px rgba(0,0,0,.4);margin-bottom:14px}
+.ecard::before{content:"";position:absolute;right:-40px;top:-10px;bottom:-10px;width:55%;transform:skewX(-20deg);background:linear-gradient(90deg,var(--gold) 0 18%,transparent 18% 26%,var(--red1) 26% 60%,transparent 60%)}
+.ecard .brand{position:relative;font-family:var(--head);font-weight:900;font-style:italic;font-size:15px;letter-spacing:.6px}
+.ecard .nm{position:relative;font-family:var(--head);font-weight:900;font-style:italic;font-size:38px;color:var(--gold);line-height:1;margin-top:6px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.ecard .bal{position:absolute;left:18px;bottom:16px}
+.ecard .bal small{font-size:11px;color:var(--muted)}
+.ecard .bal b{display:block;font-family:var(--head);font-size:30px;font-weight:800}
+.ecard .num{position:absolute;right:18px;bottom:18px;font-size:12px;letter-spacing:1.5px;opacity:.9}
+.news{display:flex;gap:12px;padding:12px;border-bottom:1px solid rgba(120,170,255,.14)}
+.news:last-child{border-bottom:0}
+.news .th{width:84px;height:70px;border-radius:10px;flex:none;display:grid;place-items:center;font-size:30px}
+.news b{display:block;font-size:14px;line-height:1.25;margin-bottom:4px}
+.news small{color:var(--muted);font-size:11.5px}
+.chatlog{display:flex;flex-direction:column;gap:8px;padding:6px 0 12px;min-height:calc(100% - 140px)}
+.msg{max-width:80%;padding:8px 11px;border-radius:14px;font-size:13.5px;line-height:1.35;background:rgba(255,255,255,.08);border:1px solid var(--line);align-self:flex-start}
+.msg small{display:block;font-size:10.5px;color:var(--gold2);font-weight:700;margin-bottom:2px}
+.msg.me{align-self:flex-end;background:linear-gradient(150deg,var(--red1),var(--red2));border-color:transparent}
+.chatbar{position:sticky;bottom:0;margin:0 -14px;padding:10px 12px;display:flex;gap:8px;background:linear-gradient(180deg,rgba(6,16,42,0),var(--bg0) 35%);z-index:10}
+.chatbar input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:22px;padding:11px 14px;outline:0}
+.chatbar button{width:44px;border-radius:22px;background:linear-gradient(150deg,var(--red1),var(--red2));display:grid;place-items:center}
+.chatbar button svg{width:18px;height:18px}
+.toast{position:absolute;left:50%;bottom:88px;transform:translate(-50%,20px);background:#fff;color:#0a1a44;font-weight:600;font-size:13px;padding:10px 16px;border-radius:12px;z-index:80;opacity:0;transition:.2s;pointer-events:none;max-width:86%;text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.map{background:rgba(0,0,0,.2);border:1px solid var(--line);border-radius:var(--radius);padding:8px;margin-bottom:12px}
+.map svg{width:100%;height:auto;display:block}
+.map .spot{cursor:pointer}
+.map .spot:hover rect,.map .spot.sel rect{stroke:var(--gold);stroke-width:2.5}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:11.5px;color:var(--muted);margin:0 2px 12px}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.bigqr{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:10px 0}
+.bigqr .qr{padding:16px;border-radius:18px}
+.bigqr .url{font-family:var(--head);font-weight:700;font-size:18px;color:var(--gold2);word-break:break-all}
+.note{font-size:11.5px;color:var(--dim);text-align:center;margin:14px 0 4px}
+</style>
+</head>
+<body>
+<div class="stage">
+  <aside class="side" id="side"></aside>
+  <div class="phone" id="phone">
+    <main class="screen" id="screen"></main>
+    <nav class="nav" id="nav"></nav>
+    <div class="sheet-wrap" id="sheetWrap"><div class="sheet" id="sheet"></div></div>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   ÍCONES
+   ========================================================= */
+const I = {
+  menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  chev:'<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+  cal:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 10h18"/><path d="M7.5 14h.01M12 14h.01M16.5 14h.01M7.5 17.5h.01M12 17.5h.01"/></svg>',
+  pin:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  ticket:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2.5a2.5 2.5 0 0 0 0 5V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-4.5a2.5 2.5 0 0 0 0-5z" transform="rotate(-12 12 12)"/><path d="M10 8.5l4 7" transform="rotate(-12 12 12)" stroke-dasharray="1.5 2"/></svg>',
+  trophy:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>',
+  chat:'<svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h11a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H9l-4 3.5V16H4a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3z" opacity=".95"/><path d="M20 8.5a3 3 0 0 1 3 3v5a3 3 0 0 1-3 3h-.5V22l-3.2-2.5H12a3 3 0 0 1-2.6-1.5H15a4.5 4.5 0 0 0 4.5-4.5V8.5z" opacity=".55"/><circle cx="6" cy="10" r="1.2" fill="#0C1D4A"/><circle cx="9.5" cy="10" r="1.2" fill="#0C1D4A"/><circle cx="13" cy="10" r="1.2" fill="#0C1D4A"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2.5 11h2.5v9.5a.5.5 0 0 0 .5.5H10v-6h4v6h4.5a.5.5 0 0 0 .5-.5V11h2.5z"/></svg>',
+  events:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M16 2.5v4M8 2.5v4M3 10h18M8 14h3v3H8z"/></svg>',
+  news:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M7 7h10M7 11h4v6H7zM14 11h3M14 14h3M14 17h3"/></svg>',
+  user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+  more:'<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2.2"/><circle cx="12" cy="12" r="2.2"/><circle cx="19" cy="12" r="2.2"/></svg>',
+  filter:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg>',
+  starO:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  pinS:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5 21 12 3 3.5l.01 6.6L15 12 3.01 13.9z"/></svg>',
+  qr:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 20h2M20 14v2"/></svg>',
+  clock:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  book:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/></svg>',
+  info:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>',
+  bolt:'<svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
+  users:'<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.2a5 5 0 0 1 5.5 4.8"/></svg>',
+};
+const wingsLogo = (k='a') => `<svg viewBox="0 0 120 40" aria-hidden="true">
+  <defs><linearGradient id="gw${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE27A"/><stop offset="1" stop-color="#E0A000"/></linearGradient>
+  <linearGradient id="rw${k}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E5283F"/><stop offset="1" stop-color="#A30D24"/></linearGradient></defs>
+  <g fill="url(#gw${k})">
+    <path d="M50 18c-10-2-22-6-36-14 6 8 13 12 22 15-7 0-14-1-21-4 6 6 14 8 23 8-5 1-11 1-16-1 6 4 13 5 22 4z"/>
+    <path d="M70 18c10-2 22-6 36-14-6 8-13 12-22 15 7 0 14-1 21-4-6 6-14 8-23 8 5 1 11 1 16-1-6 4-13 5-22 4z"/>
+    <path d="M52 3h16v7a8 8 0 0 1-16 0z"/><path d="M48 4h4v3a3 3 0 0 1-3-1zM72 4h-4v3a3 3 0 0 0 3-1z"/>
+    <path d="M57 18h6v5h4v4H53v-4h4z"/>
+  </g>
+  <path d="M42 26h36l-3 5H45z" fill="url(#rw${k})"/>
+</svg>`;
+
+/* =========================================================
+   DADOS FICTÍCIOS — troque aqui pelos dados reais
+   ========================================================= */
+const EVENTO = { nome:'Intercampus', sub:'Copa Universitária Multiesportiva', local:'Complexo Esportivo Intercampus — São Paulo, SP' };
+const DIAS = [
+  { n:1, sem:'Qui', dm:'12/11' },
+  { n:2, sem:'Sex', dm:'13/11' },
+  { n:3, sem:'Sáb', dm:'14/11' },
+  { n:4, sem:'Dom', dm:'15/11' },
+];
+const FACS = [
+  { id:'usp',      sigla:'USP',       ab:'USP',  atl:'Feras USP',          nome:'Universidade de São Paulo',        cor:'#2E7DF6' },
+  { id:'unicamp',  sigla:'Unicamp',   ab:'CAMP', atl:'Furacão Unicamp',    nome:'Universidade Estadual de Campinas', cor:'#FF6B1A' },
+  { id:'unesp',    sigla:'Unesp',     ab:'UNSP', atl:'Lobos Unesp',        nome:'Universidade Estadual Paulista',    cor:'#2FA84F' },
+  { id:'unifesp',  sigla:'Unifesp',   ab:'UNIF', atl:'Falcões Unifesp',    nome:'Universidade Federal de São Paulo', cor:'#13A89E' },
+  { id:'ufabc',    sigla:'UFABC',     ab:'ABC',  atl:'Raios UFABC',        nome:'Universidade Federal do ABC',       cor:'#E8C400' },
+  { id:'mackenzie',sigla:'Mackenzie', ab:'MACK', atl:'Fúria Mackenzie',    nome:'Universidade Presbiteriana Mackenzie', cor:'#E2242C' },
+  { id:'puc',      sigla:'PUC-SP',    ab:'PUC',  atl:'Corujas PUC',        nome:'Pontifícia Universidade Católica de SP', cor:'#7E3FBF' },
+  { id:'fgv',      sigla:'FGV',       ab:'FGV',  atl:'Águias FGV',         nome:'Fundação Getulio Vargas',           cor:'#1446A0' },
+  { id:'insper',   sigla:'Insper',    ab:'INSP', atl:'Tritões Insper',     nome:'Insper',                            cor:'#E6197A' },
+  { id:'faap',     sigla:'FAAP',      ab:'FAAP', atl:'Panteras FAAP',      nome:'Fundação Armando Alvares Penteado',  cor:'#7D8CA3' },
+  { id:'espm',     sigla:'ESPM',      ab:'ESPM', atl:'Raposas ESPM',       nome:'ESPM',                              cor:'#00B7D4' },
+  { id:'saojudas', sigla:'São Judas', ab:'SJT',  atl:'R.A. São Judas',     nome:'Universidade São Judas Tadeu',      cor:'#9A6234' },
+];
+const FAC = Object.fromEntries(FACS.map(f=>[f.id,f]));
+const MODS = [
+  { id:'futsal',   nome:'Futsal',   emoji:'⚽', quadras:[1,2], cor:'#2FA84F' },
+  { id:'handebol', nome:'Handebol', emoji:'🤾', quadras:[3,4], cor:'#FF6B1A' },
+  { id:'basquete', nome:'Basquete', emoji:'🏀', quadras:[5,6], cor:'#E2242C' },
+  { id:'volei',    nome:'Vôlei',    emoji:'🏐', quadras:[7,8], cor:'#2E7DF6' },
+];
+const MOD = Object.fromEntries(MODS.map(m=>[m.id,m]));
+const GENS = [{ id:'f', nome:'Feminino' }, { id:'m', nome:'Masculino' }];
+const GEN = Object.fromEntries(GENS.map(g=>[g.id,g]));
+const LOCAIS = [
+  ...[1,2,3,4,5,6,7,8].map(n=>({ id:'q'+n, nome:'Quadra '+n, curto:'Q'+n, tipo:'quadra' })),
+  { id:'energy', nome:'Energy Zone',     curto:'Energy Zone', tipo:'area' },
+  { id:'arena',  nome:'Arena Ativações', curto:'Arena',       tipo:'area' },
+  { id:'palco',  nome:'Palco Principal', curto:'Palco',       tipo:'area' },
+  { id:'festa',  nome:'Arena Festa',     curto:'Arena Festa', tipo:'area' },
+];
+const LOCAL = Object.fromEntries(LOCAIS.map(l=>[l.id,l]));
+const TIPOS = [{ id:'jogo', nome:'Jogos' }, { id:'ativ', nome:'Ativações' }, { id:'festa', nome:'Festas' }];
+
+/* Ativações e festas: [dia, início, duração(min), tipo, título, local, descrição] */
+const EXTRAS = [
+  [1,'08:00',60,'ativ','Cerimônia de Abertura','palco','Desfile das 12 atléticas, hino e acendimento da pira Intercampus.'],
+  [1,'10:00',480,'ativ','Energy Zone: Recovery Lounge','energy','Área de recuperação com hidratação, alongamento guiado e bebidas energéticas.'],
+  [1,'12:00',90,'ativ','DJ Set no Almoço','palco','Set ao vivo no intervalo dos jogos.'],
+  [1,'13:00',60,'ativ','Desafio 3 Pontos','arena','Quem acerta mais bolas de 3 em 60 segundos? Prêmios para o top 3.'],
+  [1,'17:00',90,'ativ','Batalha de Torcidas','palco','As baterias das atléticas se enfrentam. Júri popular pelo app.'],
+  [1,'22:00',300,'festa','Festa de Abertura — Noite das Atléticas','festa','A primeira noite do Intercampus com line-up de DJs e open de energia.'],
+  [2,'10:00',480,'ativ','Energy Zone: Recovery Lounge','energy','Área de recuperação com hidratação, alongamento guiado e bebidas energéticas.'],
+  [2,'12:00',60,'ativ','Clínica de Vôlei com Atleta Convidada','arena','Treino aberto e bate-papo com atleta profissional.'],
+  [2,'12:30',90,'ativ','DJ Set no Almoço','palco','Set ao vivo no intervalo dos jogos.'],
+  [2,'15:30',60,'ativ','Desafio do Pênalti','arena','Cobranças contra goleiro profissional. Quem marcar ganha brinde.'],
+  [2,'17:30',60,'ativ','Meet & Greet com Atletas','energy','Fotos e autógrafos com atletas convidados.'],
+  [2,'22:00',300,'festa','Neon Party','festa','Festa neon com DJs convidados e pintura corporal.'],
+  [3,'10:00',480,'ativ','Energy Zone: Recovery Lounge','energy','Área de recuperação com hidratação, alongamento guiado e bebidas energéticas.'],
+  [3,'12:00',60,'ativ','Freestyle & Skills Show','palco','Apresentação de freestyle de futebol e basquete.'],
+  [3,'13:00',60,'ativ','Desafio da Enterrada','arena','Concurso de enterradas com tabela rebaixada. Voto da torcida no app.'],
+  [3,'17:00',90,'ativ','Batalha de Rima das Atléticas','palco','MCs das atléticas na final da batalha de rima.'],
+  [3,'22:00',300,'festa','Baile das Torcidas','festa','A noite mais esperada: atléticas, baterias e muito funk.'],
+  [4,'09:00',420,'ativ','Energy Zone: Recovery Lounge','energy','Área de recuperação com hidratação, alongamento guiado e bebidas energéticas.'],
+  [4,'12:00',60,'ativ','DJ Set no Almoço','palco','Set ao vivo antes das finais.'],
+  [4,'18:00',60,'ativ','Cerimônia de Premiação','palco','Entrega das medalhas e do troféu de campeã geral.'],
+  [4,'20:00',360,'festa','Festa de Encerramento — Fly High','festa','O grande encerramento do Intercampus com headliner surpresa.'],
+];
+
+/* =========================================================
+   GERAÇÃO DETERMINÍSTICA DO CRONOGRAMA
+   ========================================================= */
+function hashStr(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const toMin = s => { const [h,m]=s.split(':').map(Number); return h*60+m; };
+const hhmm = m => String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+
+const EVENTS = [];
+const KEYS = {};
+let seq = 0;
+function addGame(o){ const e = Object.assign({ tipo:'jogo', dur:60 }, o); e.id = 'j'+(++seq); EVENTS.push(e); KEYS[e.mod+'-'+e.gen].games.push(e); return e; }
+
+MODS.forEach(m=>GENS.forEach(g=>{
+  const key = m.id+'-'+g.id, r = rng(hashStr(key));
+  const t = shuffle(FACS.map(f=>f.id), r);
+  KEYS[key] = { mod:m.id, gen:g.id, groups:{ A:t.slice(0,4), B:t.slice(4,8), C:t.slice(8,12) }, games:[] };
+}));
+
+const SLOTS = ['09:00','10:00','11:00','14:00','15:00','16:00'].map(toMin);
+const ROUNDS = [[[0,1],[2,3]],[[0,2],[1,3]],[[0,3],[1,2]]];
+MODS.forEach(m=>{
+  for (let d=1; d<=3; d++){
+    const per = { f:[], m:[] };
+    GENS.forEach(g=>{
+      const K = KEYS[m.id+'-'+g.id];
+      ['A','B','C'].forEach(G=>ROUNDS[d-1].forEach(([i,j])=>per[g.id].push({ grupo:G, a:K.groups[G][i], b:K.groups[G][j] })));
+    });
+    for (let s=0; s<6; s++) ['f','m'].forEach((gid,ci)=>{
+      const x = per[gid][s];
+      addGame({ dia:d, ini:SLOTS[s], mod:m.id, gen:gid, fase:'grupos', grupo:x.grupo, rodada:d, a:x.a, b:x.b, local:'q'+m.quadras[(ci+d)%2] });
+    });
+  }
+  const q = m.quadras;
+  ['f','m'].forEach((gid,gi)=>{
+    const qfBase = gi===0 ? toMin('08:00') : toMin('10:00');
+    for (let k=0;k<4;k++) addGame({ dia:4, ini:qfBase+Math.floor(k/2)*60, mod:m.id, gen:gid, fase:'qf', n:k+1, local:'q'+q[k%2] });
+    const sf = gi===0 ? toMin('13:00') : toMin('14:00');
+    for (let k=0;k<2;k++) addGame({ dia:4, ini:sf, mod:m.id, gen:gid, fase:'sf', n:k+1, local:'q'+q[k] });
+    addGame({ dia:4, ini:toMin('15:00'), mod:m.id, gen:gid, fase:'3', local:'q'+q[gi] });
+    addGame({ dia:4, ini:gi===0 ? toMin('16:00') : toMin('17:00'), mod:m.id, gen:gid, fase:'f', local:'q'+q[0] });
+  });
+});
+EXTRAS.forEach(([dia,ini,dur,tipo,titulo,local,desc],i)=>EVENTS.push({ id:'x'+(i+1), tipo, dia, ini:toMin(ini), dur, titulo, local, desc }));
+
+/* Placar final determinístico por jogo */
+function finalScore(e){
+  const r = rng(hashStr(e.id+e.mod+e.gen)), ko = e.fase!=='grupos';
+  let a,b,extra='';
+  if (e.mod==='volei'){ const w=r()<.5; const l=r()<.45?1:0; a=w?2:l; b=w?l:2; }
+  else {
+    const base = { futsal:[0,6], handebol:[17,15], basquete:[46,40] }[e.mod];
+    a = base[0] + Math.floor(r()*base[1]); b = base[0] + Math.floor(r()*base[1]);
+    if (e.mod==='futsal'){ a=Math.floor(r()*6); b=Math.floor(r()*6); }
+    if (e.mod==='basquete' && a===b) a+=2;
+    if (ko && a===b){ if (r()<.5) a+=1; else b+=1; extra = e.mod==='futsal' ? 'Pênaltis' : 'Prorrogação'; }
+  }
+  return { a, b, extra };
+}
+EVENTS.forEach(e=>{ if (e.tipo==='jogo') e.sc = finalScore(e); });
+const winnerOf = e => e.sc.a>e.sc.b ? e.a : e.sc.b>e.sc.a ? e.b : null;
+const loserOf  = e => e.sc.a>e.sc.b ? e.b : e.a;
+
+function standings(key, onlyDone){
+  const K = KEYS[key], tab = {};
+  Object.entries(K.groups).forEach(([G,ts])=>ts.forEach(t=>tab[t]={ t, G, j:0, v:0, e:0, d:0, pf:0, pc:0, pts:0 }));
+  K.games.filter(g=>g.fase==='grupos' && (!onlyDone || status(g)==='fim')).forEach(g=>{
+    const A=tab[g.a], B=tab[g.b];
+    A.j++; B.j++; A.pf+=g.sc.a; A.pc+=g.sc.b; B.pf+=g.sc.b; B.pc+=g.sc.a;
+    if (g.sc.a>g.sc.b){ A.v++; B.d++; A.pts+=3; } else if (g.sc.b>g.sc.a){ B.v++; A.d++; B.pts+=3; } else { A.e++; B.e++; A.pts++; B.pts++; }
+  });
+  const sortFn = (x,y)=> y.pts-x.pts || (y.pf-y.pc)-(x.pf-x.pc) || y.pf-x.pf || x.t.localeCompare(y.t);
+  const groups = {};
+  Object.keys(K.groups).forEach(G=>groups[G]=Object.values(tab).filter(r=>r.G===G).sort(sortFn));
+  return { groups, sortFn };
+}
+/* Resolve o mata-mata (times reais) a partir da fase de grupos */
+Object.keys(KEYS).forEach(key=>{
+  const K = KEYS[key], { groups, sortFn } = standings(key,false);
+  const thirds = ['A','B','C'].map(G=>groups[G][2]).sort(sortFn);
+  const P = { '1A':groups.A[0].t,'1B':groups.B[0].t,'1C':groups.C[0].t,'2A':groups.A[1].t,'2B':groups.B[1].t,'2C':groups.C[1].t,'3x':thirds[0].t,'3y':thirds[1].t };
+  const qf = K.games.filter(g=>g.fase==='qf'), sf = K.games.filter(g=>g.fase==='sf');
+  const third = K.games.find(g=>g.fase==='3'), fin = K.games.find(g=>g.fase==='f');
+  const QF = [['1A','3y','1º Grupo A','2º melhor 3º'],['2B','2C','2º Grupo B','2º Grupo C'],['1B','3x','1º Grupo B','Melhor 3º'],['1C','2A','1º Grupo C','2º Grupo A']];
+  qf.forEach((g,i)=>{ g.a=P[QF[i][0]]; g.b=P[QF[i][1]]; g.pa=QF[i][2]; g.pb=QF[i][3]; g.dep=K.games.filter(x=>x.fase==='grupos'); });
+  sf.forEach((g,i)=>{ const x=qf[i*2], y=qf[i*2+1]; g.a=winnerOf(x); g.b=winnerOf(y); g.pa='Venc. QF'+(i*2+1); g.pb='Venc. QF'+(i*2+2); g.dep=[x,y]; });
+  third.a=loserOf(sf[0]); third.b=loserOf(sf[1]); third.pa='Perd. SF1'; third.pb='Perd. SF2'; third.dep=sf;
+  fin.a=winnerOf(sf[0]); fin.b=winnerOf(sf[1]); fin.pa='Venc. SF1'; fin.pb='Venc. SF2'; fin.dep=sf;
+  K.third = third; K.fin = fin;
+});
+EVENTS.sort((x,y)=> x.dia-y.dia || x.ini-y.ini || (x.tipo==='jogo')-(y.tipo==='jogo') || (x.local||'').localeCompare(y.local||'', 'pt', {numeric:true}));
+
+/* =========================================================
+   "AGORA" DA DEMO
+   ========================================================= */
+const NOW_PRESETS = [
+  { id:'1-0930', dia:1, min:toMin('09:30'), nome:'Dia 1 · 09:30 — abertura dos jogos' },
+  { id:'2-1520', dia:2, min:toMin('15:20'), nome:'Dia 2 · 15:20 — meio da fase de grupos' },
+  { id:'3-1630', dia:3, min:toMin('16:30'), nome:'Dia 3 · 16:30 — última rodada' },
+  { id:'4-1620', dia:4, min:toMin('16:20'), nome:'Dia 4 · 16:20 — finais ao vivo' },
+  { id:'4-1900', dia:4, min:toMin('19:00'), nome:'Dia 4 · 19:00 — após a premiação' },
+];
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem('ic_'+k); return v===null?d:JSON.parse(v); }catch(_){ return d; } },
+  set(k,v){ try{ localStorage.setItem('ic_'+k, JSON.stringify(v)); }catch(_){} },
+};
+let NOW = NOW_PRESETS.find(p=>p.id===store.get('now','2-1520')) || NOW_PRESETS[1];
+const nowAbs = () => NOW.dia*1440 + NOW.min;
+function status(e){ const s=e.dia*1440+e.ini, n=nowAbs(); return n>=s+e.dur ? 'fim' : n>=s ? 'live' : 'prox'; }
+function known(e){ return e.fase==='grupos' || e.dep.every(d=>status(d)==='fim'); }
+function shownScore(e){
+  const st = status(e);
+  if (st==='fim') return { a:e.sc.a, b:e.sc.b };
+  if (st!=='live') return null;
+  const f = Math.min(.95, (nowAbs()-(e.dia*1440+e.ini))/e.dur);
+  if (e.mod==='volei'){ const w=e.sc.a>e.sc.b?'a':'b', l=w==='a'?'b':'a'; const seq=e.sc[l]===1?[w,l,w]:[w,w]; const done=Math.floor(f*seq.length); const o={a:0,b:0}; seq.slice(0,done).forEach(s=>o[s]++); return o; }
+  return { a:Math.floor(e.sc.a*f), b:Math.floor(e.sc.b*f) };
+}
+const FAV = new Set(store.get('fav', []));
+function toggleFav(id){ FAV.has(id)?FAV.delete(id):FAV.add(id); store.set('fav',[...FAV]); return FAV.has(id); }
+
+/* =========================================================
+   HELPERS DE UI
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function badge(fid, size=30){
+  const f = FAC[fid];
+  if (!f) return `<span class="bdg" style="--s:${size}px"><svg viewBox="0 0 40 44"><path d="M20 2 36 7v14c0 11-7 18-16 21C11 39 4 32 4 21V7z" fill="#24376d" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-dasharray="3 3"/></svg><b>?</b></span>`;
+  return `<span class="bdg" style="--s:${size}px" title="${esc(f.atl)}"><svg viewBox="0 0 40 44"><path d="M20 2 36 7v14c0 11-7 18-16 21C11 39 4 32 4 21V7z" fill="${f.cor}" stroke="#fff" stroke-width="2.4"/><path d="M20 6 32 10v11c0 8-5 13-12 16z" fill="rgba(255,255,255,.14)"/></svg><b style="font-size:${size*(f.ab.length>3?.24:.3)}px">${f.ab}</b></span>`;
+}
+function avatar(name, color, size=34){
+  const ini = name.split(' ').map(p=>p[0]).slice(0,2).join('');
+  return `<span class="avatar" style="width:${size}px;height:${size}px;background:linear-gradient(140deg,${color},#0b1d4f);font-size:${size*.38}px">${ini}</span>`;
+}
+const faseNome = e => ({ grupos:`Fase de Grupos · Grupo ${e.grupo} · Rodada ${e.rodada}`, qf:`Quartas de final · QF${e.n}`, sf:`Semifinal · SF${e.n}`, '3':'Disputa de 3º lugar', f:'Grande Final' })[e.fase];
+const faseCurta = e => ({ grupos:`Fase de Grupos ${e.grupo}`, qf:'Quartas de final', sf:'Semifinal', '3':'Disputa de 3º', f:'Final' })[e.fase];
+const diaLabel = d => { const x=DIAS[d-1]; return `Dia ${d} · ${x.sem} ${x.dm}`; };
+function evTitle(e){ return e.tipo==='jogo' ? `${MOD[e.mod].nome} ${GEN[e.gen].nome}` : e.titulo; }
+function teamsOf(e){ const k=known(e); return { a:k?e.a:null, b:k?e.b:null }; }
+let toastT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200); }
+function appUrl(){ return location.href.split('#')[0].split('?')[0]; }
+function makeQR(el, text, size){ el.innerHTML=''; if (window.QRCode) new QRCode(el,{ text, width:size, height:size, colorDark:'#0A1A44', colorLight:'#ffffff', correctLevel:QRCode.CorrectLevel.M }); else el.innerHTML=`<div style="width:${size}px;height:${size}px;display:grid;place-items:center;color:#0a1a44;font-size:12px;text-align:center;line-height:1.3">QR indisponível offline</div>`; }
+
+/* =========================================================
+   SHEET (painel inferior)
+   ========================================================= */
+function openSheet(html){ $('#sheet').innerHTML = `<div class="grab"></div>`+html; $('#sheetWrap').classList.add('open'); }
+function closeSheet(){ $('#sheetWrap').classList.remove('open'); }
+$('#sheetWrap').addEventListener('click', e=>{ if (e.target.id==='sheetWrap' || e.target.closest('[data-close]')) closeSheet(); });
+
+/* =========================================================
+   ROTEADOR
+   ========================================================= */
+function parseHash(){
+  const h = location.hash.replace(/^#\/?/,'');
+  const [path, qs] = h.split('?');
+  return { path: path || '', params: new URLSearchParams(qs||'') };
+}
+const NAV = [
+  { href:'#/', key:'', label:'Início', icon:I.home },
+  { href:'#/cronograma', key:'cronograma', label:'Eventos', icon:I.events },
+  { href:'#/noticias', key:'noticias', label:'Notícias', icon:I.news },
+  { href:'#/perfil', key:'perfil', label:'Perfil', icon:I.user },
+  { href:'#/mais', key:'mais', label:'Mais', icon:I.more },
+];
+function renderNav(path){
+  $('#nav').innerHTML = NAV.map(n=>`<a href="${n.href}" class="${n.key===path?'on':''}">${n.icon}<span>${n.label}</span></a>`).join('');
+}
+const ROUTES = {};
+let lastPath = null;
+function route(){
+  const { path, params } = parseHash();
+  const fn = ROUTES[path] || ROUTES[''];
+  renderNav(path);
+  closeSheet();
+  const sc = $('#screen');
+  const samePath = path===lastPath;
+  fn(sc, params);
+  if (!samePath) sc.scrollTop = 0;
+  lastPath = path;
+}
+window.addEventListener('hashchange', route);
+
+function innerHead(title, back='#/'){
+  return `<div class="ihead"><a class="iconbtn" href="${back}" aria-label="Voltar">${I.back}</a><div class="ptitle">${title}</div><button class="iconbtn" data-act="notif" aria-label="Notificações">${I.bell}<span class="dotbadge">3</span></button></div>`;
+}
+document.addEventListener('click', e=>{
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  const act = a.dataset.act;
+  if (act==='notif') openNotifs();
+  if (act==='demo') toast('Função de demonstração 😉');
+});
+function openNotifs(){
+  const live = EVENTS.filter(e=>e.tipo==='jogo' && status(e)==='live').slice(0,1)[0];
+  openSheet(`<div class="sh"><div class="ptitle">Notificações</div><button class="iconbtn" data-close>${I.x}</button></div><div class="sb"><div class="panel">
+    ${live?`<a class="row" href="#/cronograma?dia=${live.dia}&ev=${live.id}">${I.bolt}<div class="grow"><b>Ao vivo agora: ${evTitle(live)}</b><small>${FAC[live.a].sigla} × ${FAC[live.b].sigla} · ${LOCAL[live.local].nome}</small></div></a>`:''}
+    <a class="row" href="#/cronograma?tipo=festa">${I.users}<div class="grow"><b>Lista da festa liberada 🎉</b><small>Garanta seu nome na lista pelo app.</small></div></a>
+    <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card: +R$ 20 de bônus</b><small>Recarregue até 23h e ganhe bônus.</small></div></a>
+  </div></div>`);
+}
+
+/* =========================================================
+   INÍCIO
+   ========================================================= */
+function nextGame(){
+  const games = EVENTS.filter(e=>e.tipo==='jogo' && known(e));
+  return games.find(e=>status(e)==='live' && e.mod==='volei' && e.gen==='f') || games.find(e=>status(e)==='live') || games.find(e=>status(e)==='prox') || games[games.length-1];
+}
+ROUTES[''] = sc => {
+  const g = nextGame(), st = status(g);
+  const when = st==='live' ? '<span style="color:#fff;background:var(--live);padding:0 5px;border-radius:5px">AO VIVO</span>' : (g.dia===NOW.dia ? 'Hoje' : diaLabel(g.dia).split(' · ')[0]) + ' • ' + hhmm(g.ini);
+  const friends = [['Lucas','Feras USP','#2E7DF6'],['Juliana','Fúria Mackenzie','#E2242C'],['Rafael','R.A. São Judas','#9A6234']];
+  sc.innerHTML = `
+  <div class="top">
+    <a class="iconbtn" href="#/mais" aria-label="Menu">${I.menu}</a>
+    <div class="logo">${wingsLogo('top')}<div class="name">Intercampus App</div><div class="sub">${EVENTO.sub}</div></div>
+    <button class="iconbtn" data-act="notif" aria-label="Notificações">${I.bell}<span class="dotbadge">3</span></button>
+  </div>
+  <div class="hello">
+    <span class="avatar big" style="background:linear-gradient(140deg,#7a4a2a,#2b160c);font-size:26px">
+      <svg viewBox="0 0 66 66" width="66" height="66"><rect width="66" height="66" fill="#c98a58"/><circle cx="33" cy="27" r="13" fill="#8a5634"/><path d="M14 66c2-14 10-20 19-20s17 6 19 20z" fill="#E5283F"/><path d="M18 30c-2-16 8-23 15-23s18 5 15 24c-3-7-6-10-15-10s-12 3-15 9z" fill="#2b1a10"/><path d="M18 30c-3 10-1 18 3 22l2-14zM48 31c3 10 1 17-3 21l-2-14z" fill="#2b1a10"/></svg>
+    </span>
+    <div><h1>Olá, Maria! 👋</h1><p>Que comece a disputa.</p><p><b>Impulsione sua grandeza!</b></p></div>
+  </div>
+  <div class="grid">
+    <a class="card red" href="#/cronograma?dia=${g.dia}&ev=${g.id}">
+      <h3>Próximos jogos <span class="link" onclick="event.preventDefault();location.hash='#/cronograma?dia=${NOW.dia}&tipo=jogo'">Ver todos</span></h3>
+      <div class="nextgame">
+        <div class="when">${when}</div>
+        <div class="row"><div><div class="t">${evTitle(g)}</div><div class="ph">${faseCurta(g)}</div></div>
+          <div class="vs">${badge(g.a,24)}vs${badge(g.b,24)}</div></div>
+        <div class="where">${I.pinS.replace('<svg','<svg width="11" height="11"')} ${LOCAL[g.local].nome}</div>
+      </div>
+    </a>
+    <a class="card" href="#/cronograma"><h3>Cronograma</h3><div class="body">${I.cal}<p>Acompanhe toda a agenda do evento</p>${I.chev}</div></a>
+    <a class="card" href="#/mapa"><h3>Mapa do evento</h3><div class="body">${I.pin}<p>Encontre locais, quadras, estandes e muito mais</p>${I.chev}</div></a>
+    <a class="card red" href="#/ingressos"><h3>Ingressos</h3><div class="body">${I.ticket}<p>Garanta seu acesso aos jogos e atrações</p>${I.chev}</div></a>
+    <a class="card" href="#/ranking"><h3>Ranking das atléticas</h3><div class="body">${I.trophy}<p>Veja a classificação atualizada das atléticas</p>${I.chev}</div></a>
+    <a class="card gold" href="#/energy"><h3>Energy card <span class="tag-new">Novo</span></h3>
+      <div class="body"><div style="flex:1;border-radius:9px;padding:7px 9px;background:linear-gradient(135deg,#1a3a8f,#0b1d4f);border:1px solid #ffe28a;transform:rotate(-6deg);box-shadow:0 6px 12px rgba(0,0,0,.35)">
+        <div style="font-family:var(--head);font-weight:900;font-style:italic;font-size:9px;letter-spacing:.4px">INTERCAMPUS</div>
+        <div style="font-family:var(--head);font-weight:900;font-style:italic;font-size:17px;color:var(--gold);line-height:1">Energy Card</div></div>${I.chev}</div></a>
+    <a class="card red" href="#/conexoes"><h3>Conexões</h3>
+      <div style="display:flex;align-items:center;margin-bottom:6px">${[['Ana Lima','#ffb36b'],['Pedro Reis','#6bb7ff'],['Bia Souza','#ff8fb1']].map((p,i)=>`<span style="margin-left:${i?-8:0}px;border:2px solid #fff;border-radius:50%;display:inline-flex">${avatar(p[0],p[1],30)}</span>`).join('')}
+      <span style="margin-left:6px;width:30px;height:30px;border-radius:50%;background:#0b1d4f;border:2px solid #fff;display:grid;place-items:center;font-size:11px;font-weight:700">+24</span></div>
+      <div class="body"><p>Conecte-se com atletas, atléticas e novos amigos</p>${I.chev}</div></a>
+    <a class="card" href="#/chat"><h3>Chat</h3><div class="body">${I.chat}<p>Participe dos grupos e fique por dentro de tudo</p>${I.chev}</div></a>
+  </div>
+  <div class="card wide friends">
+    <h3>Amigos online <a class="link" href="#/conexoes">Ver todos</a></h3>
+    <div class="list">${friends.map(f=>`<div class="friend">${avatar(f[0],f[2],34)}<div><b>${f[0]}</b><small>${f[1]}</small></div></div>`).join('')}</div>
+  </div>
+  <div class="sect">Destaques</div>
+  <div class="carousel">
+    <a class="banner" href="#/cronograma?tipo=ativ"><b>FLY HIGH</b><span>Dentro e fora das quadras</span></a>
+    <a class="banner alt" href="#/cronograma?dia=4&tipo=jogo"><b>AS FINAIS</b><span>Dia 4 · todas as modalidades</span></a>
+    <a class="banner" href="#/cronograma?tipo=festa"><b>4 NOITES</b><span>Festas oficiais Intercampus</span></a>
+  </div>
+  <p class="note">Protótipo com dados fictícios · ${NOW.nome.split(' — ')[0]}</p>`;
+};
+
+/* =========================================================
+   CRONOGRAMA
+   ========================================================= */
+const F = { dia:NOW.dia, fac:new Set(), mod:new Set(), gen:new Set(), tipo:new Set(), local:new Set(), q:'', fav:false };
+function readFilters(p){
+  const d = p.get('dia'); F.dia = d==='all' ? 'all' : d ? +d : (F.dia||NOW.dia);
+  ['fac','mod','gen','tipo','local'].forEach(k=>{ F[k] = new Set((p.get(k)||'').split(',').filter(Boolean)); });
+  F.q = p.get('q')||''; F.fav = p.get('fav')==='1';
+}
+function filtersQS(extra={}){
+  const p = new URLSearchParams();
+  p.set('dia', F.dia);
+  ['fac','mod','gen','tipo','local'].forEach(k=>{ if (F[k].size) p.set(k,[...F[k]].join(',')); });
+  if (F.q) p.set('q',F.q); if (F.fav) p.set('fav','1');
+  Object.entries(extra).forEach(([k,v])=>p.set(k,v));
+  return p.toString().replace(/%2C/g,',');
+}
+function syncUrl(){ history.replaceState(null,'','#/cronograma?'+filtersQS()); }
+function matches(e, ignoreDia){
+  if (!ignoreDia && F.dia!=='all' && e.dia!==F.dia) return false;
+  if (F.tipo.size && !F.tipo.has(e.tipo)) return false;
+  if (F.local.size && !F.local.has(e.local)) return false;
+  const nonGameOk = e.tipo!=='jogo' && F.tipo.has(e.tipo);
+  if (F.mod.size && !(e.tipo==='jogo' ? F.mod.has(e.mod) : nonGameOk)) return false;
+  if (F.gen.size && !(e.tipo==='jogo' ? F.gen.has(e.gen) : nonGameOk)) return false;
+  if (F.fac.size){
+    if (e.tipo==='jogo'){ const t=teamsOf(e); if (!(F.fac.has(t.a)||F.fac.has(t.b))) return false; }
+    else if (!nonGameOk) return false;
+  }
+  if (F.fav && !FAV.has(e.id)) return false;
+  if (F.q){
+    const q = F.q.toLowerCase();
+    const t = e.tipo==='jogo' ? [evTitle(e), faseNome(e), LOCAL[e.local].nome, ...(Object.values(teamsOf(e)).filter(Boolean).flatMap(id=>[FAC[id].sigla,FAC[id].atl,FAC[id].nome]))].join(' ') : [e.titulo,e.desc,LOCAL[e.local].nome].join(' ');
+    if (!t.toLowerCase().includes(q)) return false;
+  }
+  return true;
+}
+const nActive = () => F.fac.size+F.mod.size+F.gen.size+F.tipo.size+F.local.size;
+
+function evCard(e){
+  const st = status(e), fav = FAV.has(e.id);
+  const star = `<span class="star ${fav?'on':''}" data-fav="${e.id}" role="button" aria-label="Favoritar">${fav?I.star:I.starO}</span>`;
+  const loc = `<span class="loc">${I.pinS} ${LOCAL[e.local].nome}</span>`;
+  const stTag = st==='live' ? '<span class="st live">● Ao vivo</span>' : st==='fim' ? '<span class="st fim">Encerrado</span>' : `<span class="st prox">${hhmm(e.ini)}</span>`;
+  if (e.tipo!=='jogo'){
+    return `<button class="ev ${e.tipo}" data-ev="${e.id}">
+      <div class="meta"><span class="typetag ${e.tipo}">${e.tipo==='ativ'?'⚡ ATIVAÇÃO':'🎉 FESTA'}</span><span class="sp"></span>${loc}</div>
+      <div class="title">${esc(e.titulo)}</div>
+      <div class="desc">${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)} · ${esc(e.desc)}</div>
+      ${st==='live'?'<div style="margin-top:6px"><span class="st live">● Acontecendo agora</span></div>':''}
+      ${star}</button>`;
+  }
+  const t = teamsOf(e), s = shownScore(e);
+  const wa = st==='fim' && e.sc.a>e.sc.b, wb = st==='fim' && e.sc.b>e.sc.a;
+  const side = (id, ph, win, r) => id
+    ? `<div class="team ${r?'r':''} ${win?'win':''}">${badge(id,30)}<span>${FAC[id].sigla}</span></div>`
+    : `<div class="team ${r?'r':''} tbd">${badge(null,30)}<span>${ph}</span></div>`;
+  const mid = s ? `<div class="score">${s.a}<i>×</i>${s.b}</div>` : `<div class="score time">vs</div>`;
+  return `<button class="ev ${st==='live'?'live':''}" data-ev="${e.id}">
+    <div class="meta"><span>${MOD[e.mod].emoji} ${MOD[e.mod].nome} · ${GEN[e.gen].nome.slice(0,3)}</span><span class="sp"></span>${loc}${stTag}</div>
+    <div class="match">${side(t.a,e.pa,wa,false)}${mid}${side(t.b,e.pb,wb,true)}</div>
+    <div class="phase">${faseNome(e)}${st==='fim'&&e.sc.extra?' · '+e.sc.extra:''}</div>
+    ${star}</button>`;
+}
+
+function chipsHtml(){
+  const out = [];
+  const add = (k,id,label,dot) => out.push(`<button class="pill on" data-rm="${k}:${id}">${dot?`<span class="dot" style="background:${dot}"></span>`:''}${label}<span class="x">✕</span></button>`);
+  F.tipo.forEach(id=>add('tipo',id,TIPOS.find(t=>t.id===id).nome));
+  F.mod.forEach(id=>add('mod',id,MOD[id].emoji+' '+MOD[id].nome));
+  F.gen.forEach(id=>add('gen',id,GEN[id].nome));
+  F.fac.forEach(id=>add('fac',id,FAC[id].sigla,FAC[id].cor));
+  F.local.forEach(id=>add('local',id,LOCAL[id].nome));
+  return out.length ? `<div class="chips">${out.join('')}</div>` : '';
+}
+
+ROUTES['cronograma'] = (sc, p) => {
+  readFilters(p);
+  const evId = p.get('ev');
+  if (evId) { p.delete('ev'); history.replaceState(null,'','#/cronograma?'+filtersQS()); }
+  drawCrono(sc);
+  if (evId) { const el = sc.querySelector(`[data-ev="${evId}"]`); if (el) setTimeout(()=>{ el.scrollIntoView({block:'center'}); openEvent(evId); },60); }
+};
+function drawCrono(sc){
+  const prevScroll = sc.scrollTop;
+  const list = EVENTS.filter(e=>matches(e));
+  const counts = DIAS.map(d=>EVENTS.filter(e=>e.dia===d.n && matches(e,true)).length);
+  const total = counts.reduce((a,b)=>a+b,0);
+  const seg = F.tipo.size===1 ? [...F.tipo][0] : F.tipo.size===0 ? '' : 'multi';
+  let html = innerHead('Cronograma') + `
+    <div class="days">${DIAS.map((d,i)=>`<button class="day ${F.dia===d.n?'on':''}" data-dia="${d.n}"><span class="today">${NOW.dia===d.n?'HOJE':''}</span><b>Dia ${d.n}</b><small>${d.sem} ${d.dm}</small></button>`).join('')}
+      <button class="day ${F.dia==='all'?'on':''}" data-dia="all"><span class="today"></span><b>Todos</b><small>${total} ev.</small></button></div>
+    <div class="seg">${[['','Tudo'],['jogo','Jogos'],['ativ','Ativações'],['festa','Festas']].map(([id,l])=>`<button class="${seg===id?'on':''}" data-tipo="${id}">${l}</button>`).join('')}</div>
+    <div class="toolbar">
+      <label class="search">${I.search}<input id="q" type="search" placeholder="Buscar time, atlética, local..." value="${esc(F.q)}"></label>
+      <button class="favbtn ${F.fav?'on':''}" data-favf aria-label="Minha agenda">${F.fav?I.star:I.starO}</button>
+      <button class="fbtn" data-openf>${I.filter}Filtros${nActive()?`<span class="n">${nActive()}</span>`:''}</button>
+    </div>
+    ${chipsHtml()}
+    <div class="count"><span>${list.length} evento${list.length===1?'':'s'}${F.dia!=='all'?' no '+diaLabel(F.dia):''}${F.fav?' · minha agenda':''}</span>${(nActive()||F.q||F.fav)?'<button data-clear>Limpar filtros</button>':''}</div>`;
+  if (!list.length){
+    html += `<div class="empty"><b>Nada por aqui</b>Nenhum evento com esses filtros${F.dia!=='all'?' neste dia':''}.${F.dia!=='all'?'<br><br><button class="pill" data-dia="all">Ver todos os dias</button>':''}</div>`;
+  } else {
+    let curKey = null;
+    list.forEach(e=>{
+      const key = (F.dia==='all' ? e.dia+'|' : '') + e.ini;
+      if (key!==curKey){
+        curKey = key;
+        const liveHere = list.some(x=>x.dia===e.dia && x.ini===e.ini && status(x)==='live');
+        html += `<div class="tgroup">${F.dia==='all'?`<span style="color:var(--gold2)">D${e.dia}</span>`:''}${hhmm(e.ini)}${liveHere?'<span class="nowtag">AGORA</span>':''}</div>`;
+      }
+      html += evCard(e);
+    });
+  }
+  sc.innerHTML = html;
+  sc.scrollTop = prevScroll;
+  const q = sc.querySelector('#q');
+  q.addEventListener('input', ()=>{ F.q = q.value.trim(); syncUrl(); const pos=q.selectionStart; drawCrono(sc); const nq=sc.querySelector('#q'); nq.focus(); nq.setSelectionRange(pos,pos); });
+}
+document.getElementById('screen').addEventListener('click', e=>{
+  if (parseHash().path!=='cronograma') return;
+  const sc = $('#screen');
+  const fav = e.target.closest('[data-fav]');
+  if (fav){ e.stopPropagation(); const on=toggleFav(fav.dataset.fav); toast(on?'Adicionado à sua agenda ⭐':'Removido da sua agenda'); drawCrono(sc); return; }
+  const d = e.target.closest('[data-dia]'); if (d){ F.dia = d.dataset.dia==='all'?'all':+d.dataset.dia; syncUrl(); sc.scrollTop=0; drawCrono(sc); return; }
+  const t = e.target.closest('[data-tipo]'); if (t){ F.tipo = new Set(t.dataset.tipo?[t.dataset.tipo]:[]); syncUrl(); drawCrono(sc); return; }
+  const rm = e.target.closest('[data-rm]'); if (rm){ const [k,id]=rm.dataset.rm.split(':'); F[k].delete(id); syncUrl(); drawCrono(sc); return; }
+  if (e.target.closest('[data-clear]')){ ['fac','mod','gen','tipo','local'].forEach(k=>F[k].clear()); F.q=''; F.fav=false; syncUrl(); drawCrono(sc); return; }
+  if (e.target.closest('[data-favf]')){ F.fav=!F.fav; syncUrl(); drawCrono(sc); if (F.fav && !FAV.size) toast('Toque na ⭐ de um evento para montar sua agenda'); return; }
+  if (e.target.closest('[data-openf]')){ openFilters(); return; }
+  const ev = e.target.closest('[data-ev]'); if (ev){ openEvent(ev.dataset.ev); }
+});
+
+/* Painel de filtros (edição em rascunho, aplica ao confirmar) */
+let DRAFT = null;
+function openFilters(){
+  DRAFT = { fac:new Set(F.fac), mod:new Set(F.mod), gen:new Set(F.gen), tipo:new Set(F.tipo), local:new Set(F.local) };
+  drawFilters();
+}
+function drawFilters(){
+  const saved = {}; ['fac','mod','gen','tipo','local'].forEach(k=>{ saved[k]=F[k]; F[k]=DRAFT[k]; });
+  const n = EVENTS.filter(e=>matches(e)).length;
+  ['fac','mod','gen','tipo','local'].forEach(k=>F[k]=saved[k]);
+  const opt = (k,id,label,dot) => `<button class="pill ${DRAFT[k].has(id)?'on':''}" data-fk="${k}" data-fid="${id}">${dot?`<span class="dot" style="background:${dot}"></span>`:''}${label}</button>`;
+  const html = `<div class="sh"><div class="ptitle">Filtros</div><button class="iconbtn" data-close>${I.x}</button></div>
+  <div class="sb">
+    <div class="fgroup"><h4>Evento</h4><div class="opts">${TIPOS.map(t=>opt('tipo',t.id,t.nome)).join('')}</div></div>
+    <div class="fgroup"><h4>Modalidade</h4><div class="opts">${MODS.map(m=>opt('mod',m.id,m.emoji+' '+m.nome)).join('')}</div></div>
+    <div class="fgroup"><h4>Gênero</h4><div class="opts">${GENS.map(g=>opt('gen',g.id,g.nome)).join('')}</div></div>
+    <div class="fgroup"><h4>Faculdade</h4><div class="opts">${FACS.map(f=>opt('fac',f.id,f.sigla,f.cor)).join('')}</div></div>
+    <div class="fgroup"><h4>Quadra / Local</h4><div class="opts">${LOCAIS.map(l=>opt('local',l.id,l.nome)).join('')}</div>
+      <p style="font-size:11.5px;color:var(--dim);margin:8px 0 0">Q1–2 Futsal · Q3–4 Handebol · Q5–6 Basquete · Q7–8 Vôlei</p></div>
+  </div>
+  <div class="sf"><button class="btn ghost" data-fclear>Limpar</button><button class="btn primary" data-fapply>Ver ${n} evento${n===1?'':'s'}</button></div>`;
+  const keep = $('#sheet .sb') ? $('#sheet .sb').scrollTop : 0;
+  openSheet(html);
+  $('#sheet .sb').scrollTop = keep;
+}
+$('#sheet').addEventListener('click', e=>{
+  const o = e.target.closest('[data-fk]');
+  if (o && DRAFT){ const s=DRAFT[o.dataset.fk], id=o.dataset.fid; s.has(id)?s.delete(id):s.add(id); drawFilters(); return; }
+  if (e.target.closest('[data-fclear]')){ Object.values(DRAFT).forEach(s=>s.clear()); drawFilters(); return; }
+  if (e.target.closest('[data-fapply]')){ Object.assign(F, DRAFT); DRAFT=null; syncUrl(); closeSheet(); $('#screen').scrollTop=0; drawCrono($('#screen')); return; }
+  const fv = e.target.closest('[data-sfav]');
+  if (fv){ const on=toggleFav(fv.dataset.sfav); fv.innerHTML = (on?I.star:I.starO)+(on?'Na minha agenda':'Adicionar à agenda'); fv.className='btn '+(on?'gold':'ghost'); if (parseHash().path==='cronograma') drawCrono($('#screen')); }
+});
+
+function openEvent(id){
+  const e = EVENTS.find(x=>x.id===id); if (!e) return;
+  const st = status(e), fav = FAV.has(e.id);
+  const favBtn = `<button class="btn ${fav?'gold':'ghost'}" data-sfav="${e.id}">${fav?I.star:I.starO}${fav?'Na minha agenda':'Adicionar à agenda'}</button>`;
+  const mapBtn = `<a class="btn primary" href="#/mapa?local=${e.local}">${I.pinS}Ver no mapa</a>`;
+  const stLabel = st==='live' ? '<span class="st live">● Ao vivo</span>' : st==='fim' ? '<span class="st fim">Encerrado</span>' : '<span class="st prox">Em breve</span>';
+  if (e.tipo!=='jogo'){
+    openSheet(`<div class="sh"><span class="typetag ${e.tipo}">${e.tipo==='ativ'?'⚡ ATIVAÇÃO':'🎉 FESTA'}</span><button class="iconbtn" data-close>${I.x}</button></div>
+      <div class="sb"><div class="ptitle" style="font-size:26px;margin-bottom:6px">${esc(e.titulo)}</div><p style="color:#dbe4ff;line-height:1.45;margin:0 0 12px">${esc(e.desc)}</p>
+      <div class="kv"><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)}</b><span>Onde</span><b>${LOCAL[e.local].nome}</b><span>Status</span><div>${stLabel}</div></div></div>
+      <div class="sf">${favBtn}${mapBtn}</div>`);
+    return;
+  }
+  const t = teamsOf(e), s = shownScore(e);
+  const tm = (id,ph) => id ? `<div class="tm">${badge(id,64)}<div>${FAC[id].sigla}<br><small>${FAC[id].atl}</small></div></div>` : `<div class="tm">${badge(null,64)}<div style="color:var(--dim)">${ph}</div></div>`;
+  openSheet(`<div class="sh"><span style="font-weight:700;color:var(--muted)">${MOD[e.mod].emoji} ${MOD[e.mod].nome} ${GEN[e.gen].nome}</span><button class="iconbtn" data-close>${I.x}</button></div>
+    <div class="sb">
+      <div style="text-align:center">${stLabel}</div>
+      <div class="board">${tm(t.a,e.pa)}<div class="sc">${s?`${s.a}<i>×</i>${s.b}`:`<span style="font-size:22px;color:var(--muted)">${hhmm(e.ini)}</span>`}</div>${tm(t.b,e.pb)}</div>
+      ${e.mod==='volei'&&s?'<p class="note" style="margin-top:-6px">Placar em sets (melhor de 3)</p>':''}
+      <div class="kv"><span>Fase</span><b>${faseNome(e)}${st==='fim'&&e.sc.extra?' · '+e.sc.extra:''}</b><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)}</b><span>Onde</span><b>${LOCAL[e.local].nome}</b></div>
+      ${e.fase==='grupos'?`<a class="btn ghost" style="margin-bottom:4px" href="#/ranking?v=grupos&mod=${e.mod}&gen=${e.gen}">${I.trophy.replace('class="ic"','')}Ver classificação do grupo</a>`:''}
+    </div>
+    <div class="sf">${favBtn}${mapBtn}</div>`);
+}
+
+/* =========================================================
+   RANKING
+   ========================================================= */
+function generalRanking(){
+  const tab = {}; FACS.forEach(f=>tab[f.id]={ t:f.id, j:0, v:0, e:0, d:0, o:0, p:0, b:0, pts:0 });
+  EVENTS.filter(e=>e.tipo==='jogo' && status(e)==='fim').forEach(e=>{
+    const A=tab[e.a], B=tab[e.b]; A.j++; B.j++;
+    if (e.sc.a>e.sc.b){ A.v++; B.d++; A.pts+=3; } else if (e.sc.b>e.sc.a){ B.v++; A.d++; B.pts+=3; } else { A.e++; B.e++; A.pts++; B.pts++; }
+  });
+  Object.values(KEYS).forEach(K=>{
+    if (status(K.fin)==='fim'){ tab[winnerOf(K.fin)].o++; tab[loserOf(K.fin)].p++; tab[winnerOf(K.fin)].pts+=15; tab[loserOf(K.fin)].pts+=10; }
+    if (status(K.third)==='fim'){ tab[winnerOf(K.third)].b++; tab[winnerOf(K.third)].pts+=6; }
+  });
+  return Object.values(tab).sort((x,y)=>y.pts-x.pts || y.o-x.o || y.p-x.p || y.b-x.b || y.v-x.v || x.t.localeCompare(y.t));
+}
+ROUTES['ranking'] = (sc, p) => {
+  const v = p.get('v')||'geral', mod = p.get('mod')||'futsal', gen = p.get('gen')||'f';
+  let html = innerHead('Ranking') + `<div class="seg"><button class="${v==='geral'?'on':''}" onclick="location.hash='#/ranking'">Geral das atléticas</button><button class="${v==='grupos'?'on':''}" onclick="location.hash='#/ranking?v=grupos&mod=${mod}&gen=${gen}'">Grupos</button></div>`;
+  if (v==='geral'){
+    const r = generalRanking();
+    html += `<div class="panel"><table class="rank"><thead><tr><th>#</th><th>Atlética</th><th>V</th><th>🥇</th><th>🥈</th><th>🥉</th><th>Pts</th></tr></thead><tbody>
+      ${r.map((x,i)=>`<tr class="top${i+1}"><td class="pos">${i+1}</td><td class="tn"><div>${badge(x.t,28)}<span>${FAC[x.t].sigla}<small>${FAC[x.t].atl}</small></span></div></td><td>${x.v}</td><td>${x.o}</td><td>${x.p}</td><td>${x.b}</td><td class="pts">${x.pts}</td></tr>`).join('')}
+    </tbody></table></div><p class="note">Vitória 3 pts · empate 1 · ouro +15 · prata +10 · bronze +6 · atualizado ${NOW.nome.split(' — ')[0]}</p>`;
+  } else {
+    const st = standings(mod+'-'+gen, true);
+    html += `<div class="chips" style="margin-bottom:8px">${MODS.map(m=>`<a class="pill ${m.id===mod?'on':''}" href="#/ranking?v=grupos&mod=${m.id}&gen=${gen}">${m.emoji} ${m.nome}</a>`).join('')}</div>
+      <div class="seg">${GENS.map(g=>`<button class="${g.id===gen?'on':''}" onclick="location.hash='#/ranking?v=grupos&mod=${mod}&gen=${g.id}'">${g.nome}</button>`).join('')}</div>`;
+    ['A','B','C'].forEach(G=>{
+      html += `<div class="panel"><div class="gtitle">Grupo ${G}</div><table class="rank"><thead><tr><th>#</th><th>Atlética</th><th>J</th><th>V</th><th>E</th><th>D</th><th>Saldo</th><th>Pts</th></tr></thead><tbody>
+        ${st.groups[G].map((x,i)=>`<tr class="${i<2?'q':''}"><td class="pos">${i+1}</td><td class="tn"><div>${badge(x.t,26)}<span>${FAC[x.t].sigla}</span></div></td><td>${x.j}</td><td>${x.v}</td><td>${x.e}</td><td>${x.d}</td><td>${x.pf-x.pc>0?'+':''}${x.pf-x.pc}</td><td class="pts">${x.pts}</td></tr>`).join('')}
+      </tbody></table></div>`;
+    });
+    html += `<p class="note">Avançam às quartas: 1º e 2º de cada grupo + 2 melhores 3º colocados.</p>`;
+  }
+  sc.innerHTML = html;
+};
+
+/* =========================================================
+   MAPA
+   ========================================================= */
+const MAP_SPOTS = [
+  ...[1,2,3,4].map((n,i)=>({ id:'q'+n, x:14+i*84, y:60, w:76, h:96 })),
+  ...[5,6,7,8].map((n,i)=>({ id:'q'+n, x:14+i*84, y:170, w:76, h:96 })),
+  { id:'palco',  x:14,  y:286, w:110, h:70, label:'Palco Principal', fill:'#7a1222' },
+  { id:'arena',  x:134, y:286, w:110, h:70, label:'Arena Ativações', fill:'#6b4c00' },
+  { id:'energy', x:254, y:286, w:96,  h:70, label:'Energy Zone',     fill:'#8a6400' },
+  { id:'festa',  x:14,  y:370, w:160, h:62, label:'Arena Festa',     fill:'#3d1160' },
+  { id:'food',   x:184, y:370, w:166, h:62, label:'Praça de Alimentação', fill:'#14325f' },
+];
+function courtSvg(s){
+  const n = +s.id.slice(1), m = MODS.find(m=>m.quadras.includes(n));
+  const cx=s.x+s.w/2, cy=s.y+s.h/2;
+  return `<g class="spot" data-spot="${s.id}"><rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="6" fill="${m.cor}" fill-opacity=".85" stroke="rgba(255,255,255,.6)" stroke-width="1.2"/>
+    <rect x="${s.x+7}" y="${s.y+7}" width="${s.w-14}" height="${s.h-14}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
+    <line x1="${s.x+7}" y1="${cy}" x2="${s.x+s.w-7}" y2="${cy}" stroke="rgba(255,255,255,.7)"/>
+    <circle cx="${cx}" cy="${cy}" r="9" fill="none" stroke="rgba(255,255,255,.7)"/>
+    <text x="${cx}" y="${s.y+24}" text-anchor="middle" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="17">Q${n}</text>
+    <text x="${cx}" y="${s.y+s.h-12}" text-anchor="middle" fill="#fff" font-size="15">${m.emoji}</text></g>`;
+}
+ROUTES['mapa'] = (sc, p) => {
+  const sel = p.get('local');
+  sc.innerHTML = innerHead('Mapa do evento') + `
+    <div class="map"><svg viewBox="0 0 364 480" role="img" aria-label="Mapa do complexo">
+      <rect x="4" y="4" width="356" height="472" rx="14" fill="#0a1a44" stroke="rgba(120,170,255,.35)"/>
+      <text x="182" y="40" text-anchor="middle" fill="#B4C3E8" font-size="12" font-weight="600" letter-spacing="2">COMPLEXO ESPORTIVO INTERCAMPUS</text>
+      ${MAP_SPOTS.map(s=>s.id.startsWith('q')?courtSvg(s):`<g class="spot" data-spot="${s.id}"><rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="8" fill="${s.fill}" stroke="rgba(255,255,255,.45)"/><text x="${s.x+s.w/2}" y="${s.y+s.h/2+5}" text-anchor="middle" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="15">${s.label.toUpperCase()}</text></g>`).join('')}
+      <rect x="140" y="446" width="84" height="24" rx="12" fill="#F5B800"/><text x="182" y="462" text-anchor="middle" fill="#1a1200" font-size="11.5" font-weight="700">ENTRADA</text>
+      <text x="40" y="462" fill="#7F92C4" font-size="10">🚻 WC</text><text x="350" y="462" text-anchor="end" fill="#7F92C4" font-size="10">⛑️ Posto médico</text>
+    </svg></div>
+    <div class="legend">${MODS.map(m=>`<span><i style="background:${m.cor}"></i>${m.nome} (Q${m.quadras.join('–')})</span>`).join('')}</div>
+    <p class="note">Toque em uma quadra ou área para ver o que está rolando.</p>`;
+  sc.querySelectorAll('[data-spot]').forEach(g=>g.addEventListener('click',()=>openSpot(g.dataset.spot)));
+  if (sel) { sc.querySelector(`[data-spot="${sel}"]`)?.classList.add('sel'); setTimeout(()=>openSpot(sel),80); }
+};
+function openSpot(id){
+  if (id==='food'){ openSheet(`<div class="sh"><div class="ptitle">Praça de Alimentação</div><button class="iconbtn" data-close>${I.x}</button></div><div class="sb"><p style="color:#dbe4ff;line-height:1.5">Food trucks, hidratação e pontos de recarga do Energy Card. Aberta das 08:00 às 20:00.</p></div>`); return; }
+  const l = LOCAL[id];
+  const here = EVENTS.filter(e=>e.local===id && e.dia===NOW.dia);
+  const now = here.filter(e=>status(e)==='live'), next = here.filter(e=>status(e)==='prox').slice(0,2);
+  const line = e => e.tipo==='jogo' ? (()=>{ const t=teamsOf(e); return `${hhmm(e.ini)} · ${evTitle(e)} — ${t.a?FAC[t.a].sigla:e.pa} × ${t.b?FAC[t.b].sigla:e.pb}`; })() : `${hhmm(e.ini)} · ${esc(e.titulo)}`;
+  const m = l.tipo==='quadra' ? MODS.find(m=>m.quadras.includes(+id.slice(1))) : null;
+  openSheet(`<div class="sh"><div class="ptitle">${l.nome}</div><button class="iconbtn" data-close>${I.x}</button></div>
+    <div class="sb">${m?`<p style="color:var(--muted);margin:0 0 10px">${m.emoji} Quadra de ${m.nome}</p>`:''}
+      <div class="panel">
+        <div class="row"><span class="st live">Agora</span><div class="grow"><b style="font-size:13px">${now.length?now.map(line).join('<br>'):'Nada acontecendo neste momento'}</b></div></div>
+        <div class="row"><span class="st prox">Próximo</span><div class="grow"><b style="font-size:13px">${next.length?next.map(line).join('<br>'):'Sem mais eventos hoje'}</b></div></div>
+      </div></div>
+    <div class="sf"><a class="btn primary" href="#/cronograma?dia=${NOW.dia}&local=${id}">${I.events.replace('<svg','<svg width="18" height="18"')}Ver cronograma deste local</a></div>`);
+}
+
+/* =========================================================
+   TELAS DE DEMONSTRAÇÃO
+   ========================================================= */
+ROUTES['ingressos'] = sc => {
+  sc.innerHTML = innerHead('Ingressos') + `
+    <div class="ticket"><div class="tt"><small>Seu ingresso</small><h2>Passaporte 4 dias</h2><div style="font-size:13px">Maria · Feras USP · Acesso a jogos e ativações</div></div>
+      <div class="tb"><div class="qr" id="tqr"></div><div><b style="font-size:15px">Nº IC-2026-04817</b><br><small style="color:#51608a">Apresente na entrada · ${DIAS[0].dm} a ${DIAS[3].dm}</small></div></div></div>
+    <div class="sect">Comprar mais</div>
+    <div class="panel">
+      ${[['Day Pass','Acesso a 1 dia de jogos','R$ 49'],['Festa de Encerramento','Fly High · Dia 4','R$ 89'],['Combo 4 Festas','Todas as noites','R$ 199']].map(x=>`<button class="row" data-act="demo">${I.ticket.replace('class="ic"','class="ic" style="color:var(--gold)"')}<div class="grow"><b>${x[0]}</b><small>${x[1]}</small></div><b style="color:var(--gold2)">${x[2]}</b></button>`).join('')}
+    </div><p class="note">Compras desativadas no protótipo.</p>`;
+  makeQR(sc.querySelector('#tqr'), 'INTERCAMPUS-IC-2026-04817', 92);
+};
+ROUTES['energy'] = sc => {
+  sc.innerHTML = innerHead('Energy Card') + `
+    <div class="ecard"><div class="brand">INTERCAMPUS</div><div class="nm">Energy Card</div>
+      <div class="bal"><small>Saldo</small><b>R$ 120,00</b></div><div class="num">•••• 2026</div></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">${['+ R$ 20','+ R$ 50','+ R$ 100'].map(v=>`<button class="btn gold" data-act="demo">${v}</button>`).join('')}</div>
+    <div class="sect">Benefícios</div>
+    <div class="panel">
+      <div class="row">${I.bolt}<div class="grow"><b>Pague tudo com aproximação</b><small>Bares, food trucks e lojinha oficial</small></div></div>
+      <div class="row">${I.bolt}<div class="grow"><b>Fura-fila na Energy Zone</b><small>Acesso prioritário ao Recovery Lounge</small></div></div>
+      <div class="row">${I.bolt}<div class="grow"><b>Pontos para sua atlética</b><small>Cada recarga soma no ranking de torcida</small></div></div>
+    </div>
+    <div class="sect">Extrato</div>
+    <div class="panel">${[['Recarga','+ R$ 100,00','Dia 1 · 09:12'],['Food Truck Burger','− R$ 32,00','Dia 1 · 12:40'],['Energy Zone · bebida','− R$ 12,00','Dia 1 · 15:05'],['Recarga bônus','+ R$ 64,00','Dia 2 · 08:50']].map(x=>`<div class="row"><div class="grow"><b>${x[0]}</b><small>${x[2]}</small></div><b style="color:${x[1].startsWith('+')?'var(--ok)':'#fff'}">${x[1]}</b></div>`).join('')}</div>`;
+};
+ROUTES['conexoes'] = sc => {
+  const ppl = [['Lucas Andrade','Feras USP · Futsal','#2E7DF6',true],['Juliana Costa','Fúria Mackenzie · Vôlei','#E2242C',true],['Rafael Lima','R.A. São Judas · Basquete','#9A6234',true],['Ana Lima','Corujas PUC · Handebol','#7E3FBF',false],['Pedro Reis','Águias FGV · Futsal','#1446A0',false],['Bia Souza','Tritões Insper · Vôlei','#E6197A',false],['Gabriel Nunes','Furacão Unicamp · Basquete','#FF6B1A',false],['Larissa Melo','Raposas ESPM · Torcida','#00B7D4',false]];
+  sc.innerHTML = innerHead('Conexões') + `<p style="color:var(--muted);margin:0 2px 12px">Pessoas no evento com interesses em comum com você.</p>
+    <div class="panel">${ppl.map((x,i)=>`<div class="row">${avatar(x[0],x[2],40)}<div class="grow"><b>${x[0]} ${x[3]?'<span style="color:var(--ok);font-size:10px">● online</span>':''}</b><small>${x[1]}</small></div><button class="pill" data-conn="${i}">Conectar</button></div>`).join('')}</div>`;
+  sc.querySelectorAll('[data-conn]').forEach(b=>b.addEventListener('click',()=>{ const on=!b.classList.contains('on'); b.classList.toggle('on',on); b.textContent=on?'✓ Conectado':'Conectar'; if(on) toast('Conexão enviada!'); }));
+};
+const CHATS = [
+  { id:'geral', nome:'Intercampus · Geral', sub:'12.480 participantes', cor:'#F5B800', msgs:[['Organização','Bem-vindos ao Intercampus! Fiquem de olho no cronograma pelo app 🔥'],['Pedro','Alguém sabe se a Energy Zone abre cedo?'],['Organização','Abre às 10h todos os dias, no Dia 4 às 9h!']] },
+  { id:'usp', nome:'Feras USP', sub:'Atlética · 860 membros', cor:'#2E7DF6', msgs:[['Lucas','Bora lotar a quadra 7 no vôlei feminino!'],['Carol','Bateria concentra no portão às 14h 🥁']] },
+  { id:'volei', nome:'Vôlei Feminino', sub:'Modalidade · 340 membros', cor:'#E2242C', msgs:[['Juliana','Quem pega a final no domingo? 👀']] },
+  { id:'festa', nome:'Festas Intercampus', sub:'Avisos das festas', cor:'#b04cff', msgs:[['Organização','Lista da Neon Party liberada no app!']] },
+];
+ROUTES['chat'] = (sc, p) => {
+  const id = p.get('c');
+  if (!id){
+    sc.innerHTML = innerHead('Chat') + `<div class="panel">${CHATS.map(c=>`<a class="row" href="#/chat?c=${c.id}">${avatar(c.nome,c.cor,42)}<div class="grow"><b>${c.nome}</b><small>${esc(c.msgs[c.msgs.length-1][1]).slice(0,48)}…</small></div>${I.chev}</a>`).join('')}</div>`;
+    return;
+  }
+  const c = CHATS.find(x=>x.id===id) || CHATS[0];
+  const draw = () => {
+    sc.innerHTML = innerHead(c.nome,'#/chat') + `<div class="chatlog">${c.msgs.map(m=>`<div class="msg ${m[0]==='Você'?'me':''}">${m[0]==='Você'?'':`<small>${esc(m[0])}</small>`}${esc(m[1])}</div>`).join('')}</div>
+      <form class="chatbar" id="cf"><input id="ci" placeholder="Mensagem..." autocomplete="off"><button aria-label="Enviar">${I.send}</button></form>`;
+    sc.scrollTop = sc.scrollHeight;
+    sc.querySelector('#cf').addEventListener('submit', ev=>{ ev.preventDefault(); const v=sc.querySelector('#ci').value.trim(); if(!v) return; c.msgs.push(['Você',v]); draw(); sc.querySelector('#ci').focus(); });
+  };
+  draw();
+};
+ROUTES['noticias'] = sc => {
+  const n = [['🏐','Vôlei feminino tem rodada eletrizante no Dia 2','Três jogos decididos no tie-break e torcida lotando a Quadra 7.','há 25 min','linear-gradient(135deg,#2E7DF6,#0b1d4f)'],
+    ['⚡','Energy Zone bate recorde de visitantes','Mais de 3 mil atletas passaram pelo Recovery Lounge no primeiro dia.','há 1 h','linear-gradient(135deg,#F5B800,#C58500)'],
+    ['🎉','Neon Party: line-up confirmado','DJs convidados e pintura corporal na Arena Festa a partir das 22h.','há 3 h','linear-gradient(135deg,#b04cff,#E5283F)'],
+    ['🏆','Como funciona o ranking geral das atléticas','Vitórias e medalhas somam pontos para a campeã geral do Intercampus.','ontem','linear-gradient(135deg,#E5283F,#A30D24)']];
+  sc.innerHTML = innerHead('Notícias') + `<div class="panel">${n.map(x=>`<button class="news" data-act="demo" style="text-align:left;width:100%"><div class="th" style="background:${x[4]}">${x[0]}</div><div><b>${x[1]}</b><small>${x[2]}<br>${x[3]}</small></div></button>`).join('')}</div>`;
+};
+ROUTES['perfil'] = sc => {
+  sc.innerHTML = innerHead('Perfil') + `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 16px">${avatar('Maria Sophia','#E5283F',84)}<div class="ptitle" style="font-size:26px">Maria</div><div style="display:flex;align-items:center;gap:6px;color:var(--muted)">${badge('usp',22)} Feras USP · Vôlei Feminino</div></div>
+    <div class="grid" style="margin-bottom:12px">
+      <a class="card" href="#/cronograma?fav=1&dia=all" style="min-height:0"><h3>Minha agenda</h3><div class="ptitle" style="font-size:30px;color:var(--gold)">${FAV.size}</div><p style="margin:0;font-size:11.5px;color:var(--muted)">eventos salvos</p></a>
+      <a class="card" href="#/conexoes" style="min-height:0"><h3>Conexões</h3><div class="ptitle" style="font-size:30px;color:var(--gold)">27</div><p style="margin:0;font-size:11.5px;color:var(--muted)">amigos no evento</p></a>
+    </div>
+    <div class="panel">
+      <a class="row" href="#/ingressos">${I.ticket}<div class="grow"><b>Meus ingressos</b><small>Passaporte 4 dias</small></div>${I.chev}</a>
+      <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card</b><small>Saldo R$ 120,00</small></div>${I.chev}</a>
+      <a class="row" href="#/cronograma?fac=usp&dia=all">${I.cal}<div class="grow"><b>Jogos da minha atlética</b><small>Feras USP em todas as modalidades</small></div>${I.chev}</a>
+    </div>`;
+};
+ROUTES['mais'] = sc => {
+  sc.innerHTML = innerHead('Mais') + `
+    <div class="panel">
+      <a class="row" href="#/qr">${I.qr}<div class="grow"><b>Compartilhar o app</b><small>QR code para projetar na apresentação</small></div>${I.chev}</a>
+      <a class="row" href="#/cronograma">${I.cal}<div class="grow"><b>Cronograma</b><small>Jogos, ativações e festas</small></div>${I.chev}</a>
+      <a class="row" href="#/mapa">${I.pin}<div class="grow"><b>Mapa do evento</b><small>8 quadras + áreas de ativação</small></div>${I.chev}</a>
+      <a class="row" href="#/ranking">${I.trophy}<div class="grow"><b>Ranking das atléticas</b><small>Geral e por grupos</small></div>${I.chev}</a>
+      <a class="row" href="#/regulamento">${I.book}<div class="grow"><b>Formato e regulamento</b><small>Como funciona a competição</small></div>${I.chev}</a>
+    </div>
+    <div class="sect">Modo demonstração</div>
+    <p style="color:var(--muted);font-size:12.5px;margin:0 2px 8px">Escolha o "momento" do evento para mostrar jogos ao vivo, resultados e finais.</p>
+    <div class="panel">${NOW_PRESETS.map(p=>`<button class="row" data-now="${p.id}">${I.clock}<div class="grow"><b>${p.nome.split(' — ')[0]}</b><small>${p.nome.split(' — ')[1]}</small></div>${p.id===NOW.id?'<span class="st prox">Atual</span>':''}</button>`).join('')}</div>
+    <p class="note">${EVENTO.nome} · protótipo com dados fictícios</p>`;
+  sc.querySelectorAll('[data-now]').forEach(b=>b.addEventListener('click',()=>{ NOW = NOW_PRESETS.find(p=>p.id===b.dataset.now); store.set('now',NOW.id); F.dia = NOW.dia; toast('Agora: '+NOW.nome.split(' — ')[0]); route(); }));
+};
+ROUTES['regulamento'] = sc => {
+  sc.innerHTML = innerHead('Formato','#/mais') + `
+    <div class="panel"><div style="padding:14px;line-height:1.55;color:#dbe4ff;font-size:13.5px">
+      <b style="color:#fff">12 faculdades · 4 modalidades · 2 gêneros · 4 dias</b><br><br>
+      <b style="color:var(--gold2)">Fase de grupos (Dias 1–3)</b><br>Em cada modalidade/gênero, as 12 atléticas são divididas em 3 grupos de 4. Uma rodada por dia.<br><br>
+      <b style="color:var(--gold2)">Mata-mata (Dia 4)</b><br>1º e 2º de cada grupo + 2 melhores 3º → quartas, semis, disputa de 3º e final.<br><br>
+      <b style="color:var(--gold2)">Estrutura</b><br>${EVENTS.filter(e=>e.tipo==='jogo').length} jogos em 8 quadras (2 por modalidade), jogos de 1h entre 8h e 18h. Ativações durante o dia e festas todas as noites.<br><br>
+      <b style="color:var(--gold2)">Pontuação geral</b><br>Vitória 3 · empate 1 · ouro +15 · prata +10 · bronze +6.
+    </div></div>`;
+};
+ROUTES['qr'] = sc => {
+  const url = appUrl();
+  sc.innerHTML = innerHead('Compartilhar','#/mais') + `<div class="bigqr"><div class="ptitle" style="font-size:28px">Escaneie e entre<br>no <span style="color:var(--gold)">Intercampus</span></div><div class="qr" id="bqr"></div><div class="url">${esc(url.replace(/^https?:\/\//,''))}</div>
+    <button class="btn gold" style="flex:none;padding:12px 22px" id="cp">Copiar link</button></div>`;
+  makeQR(sc.querySelector('#bqr'), url, 240);
+  sc.querySelector('#cp').addEventListener('click', ()=>{ (navigator.clipboard?.writeText(url)||Promise.reject()).then(()=>toast('Link copiado!')).catch(()=>toast(url)); });
+};
+
+/* Painel lateral (desktop) com QR para a plateia */
+function renderSide(){
+  const url = appUrl();
+  $('#side').innerHTML = `<div class="logo" style="align-items:flex-start">${wingsLogo('side')}<div class="name">Intercampus App</div><div class="sub">${EVENTO.sub}</div></div>
+    <h2>Abra no seu <span>celular</span></h2>
+    <p>Aponte a câmera para o QR code e navegue pelo app durante a apresentação.</p>
+    <div class="qrbox"><div class="qr" id="sqr"></div><div class="url">${esc(url.replace(/^https?:\/\//,''))}</div></div>`;
+  makeQR($('#sqr'), url, 150);
+}
+
+renderSide();
+route();
+</script>
+</body>
+</html>
