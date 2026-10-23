@@ -347,6 +347,19 @@ table.rank tr.q td{background:rgba(47,208,122,.06)}
 .foto .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 8px 7px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-size:11.5px;font-weight:600;text-align:left}
 .foto .ok{position:absolute;top:6px;right:6px;background:var(--ok);color:#00230f;font-weight:800;font-size:11px;border-radius:8px;padding:2px 7px}
 .folder .lockic{font-size:16px;opacity:.8}
+/* leitor de QR */
+.scanner{position:absolute;inset:0;z-index:90;background:#000;overflow:hidden}
+.scanner video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scanframe{position:absolute;left:50%;top:46%;width:66%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:22px;border:3px solid var(--gold);box-shadow:0 0 0 2000px rgba(3,8,24,.62)}
+.scanframe::after{content:"";position:absolute;left:8%;right:8%;top:50%;height:2px;background:var(--gold);box-shadow:0 0 12px var(--gold);animation:scanline 2s ease-in-out infinite}
+@keyframes scanline{0%,100%{top:12%}50%{top:88%}}
+.scantop{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 14px) 12px 10px 18px;z-index:2}
+.scantop b{font-family:var(--head);font-style:italic;font-weight:900;font-size:22px;text-transform:uppercase}
+.scanmsg{position:absolute;left:18px;right:18px;bottom:calc(env(safe-area-inset-bottom) + 36px);text-align:center;color:#fff;font-size:13.5px;line-height:1.45;z-index:2}
+.scanbtn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border-radius:var(--radius);padding:16px;margin-bottom:12px;background:linear-gradient(150deg,var(--red1),var(--red2));border:1px solid rgba(255,140,150,.45);box-shadow:0 8px 20px rgba(229,40,63,.25)}
+.scanbtn svg{width:42px;height:42px;flex:none}
+.scanbtn b{display:block;font-family:var(--head);font-style:italic;font-weight:900;font-size:21px;text-transform:uppercase;line-height:1.05}
+.scanbtn small{color:#ffe3e6;font-size:12px}
 /* votação */
 .vopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .vbtn{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border-radius:16px;text-align:center;background:linear-gradient(160deg,var(--navy1),var(--navy2));border:1px solid var(--line)}
@@ -698,6 +711,7 @@ function route(){
   const fn = ROUTES[path] || ROUTES[''];
   renderNav(path);
   closeSheet();
+  closeScanner();
   const sc = $('#screen');
   const samePath = path===lastPath;
   fn(sc, params);
@@ -961,7 +975,7 @@ function openEvent(id){
       <div class="board">${tm(t.a,e.pa)}<div class="sc">${s?`${s.a}<i>×</i>${s.b}`:`<span style="font-size:22px;color:var(--muted)">${hhmm(e.ini)}</span>`}</div>${tm(t.b,e.pb)}</div>
       ${e.mod==='volei'&&s?'<p class="note" style="margin-top:-6px">Placar em sets (melhor de 3)</p>':''}
       <div class="kv"><span>Fase</span><b>${faseNome(e)}${st==='fim'&&e.sc.extra?' · '+e.sc.extra:''}</b><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)}</b><span>Onde</span><b>${localNome(e.local)}</b><span>Código</span><b>${e.cod}</b></div>
-      ${st==='live'?`<p style="color:#dbe4ff;font-size:12.5px;margin:0 0 10px;text-align:center">🥁 Está na quadra? Escaneie o QR code da quadra para votar na melhor bateria.</p>`:''}
+      ${st==='live'?`<p style="color:#dbe4ff;font-size:12.5px;margin:0 0 10px;text-align:center">🥁 Está na quadra? Vá em Votação e escaneie o QR code da quadra para votar na melhor bateria.</p>`:''}
       ${e.fase==='grupos'?`<a class="btn ghost" style="margin-bottom:4px" href="#/ranking?v=grupos&mod=${e.mod}&gen=${e.gen}">${I.trophy.replace('class="ic"','')}Ver classificação do grupo</a>`:''}
     </div>
     <div class="sf">${favBtn}${mapBtn}</div>`);
@@ -1126,7 +1140,6 @@ ROUTES['energy'] = sc => {
 const MINHA_FAC = 'usp', FOTO_PRECO = 'R$ 4,90';
 const NOMES = { f:['Ana','Bia','Larissa','Juliana','Carol','Marina','Gabriela','Luiza'], m:['Lucas','Pedro','Gabriel','Rafael','Thiago','Felipe','Bruno','Mateus'] };
 const SOBRENOMES = ['Andrade','Lima','Reis','Souza','Nunes','Melo','Costa','Alves','Rocha','Prado'];
-const UPLOADS = {};
 const senhaGaleria = id => FAC[id].atl.split(' ')[0].normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z]/g,'').toUpperCase()+'-27';
 function fotosDe(dia, fac){
   const r = rng(hashStr('foto'+dia+fac)), n = 6 + Math.floor(r()*5), out = [];
@@ -1135,7 +1148,7 @@ function fotosDe(dia, fac){
     const nome = NOMES[g][Math.floor(r()*8)]+' '+SOBRENOMES[Math.floor(r()*SOBRENOMES.length)];
     out.push({ id:`${dia}-${fac}-${i}`, dia, fac, torcida, mod:m.id, gen:g, nome, seed:Math.floor(r()*1e9) });
   }
-  return out.concat(UPLOADS[dia+'-'+fac] || []);
+  return out;
 }
 function fotoArt(p){
   const c = FAC[p.fac].cor, r = rng(p.seed), id = 'g'+p.seed;
@@ -1152,7 +1165,7 @@ function fotoArt(p){
 }
 const comprada = id => store.get('compradas', []).includes(id);
 function fotoHtml(p){
-  return `<button class="foto" data-foto="${p.id}">${p.url?`<img src="${p.url}" alt="">`:fotoArt(p)}${comprada(p.id)?'<span class="ok">✓ Sua</span>':'<div class="wm"></div>'}<div class="cap">${p.upload?'📤 Enviada pela atlética':p.torcida?'🥁 Torcida':MOD[p.mod].emoji+' '+p.nome}</div></button>`;
+  return `<button class="foto" data-foto="${p.id}">${fotoArt(p)}${comprada(p.id)?'<span class="ok">✓ Sua</span>':'<div class="wm"></div>'}<div class="cap">${p.torcida?'🥁 Torcida':MOD[p.mod].emoji+' '+p.nome}</div></button>`;
 }
 function openSenha(fac, dia){
   openSheet(`<div class="sh"><div class="ptitle">Pasta protegida</div><button class="iconbtn" data-close>${I.x}</button></div>
@@ -1169,14 +1182,14 @@ function openSenha(fac, dia){
   });
 }
 function openFoto(p){
-  const ok = comprada(p.id), quem = p.torcida || p.upload ? FAC[p.fac].atl : p.nome;
-  const legenda = p.upload ? 'Foto enviada pela atlética' : p.torcida ? `Torcida ${FAC[p.fac].atl}` : `${p.nome} · ${MOD[p.mod].nome} ${GEN[p.gen].nome}`;
-  const src = p.url || 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(fotoArt(p));
+  const ok = comprada(p.id), quem = p.torcida ? FAC[p.fac].atl : p.nome;
+  const legenda = p.torcida ? `Torcida ${FAC[p.fac].atl}` : `${p.nome} · ${MOD[p.mod].nome} ${GEN[p.gen].nome}`;
+  const src = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(fotoArt(p));
   openSheet(`<div class="sh"><span style="font-weight:700;color:var(--muted)">Dia ${p.dia} · ${FAC[p.fac].atl}</span><button class="iconbtn" data-close>${I.x}</button></div>
-    <div class="sb"><div class="foto big">${p.url?`<img src="${p.url}" alt="">`:fotoArt(p)}${ok?'':'<div class="wm"></div>'}</div>
+    <div class="sb"><div class="foto big">${fotoArt(p)}${ok?'':'<div class="wm"></div>'}</div>
       <b style="display:block;text-align:center">${esc(legenda)}</b>
-      <p style="color:var(--muted);font-size:12.5px;text-align:center;margin:4px 0 0">${ok?'Versão sem marca d’água liberada para você.':`Prévia com marca d’água · versão original por ${FOTO_PRECO}. O valor vai para ${p.torcida||p.upload?'a atlética':'o atleta da foto'}.`}</p></div>
-    <div class="sf">${ok?`<a class="btn gold" href="${src}" download="intercampus-${p.id}.${p.url?'jpg':'svg'}">Baixar original</a>`:`<button class="btn gold" data-buy="${p.id}">Comprar sem marca · ${FOTO_PRECO}</button>`}</div>`);
+      <p style="color:var(--muted);font-size:12.5px;text-align:center;margin:4px 0 0">${ok?'Versão sem marca d’água liberada para você.':`Prévia com marca d’água · versão original por ${FOTO_PRECO}. O valor vai para ${p.torcida?'a atlética':'o atleta da foto'}.`}</p></div>
+    <div class="sf">${ok?`<a class="btn gold" href="${src}" download="intercampus-${p.id}.svg">Baixar original</a>`:`<button class="btn gold" data-buy="${p.id}">Comprar sem marca · ${FOTO_PRECO}</button>`}</div>`);
   const b = $('#sheet [data-buy]');
   if (b) b.addEventListener('click', ()=>{ store.set('compradas', [...store.get('compradas',[]), p.id]); toast(`Compra simulada ✓ ${FOTO_PRECO} para ${quem}`); openFoto(p); ROUTES['fotos']($('#screen'), parseHash().params); });
 }
@@ -1186,7 +1199,7 @@ ROUTES['fotos'] = (sc, p) => {
   const tabs = `<div class="days" style="grid-template-columns:repeat(3,1fr)">${DIAS.map(d=>`<a class="day ${d.n===dia?'on':''}" href="#/fotos?dia=${d.n}${fac?'&fac='+fac:''}"><span class="today">${d.tema.toUpperCase()}</span><b>Dia ${d.n}</b><small>${d.sem} ${d.dm}</small></a>`).join('')}</div>`;
   if (!fac || !abertas.has(fac)){
     sc.innerHTML = innerHead('Fotos do evento') + tabs + `
-      <p style="color:var(--muted);font-size:12.5px;margin:0 2px 10px">As atléticas publicam aqui as fotos de atletas e torcedores. 🔒 Você só acessa a pasta da sua faculdade, com a senha do seu Perfil.</p>
+      <p style="color:var(--muted);font-size:12.5px;margin:0 2px 10px">Fotos de atletas e torcedores publicadas pelos fotógrafos oficiais de cada faculdade. 🔒 Você só acessa a pasta da sua faculdade, com a senha do seu Perfil.</p>
       <div class="panel">${FACS.map(f=>`<button class="row folder" data-pasta="${f.id}">${badge(f.id,32)}<div class="grow"><b>${f.atl}</b><small>${fotosDe(dia,f.id).length} fotos · Dia ${dia}</small></div>${f.id===MINHA_FAC?'<span class="st prox">Sua faculdade</span>':''}<span class="lockic">${abertas.has(f.id)?'📂':'🔒'}</span></button>`).join('')}</div>`;
     sc.querySelectorAll('[data-pasta]').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.pasta; abertas.has(id) ? (location.hash=`#/fotos?dia=${dia}&fac=${id}`) : openSenha(id, dia); }));
     if (fac && !abertas.has(fac)) setTimeout(()=>openSenha(fac, dia), 60);
@@ -1197,28 +1210,31 @@ ROUTES['fotos'] = (sc, p) => {
     <div style="display:flex;align-items:center;gap:10px;margin:0 2px 10px">${badge(fac,36)}<div><b>${FAC[fac].atl}</b><br><small style="color:var(--muted)">${fotos.length} fotos · Dia ${dia} — ${DIAS[dia-1].tema.toUpperCase()}</small></div></div>
     <p style="color:var(--muted);font-size:12px;margin:0 2px 10px">Prévias com marca d’água. Toque numa foto para comprar a original por ${FOTO_PRECO}: o valor vai para o atleta.</p>
     <div class="pgrid">${fotos.map(fotoHtml).join('')}</div>
-    <label class="btn ghost" style="width:100%;cursor:pointer">📤 Área da atlética: enviar fotos<input type="file" id="up" accept="image/*" multiple hidden></label>`;
+    <p class="note">📷 Fotos publicadas pelo fotógrafo oficial da ${FAC[fac].atl}</p>`;
   sc.querySelectorAll('[data-foto]').forEach(b=>b.addEventListener('click',()=>openFoto(fotos.find(x=>x.id===b.dataset.foto))));
-  sc.querySelector('#up').addEventListener('change', ev=>{
-    const k = dia+'-'+fac; UPLOADS[k] = UPLOADS[k] || [];
-    [...ev.target.files].forEach((f,i)=>UPLOADS[k].push({ id:`up-${k}-${Date.now()}-${i}`, dia, fac, upload:true, url:URL.createObjectURL(f) }));
-    toast(ev.target.files.length+' foto(s) publicada(s) com marca d’água'); ROUTES['fotos'](sc, p);
-  });
 };
 
-/* Votação da bateria: só pelo QR code fixado na quadra, durante o jogo */
-const voteToken = cod => hashStr('IC-VOTO|'+cod).toString(36).slice(0,6);
-const voteUrl = e => `${appUrl()}#/votar?jogo=${e.cod}&t=${voteToken(e.cod)}&now=${NOW.id}`;
+/* Votação da bateria: cada quadra tem um QR code fixo. O participante lê o QR pela câmera do app
+   e vota numa das duas baterias do jogo que está acontecendo naquela quadra. */
+const courtToken = q => hashStr('IC-QUADRA|'+q).toString(36).slice(0,6);
 function voteCounts(e, meu){ const r=rng(hashStr('vc'+e.cod)); return { a:60+Math.floor(r()*180)+(meu===e.a?1:0), b:60+Math.floor(r()*180)+(meu===e.b?1:0) }; }
+function jogoNaQuadra(q){
+  const n = nowAbs(), jogos = EVENTS.filter(e=>e.tipo==='jogo' && e.local===q && known(e));
+  return jogos.find(e=>status(e)==='live') || jogos.filter(e=>status(e)==='fim' && n <= e.dia*1440+e.ini+e.dur+30).pop() || null;
+}
 ROUTES['votar'] = (sc, p) => {
-  const cod = p.get('jogo'), pr = NOW_PRESETS.find(x=>x.id===p.get('now'));
+  const q = p.get('q'), pr = NOW_PRESETS.find(x=>x.id===p.get('now'));
   if (pr && pr.id!==NOW.id){ NOW = pr; store.set('now', pr.id); F.dia = pr.dia; }
-  const e = EVENTS.find(x=>x.cod===cod), head = innerHead('Votação da bateria','#/votacao');
-  const msg = (t,d) => head + `<div class="empty"><b>${t}</b>${d}<br><br><a class="pill" href="#/votacao">Como funciona</a></div>`;
-  if (!e || p.get('t')!==voteToken(cod)){ sc.innerHTML = msg('Escaneie o QR da quadra','A votação só abre pelo QR code fixado na quadra, durante o jogo.'); return; }
-  const st = status(e), t = teamsOf(e);
-  if (st==='prox' || !t.a){ sc.innerHTML = msg('A votação ainda não abriu','Ela começa junto com o jogo, às '+hhmm(e.ini)+'.'); return; }
-  if (st==='fim' && nowAbs() > e.dia*1440+e.ini+e.dur+30){ sc.innerHTML = msg('Votação encerrada','A votação fecha 30 minutos após o fim do jogo.'); return; }
+  const head = innerHead('Votação da bateria','#/votacao');
+  const msg = (t,d) => head + `<div class="empty"><b>${t}</b>${d}<br><br><a class="pill" href="#/votacao">Escanear outro QR</a></div>`;
+  if (!LOCAL[q] || LOCAL[q].tipo!=='quadra' || p.get('t')!==courtToken(q)){ sc.innerHTML = msg('QR inválido','A votação só abre pelo QR code oficial fixado na quadra.'); return; }
+  const e = jogoNaQuadra(q);
+  if (!e){
+    const prox = EVENTS.find(x=>x.tipo==='jogo' && x.local===q && status(x)==='prox');
+    sc.innerHTML = msg(`Nenhum jogo na ${LOCAL[q].nome} agora`, prox ? `O próximo jogo começa ${prox.dia===NOW.dia?'hoje':'no Dia '+prox.dia} às ${hhmm(prox.ini)}. A votação abre junto com a partida.` : 'Não há mais jogos nesta quadra.');
+    return;
+  }
+  const cod = e.cod, st = status(e), t = teamsOf(e);
   const votos = store.get('votos', {}), meu = votos[cod], c = voteCounts(e, meu), tot = c.a+c.b;
   const opt = (id, n) => `<button class="vbtn ${meu===id?'me':''}" data-v="${id}" ${meu?'disabled':''}>${badge(id,58)}<small>Bateria</small><b>${FAC[id].atl}</b>${meu?`<div class="bar"><i style="width:${Math.round(n/tot*100)}%"></i></div><small style="color:#fff">${Math.round(n/tot*100)}% · ${n} votos</small>`:''}</button>`;
   sc.innerHTML = head + `
@@ -1230,26 +1246,72 @@ ROUTES['votar'] = (sc, p) => {
     <p class="note">O resultado da melhor bateria é anunciado na premiação de sábado.</p>`;
   sc.querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>{ if (meu) return; votos[cod] = b.dataset.v; store.set('votos', votos); toast('Voto registrado: '+FAC[b.dataset.v].atl); ROUTES['votar'](sc, p); }));
 };
-ROUTES['votacao'] = (sc, p) => {
-  const live = EVENTS.filter(e=>e.tipo==='jogo' && status(e)==='live' && known(e));
-  const sel = live.find(e=>e.cod===p.get('jogo')) || live[0];
+
+/* Leitor de QR com a câmera (jsQR carregado sob demanda) */
+let SCANNER = null;
+function loadJsQR(){
+  if (window.jsQR) return Promise.resolve();
+  return new Promise((ok, fail)=>{ const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'; sc.onload = ok; sc.onerror = fail; document.head.appendChild(sc); });
+}
+function closeScanner(){
+  if (!SCANNER) return;
+  SCANNER.stream?.getTracks().forEach(t=>t.stop());
+  SCANNER.el.remove(); SCANNER = null;
+}
+async function openScanner(){
+  closeScanner();
+  const el = document.createElement('div');
+  el.className = 'scanner';
+  el.innerHTML = `<video playsinline muted autoplay></video><div class="scanframe"></div>
+    <div class="scantop"><b>Escanear QR da quadra</b><button class="iconbtn" aria-label="Fechar">${I.x}</button></div>
+    <p class="scanmsg">Abrindo a câmera…</p>`;
+  $('#phone').appendChild(el);
+  const S = SCANNER = { el, stream:null };
+  const video = el.querySelector('video'), msg = el.querySelector('.scanmsg');
+  el.querySelector('.scantop button').addEventListener('click', closeScanner);
+  try {
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error('sem câmera');
+    const [stream] = await Promise.all([navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' }, audio:false }), loadJsQR()]);
+    if (SCANNER !== S){ stream.getTracks().forEach(t=>t.stop()); return; }
+    S.stream = stream; video.srcObject = stream; await video.play();
+  } catch (err){
+    msg.innerHTML = 'Não foi possível abrir a câmera.<br>Permita o acesso à câmera para este site nas configurações do navegador e tente de novo.';
+    return;
+  }
+  msg.textContent = 'Aponte para o QR code fixado na quadra';
+  const canvas = document.createElement('canvas'), ctx = canvas.getContext('2d', { willReadFrequently:true });
+  const tick = () => {
+    if (SCANNER !== S) return;
+    if (video.readyState >= 2 && video.videoWidth){
+      const k = Math.min(1, 640/Math.max(video.videoWidth, video.videoHeight));
+      canvas.width = Math.round(video.videoWidth*k); canvas.height = Math.round(video.videoHeight*k);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const code = jsQR(ctx.getImageData(0,0,canvas.width,canvas.height).data, canvas.width, canvas.height, { inversionAttempts:'dontInvert' });
+      if (code){
+        const m = code.data.match(/#\/votar\?[^\s]+/);
+        if (m){ if (navigator.vibrate) navigator.vibrate(60); closeScanner(); location.hash = m[0]; return; }
+        msg.textContent = 'Esse QR não é de uma quadra do Intercampus';
+      }
+    }
+    requestAnimationFrame(tick);
+  };
+  tick();
+}
+
+ROUTES['votacao'] = sc => {
   const votos = store.get('votos', {});
   sc.innerHTML = innerHead('Votação') + `
     <div class="ptitle" style="font-size:22px;margin:4px 2px 4px">Torcida que voa mais alto 🥁</div>
-    <p style="color:#dbe4ff;margin:0 2px 12px;font-size:13px;line-height:1.45">Só vota quem está na quadra: em cada jogo, QR codes espalhados pela arena levam à votação entre as <b>duas baterias daquele jogo</b>. Assim ninguém vota por favoritismo sem estar presente.</p>
+    <p style="color:#dbe4ff;margin:0 2px 12px;font-size:13px;line-height:1.45">Só vota quem está na quadra: cada quadra tem QR codes oficiais que abrem a votação entre as <b>duas baterias do jogo em andamento</b>. Assim ninguém vota por favoritismo sem estar presente.</p>
+    <button class="scanbtn" id="scan">${I.qr.replace('class="ic"','')}<div><b>Escanear QR da quadra</b><small>Abre a câmera do app para votar</small></div></button>
     <div class="panel steps">
       <div class="row"><span class="stepn">1</span><div class="grow"><b>Vá ao jogo</b><small>A votação abre quando a partida começa.</small></div></div>
-      <div class="row"><span class="stepn">2</span><div class="grow"><b>Aponte a câmera para o QR da quadra</b><small>Ele abre o app direto na votação daquele jogo.</small></div></div>
+      <div class="row"><span class="stepn">2</span><div class="grow"><b>Escaneie o QR fixado na quadra</b><small>Toque em "Escanear" e aponte a câmera.</small></div></div>
       <div class="row"><span class="stepn">3</span><div class="grow"><b>Escolha uma das duas baterias</b><small>Um voto por jogo, até 30 min após o fim.</small></div></div>
     </div>
     <div class="sect">Seus votos</div>
-    <div class="panel">${Object.keys(votos).length ? Object.entries(votos).map(([cod,f])=>{ const e=EVENTS.find(x=>x.cod===cod); return `<div class="row">${badge(f,28)}<div class="grow"><b>${FAC[f].atl}</b><small>${MOD[e.mod].emoji} ${evTitle(e)} · ${LOCAL[e.local].nome} · Dia ${e.dia}</small></div></div>`; }).join('') : '<div class="row"><div class="grow"><small>Você ainda não votou em nenhum jogo.</small></div></div>'}</div>
-    <div class="sect">Modo apresentação · QR da quadra</div>
-    ${live.length ? `<p style="color:var(--muted);font-size:12.5px;margin:0 2px 8px">Projete o QR de um jogo ao vivo: quem escanear vota como se estivesse na quadra.</p>
-      <div class="chips">${live.map(e=>`<a class="pill ${e===sel?'on':''}" href="#/votacao?jogo=${e.cod}">${e.local.toUpperCase()} · ${MOD[e.mod].emoji} ${FAC[e.a].sigla}×${FAC[e.b].sigla}</a>`).join('')}</div>
-      <div class="bigqr"><div class="qr" id="vqr"></div><b>${MOD[sel.mod].emoji} ${evTitle(sel)} · ${localNome(sel.local)}</b><small style="color:var(--muted)">Bateria ${FAC[sel.a].atl} × Bateria ${FAC[sel.b].atl}</small></div>`
-    : `<div class="empty"><b>Nenhum jogo ao vivo agora</b>Mude o momento em <a href="#/mais" style="color:var(--gold2);text-decoration:underline">Mais → Modo demonstração</a> para gerar o QR de uma quadra.</div>`}`;
-  if (sel) makeQR(sc.querySelector('#vqr'), voteUrl(sel), 220);
+    <div class="panel">${Object.keys(votos).length ? Object.entries(votos).map(([cod,f])=>{ const e=EVENTS.find(x=>x.cod===cod); return e ? `<div class="row">${badge(f,28)}<div class="grow"><b>${FAC[f].atl}</b><small>${MOD[e.mod].emoji} ${evTitle(e)} · ${LOCAL[e.local].nome} · Dia ${e.dia}</small></div></div>` : ''; }).join('') : '<div class="row"><div class="grow"><small>Você ainda não votou em nenhum jogo.</small></div></div>'}</div>`;
+  sc.querySelector('#scan').addEventListener('click', openScanner);
 };
 
 ROUTES['noticias'] = sc => {
@@ -1281,7 +1343,7 @@ ROUTES['mais'] = sc => {
       <a class="row" href="#/qr">${I.qr}<div class="grow"><b>Compartilhar o app</b><small>QR code para projetar na apresentação</small></div>${I.chev}</a>
       <a class="row" href="#/cronograma">${I.cal}<div class="grow"><b>Cronograma</b><small>160 jogos, ativações e festa</small></div>${I.chev}</a>
       <a class="row" href="#/recharge">${I.bolt}<div class="grow"><b>Red Bull Recharge</b><small>Sexta, 13h30–15h30 · inscrições no Challenge</small></div>${I.chev}</a>
-      <a class="row" href="#/votacao">${I.qr}<div class="grow"><b>Votação da bateria</b><small>Pelo QR code da quadra · modo apresentação</small></div>${I.chev}</a>
+      <a class="row" href="#/votacao">${I.qr}<div class="grow"><b>Votação da bateria</b><small>Escaneie o QR code da quadra</small></div>${I.chev}</a>
       <a class="row" href="#/fotos">${I.users}<div class="grow"><b>Fotos do evento</b><small>Por dia e por faculdade</small></div>${I.chev}</a>
       <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card</b><small>Exclusivo para atletas</small></div>${I.chev}</a>
       <a class="row" href="#/mapa">${I.pin}<div class="grow"><b>Mapa do evento</b><small>4 polos de quadras, Vila e Anhangabaú</small></div>${I.chev}</a>
