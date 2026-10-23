@@ -12,6 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
@@ -311,6 +313,49 @@ table.rank tr.q td{background:rgba(47,208,122,.06)}
 .bigqr .qr{padding:16px;border-radius:18px}
 .bigqr .url{font-family:var(--head);font-weight:700;font-size:18px;color:var(--gold2);word-break:break-all}
 .note{font-size:11.5px;color:var(--dim);text-align:center;margin:14px 0 4px}
+/* mapa da cidade */
+.mapbox{height:380px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);margin-bottom:10px;background:#0a1a44}
+.leaflet-container{background:#0a1a44;font-family:var(--body)}
+.mk{width:34px;height:34px;border-radius:50%;background:var(--c);border:3px solid #fff;display:grid;place-items:center;font-size:16px;box-shadow:0 4px 12px rgba(0,0,0,.55)}
+.mk.sm{width:34px;height:34px;flex:none;font-size:15px;border-width:2px}
+.leaflet-tooltip.lbl{background:#0A1A44;color:#fff;border:1px solid rgba(120,170,255,.5);border-radius:8px;font-weight:700;font-size:11px;padding:3px 7px;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+.leaflet-tooltip.lbl::before{display:none}
+.leaflet-control-attribution{font-size:9px;background:rgba(6,16,42,.75)!important;color:#9fb0d8}
+.leaflet-control-attribution a{color:#cfd9f5}
+/* formulários */
+.field{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:16px;outline:0;letter-spacing:1px}
+.field:focus{border-color:var(--gold)}
+/* energy card bloqueado */
+.ecard.locked::after{content:"";position:absolute;inset:0;background:rgba(4,10,30,.55);backdrop-filter:blur(2px)}
+.ecard .lock{position:absolute;inset:0;display:grid;place-items:center;font-size:46px;z-index:2}
+.steps .row b{font-size:13.5px}
+.stepn{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#1a1200;font-weight:800;display:grid;place-items:center;flex:none;font-size:13px}
+/* fotos */
+.days3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.daytile{position:relative;border-radius:var(--radius);height:104px;padding:10px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border:1px solid var(--line);background:linear-gradient(150deg,var(--navy1),var(--navy2))}
+.daytile.d2{background:linear-gradient(150deg,var(--red1),var(--red2));border-color:rgba(255,140,150,.45)}
+.daytile.d3{background:linear-gradient(140deg,var(--gold2),var(--gold) 55%,var(--gold3));border-color:#ffe28a}
+.daytile span{position:absolute;top:8px;right:10px;font-size:24px}
+.daytile b{font-family:var(--head);font-style:italic;font-weight:900;font-size:22px;text-transform:uppercase;line-height:1}
+.daytile small{font-family:var(--head);font-style:italic;font-weight:800;font-size:13px;text-transform:uppercase;opacity:.9}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.foto{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/5;background:#0b1d4f;display:block;width:100%;padding:0}
+.foto.big{border-radius:14px;margin:0 auto 12px;width:min(100%,calc(46dvh * .8));aspect-ratio:4/5}
+.foto img,.foto svg{width:100%;height:100%;object-fit:cover;display:block}
+.wm{position:absolute;inset:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='110'%3E%3Ctext x='85' y='60' text-anchor='middle' transform='rotate(-28 85 55)' font-family='Arial' font-weight='900' font-style='italic' font-size='19' fill='white' fill-opacity='.38'%3EINTERCAMPUS%3C/text%3E%3C/svg%3E");background-size:150px 96px}
+.wm::after{content:"PRÉVIA";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-28deg);font-family:var(--head);font-style:italic;font-weight:900;font-size:30px;letter-spacing:2px;color:rgba(255,255,255,.55);border:3px solid rgba(255,255,255,.55);padding:0 10px;border-radius:8px}
+.foto .cap{position:absolute;left:0;right:0;bottom:0;padding:16px 8px 7px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-size:11.5px;font-weight:600;text-align:left}
+.foto .ok{position:absolute;top:6px;right:6px;background:var(--ok);color:#00230f;font-weight:800;font-size:11px;border-radius:8px;padding:2px 7px}
+.folder .lockic{font-size:16px;opacity:.8}
+/* votação */
+.vopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.vbtn{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border-radius:16px;text-align:center;background:linear-gradient(160deg,var(--navy1),var(--navy2));border:1px solid var(--line)}
+.vbtn:active{transform:scale(.98)}
+.vbtn small{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.vbtn b{font-size:14px;line-height:1.2}
+.vbtn.me{border-color:var(--gold);box-shadow:0 0 0 2px rgba(245,184,0,.35)}
+.bar{height:10px;border-radius:5px;background:rgba(255,255,255,.1);overflow:hidden;width:100%}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
 </style>
 </head>
 <body>
@@ -394,45 +439,50 @@ const FACS = [
 ];
 const FAC = Object.fromEntries(FACS.map(f=>[f.id,f]));
 const MODS = [
-  { id:'futsal',   cod:'FUT', nome:'Futsal',   emoji:'⚽', quadras:['f1','f2','f3'], cor:'#2FA84F' },
-  { id:'handebol', cod:'HAN', nome:'Handebol', emoji:'🤾', quadras:['h1','h2','h3'], cor:'#FF6B1A' },
-  { id:'basquete', cod:'BAS', nome:'Basquete', emoji:'🏀', quadras:['b1','b2','b3'], cor:'#E2242C' },
-  { id:'volei',    cod:'VOL', nome:'Vôlei',    emoji:'🏐', quadras:['v1','v2','v3'], cor:'#2E7DF6' },
+  { id:'futsal',   cod:'FUT', nome:'Futsal',   emoji:'⚽', quadras:['f1','f2','f3'], cor:'#2FA84F', venue:{ id:'ibira', nome:'Ginásio do Ibirapuera', short:'Ginásio do Ibirapuera', end:'R. Manuel da Nóbrega, 1361 · Moema', lat:-23.5779, lng:-46.6561 } },
+  { id:'handebol', cod:'HAN', nome:'Handebol', emoji:'🤾', quadras:['h1','h2','h3'], cor:'#FF6B1A', venue:{ id:'cotp', nome:'Centro Olímpico (COTP)', short:'Centro Olímpico', end:'Av. Ibirapuera, 1315 · Moema', lat:-23.5987, lng:-46.6555 } },
+  { id:'basquete', cod:'BAS', nome:'Basquete', emoji:'🏀', quadras:['b1','b2','b3'], cor:'#E2242C', venue:{ id:'sirio', nome:'Esporte Clube Sírio', short:'E.C. Sírio', end:'Av. Indianópolis, 1192 · Planalto Paulista', lat:-23.6099, lng:-46.6531 } },
+  { id:'volei',    cod:'VOL', nome:'Vôlei',    emoji:'🏐', quadras:['v1','v2','v3'], cor:'#2E7DF6', venue:{ id:'sesc', nome:'Sesc Vila Mariana', short:'Sesc Vila Mariana', end:'R. Pelotas, 141 · Vila Mariana', lat:-23.5819, lng:-46.6429 } },
 ];
 const MOD = Object.fromEntries(MODS.map(m=>[m.id,m]));
 const GENS = [{ id:'f', nome:'Feminino' }, { id:'m', nome:'Masculino' }];
 const GEN = Object.fromEntries(GENS.map(g=>[g.id,g]));
 const LOCAIS = [
-  ...MODS.flatMap(m=>m.quadras.map(q=>({ id:q, nome:'Quadra '+q.toUpperCase(), tipo:'quadra', mod:m.id }))),
-  { id:'vila',  nome:'Vila Intercampus',     tipo:'area' },
-  { id:'rca',   nome:'Recharge · Área A',    tipo:'area' },
-  { id:'rcb',   nome:'Recharge · Área B',    tipo:'area' },
-  { id:'palco', nome:'Palco Central',        tipo:'area' },
-  { id:'festa', nome:'Arena da Festa',       tipo:'area' },
+  ...MODS.flatMap(m=>m.quadras.map(q=>({ id:q, nome:'Quadra '+q.toUpperCase(), tipo:'quadra', mod:m.id, place:m.venue.id }))),
+  { id:'vila',   nome:'Vila Intercampus',   tipo:'area', place:'vila' },
+  { id:'anhang', nome:'Vale do Anhangabaú', tipo:'area', place:'anhang' },
 ];
+/* Locais propostos no mapa da cidade: 4 polos de quadras (3 quadras cada), a Vila e o local de cerimônias/festa */
+const PLACES = [
+  ...MODS.map(m=>({ ...m.venue, mod:m.id, cor:m.cor, emoji:m.emoji, sub:`${m.nome} · quadras ${m.quadras.map(q=>q.toUpperCase()).join(', ')}` })),
+  { id:'vila', nome:'Vila Intercampus', short:'Vila Intercampus', sub:'Convivência, food trucks, telão e Red Bull Recharge', end:'Parque Ibirapuera · Moema', lat:-23.5877, lng:-46.6585, cor:'#F5B800', emoji:'⚡' },
+  { id:'anhang', nome:'Vale do Anhangabaú', short:'Vale do Anhangabaú', sub:'Cerimônia de abertura, premiação e festa de encerramento', end:'Vale do Anhangabaú · Centro', lat:-23.5455, lng:-46.6367, cor:'#b04cff', emoji:'🎉' },
+];
+const PLACE = Object.fromEntries(PLACES.map(p=>[p.id,p]));
 const LOCAL = Object.fromEntries(LOCAIS.map(l=>[l.id,l]));
+const localNome = id => LOCAL[id].tipo==='quadra' ? `${LOCAL[id].nome} · ${PLACE[LOCAL[id].place].nome}` : LOCAL[id].nome;
 const TIPOS = [{ id:'jogo', nome:'Jogos' }, { id:'ativ', nome:'Ativações' }, { id:'festa', nome:'Festas' }];
 
 /* Programação fora das quadras (Intercampus Cronograma Detalhado.pdf): [dia, início, duração(min), tipo, título, local, descrição] */
 const EXTRAS = [
-  [1,'09:30',90,'ativ','Credenciamento e chegada das delegações','vila','Vila aberta, retirada de kits e do Energy Card.'],
-  [1,'09:30',750,'ativ','Vila Intercampus aberta','vila','Duas vilas de convivência com food trucks, bebidas e telão com os jogos ao vivo.'],
-  [1,'11:00',40,'ativ','Cerimônia de Abertura','palco','Regras do campeonato, apresentação das 12 faculdades e grito dos capitães no palco. 12 faculdades, 1 pergunta: quem voará mais alto?'],
+  [1,'09:30',90,'ativ','Credenciamento e chegada das delegações','vila','Vila aberta e retirada de kits das delegações.'],
+  [1,'09:30',750,'ativ','Vila Intercampus aberta','vila','No Parque Ibirapuera, perto de todas as quadras: convivência, food trucks, bebidas e telão com os jogos ao vivo.'],
+  [1,'11:00',40,'ativ','Cerimônia de Abertura','anhang','Regras do campeonato, apresentação das 12 faculdades e grito dos capitães no palco. 12 faculdades, 1 pergunta: quem voará mais alto?'],
   [1,'11:40',50,'ativ','Almoço, preparação e aquecimento','vila','Participantes se alimentam antes da fase de grupos.'],
   [1,'12:30',540,'ativ','Encontre o Mini Bull!','vila','Ache o Mini Cooper Red Bull pelo evento, poste uma foto marcando a Red Bull e concorra a pins, bucket hats e pochetes.'],
   [1,'21:30',30,'ativ','Resultados do dia e saída escalonada','vila','Fechamento público às 22h.'],
   [2,'08:30',30,'ativ','Acesso, vistoria e aquecimento','vila','Preparação para o início dos jogos às 9h.'],
   [2,'08:30',810,'ativ','Vila Intercampus aberta','vila','Convivência, food trucks, bebidas e telão com os jogos ao vivo.'],
-  [2,'13:30',120,'ativ','Red Bull Recharge — Área A','rca','Momento exclusivo: nenhum jogo nas 12 quadras. Challenge (barra fixa, touro mecânico e potência), degustação, quiosque de grifes, cabine de fotos e telão com ranking.'],
-  [2,'13:30',120,'ativ','Red Bull Recharge — Área B','rcb','Mesmo conjunto de experiências da Área A: Challenge, degustação, quiosque, cabine de fotos e ranking sincronizado.'],
+  [2,'13:30',120,'ativ','Red Bull Recharge — Área A','vila','Na Vila Intercampus. Momento exclusivo: nenhum jogo nas 12 quadras. Challenge (barra fixa, touro mecânico e potência), degustação, quiosque de grifes, cabine de fotos e telão com ranking.'],
+  [2,'13:30',120,'ativ','Red Bull Recharge — Área B','vila','Na Vila Intercampus, com o mesmo conjunto de experiências da Área A: Challenge, degustação, quiosque, cabine de fotos e ranking sincronizado.'],
   [2,'15:30',30,'ativ','Retorno às arenas e publicação das chaves','vila','Aquecimento para as quartas de final.'],
   [2,'21:15',45,'ativ','Resultados e saída escalonada','vila','Fechamento público às 22h.'],
   [3,'07:45',45,'ativ','Entrada de atletas e aquecimento','vila','Vistorias e serviços essenciais antes das semifinais.'],
   [3,'07:45',810,'ativ','Vila Intercampus aberta','vila','Convivência, food trucks e telão com as decisões ao vivo.'],
-  [3,'08:30',705,'ativ','Transmissão ao vivo com narração','palco','Semifinais e finais transmitidas no YouTube e no telão da Vila, com narração.'],
+  [3,'08:30',705,'ativ','Transmissão ao vivo com narração','vila','Semifinais e finais transmitidas no YouTube e no telão da Vila, com narração.'],
   [3,'12:00',120,'ativ','Alimentação, descanso e preparação das finais','vila','Intervalo para recuperação dos atletas.'],
-  [3,'20:30',45,'ativ','Premiação e melhores momentos','palco','Campeões por modalidade, melhor jogador ofensivo e defensivo, melhor bateria e campeões do Red Bull Recharge.'],
-  [3,'22:00',480,'festa','Festa de Encerramento — Fly High','festa','Abertura da pista às 22h, atração principal das 23h à 01h, DJs até 04h30 e encerramento às 06h de domingo (30/05).'],
+  [3,'20:30',45,'ativ','Premiação e melhores momentos','anhang','Campeões por modalidade, melhor jogador ofensivo e defensivo, melhor bateria e campeões do Red Bull Recharge.'],
+  [3,'22:00',480,'festa','Festa de Encerramento — Fly High','anhang','Abertura da pista às 22h, atração principal das 23h à 01h, DJs até 04h30 e encerramento às 06h de domingo (30/05).'],
 ];
 
 /* =========================================================
@@ -670,7 +720,7 @@ function openNotifs(){
   openSheet(`<div class="sh"><div class="ptitle">Notificações</div><button class="iconbtn" data-close>${I.x}</button></div><div class="sb"><div class="panel">
     ${live?`<a class="row" href="#/cronograma?dia=${live.dia}&ev=${live.id}">${I.bolt}<div class="grow"><b>Ao vivo agora: ${evTitle(live)}</b><small>${FAC[live.a].sigla} × ${FAC[live.b].sigla} · ${LOCAL[live.local].nome}</small></div></a>`:''}
     <a class="row" href="#/recharge">${I.bolt}<div class="grow"><b>Inscrições do Recharge abertas ⚡</b><small>Garanta seu horário no Challenge.</small></div></a>
-    <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card: +R$ 20 de bônus</b><small>Recarregue até 23h e ganhe bônus.</small></div></a>
+    <a class="row" href="#/fotos?dia=${NOW.dia}">${I.users}<div class="grow"><b>Novas fotos na pasta Feras USP 📸</b><small>A atlética publicou fotos de hoje.</small></div></a>
   </div></div>`);
 }
 
@@ -684,7 +734,6 @@ function nextGame(){
 ROUTES[''] = sc => {
   const g = nextGame(), st = status(g);
   const when = st==='live' ? '<span style="color:#fff;background:var(--live);padding:0 5px;border-radius:5px">AO VIVO</span>' : (g.dia===NOW.dia ? 'Hoje' : diaLabel(g.dia).split(' · ')[0]) + ' • ' + hhmm(g.ini);
-  const friends = [['Lucas','Feras USP','#2E7DF6'],['Juliana','Fúria Mackenzie','#E2242C'],['Rafael','R.A. São Judas','#9A6234']];
   sc.innerHTML = `
   <div class="top">
     <a class="iconbtn" href="#/mais" aria-label="Menu">${I.menu}</a>
@@ -704,34 +753,23 @@ ROUTES[''] = sc => {
         <div class="when">${when}</div>
         <div class="row"><div><div class="t">${evTitle(g)}</div><div class="ph">${faseCurta(g)}</div></div>
           <div class="vs">${badge(g.a,24)}vs${badge(g.b,24)}</div></div>
-        <div class="where">${I.pinS.replace('<svg','<svg width="11" height="11"')} ${LOCAL[g.local].nome}</div>
+        <div class="where">${I.pinS.replace('<svg','<svg width="11" height="11"')} ${LOCAL[g.local].nome} · ${PLACE[LOCAL[g.local].place].short}</div>
       </div>
     </a>
     <a class="card" href="#/cronograma"><h3>Cronograma</h3><div class="body">${I.cal}<p>Acompanhe toda a agenda do evento</p>${I.chev}</div></a>
-    <a class="card" href="#/mapa"><h3>Mapa do evento</h3><div class="body">${I.pin}<p>Encontre locais, quadras, estandes e muito mais</p>${I.chev}</div></a>
+    <a class="card" href="#/mapa"><h3>Mapa do evento</h3><div class="body">${I.pin}<p>Quadras, Vila Intercampus e festa no mapa de SP</p>${I.chev}</div></a>
     <a class="card red" href="#/ingressos"><h3>Ingressos</h3><div class="body">${I.ticket}<p>Garanta seu acesso aos jogos e atrações</p>${I.chev}</div></a>
     <a class="card" href="#/ranking"><h3>Ranking das atléticas</h3><div class="body">${I.trophy}<p>Veja a classificação atualizada das atléticas</p>${I.chev}</div></a>
     <a class="card gold" href="#/energy"><h3>Energy card <span class="tag-new">Novo</span></h3>
       <div class="body"><div style="flex:1;border-radius:9px;padding:7px 9px;background:linear-gradient(135deg,#1a3a8f,#0b1d4f);border:1px solid #ffe28a;transform:rotate(-6deg);box-shadow:0 6px 12px rgba(0,0,0,.35)">
         <div style="font-family:var(--head);font-weight:900;font-style:italic;font-size:9px;letter-spacing:.4px">INTERCAMPUS</div>
         <div style="font-family:var(--head);font-weight:900;font-style:italic;font-size:17px;color:var(--gold);line-height:1">Energy Card</div></div>${I.chev}</div></a>
-    <a class="card red" href="#/conexoes"><h3>Conexões</h3>
-      <div style="display:flex;align-items:center;margin-bottom:6px">${[['Ana Lima','#ffb36b'],['Pedro Reis','#6bb7ff'],['Bia Souza','#ff8fb1']].map((p,i)=>`<span style="margin-left:${i?-8:0}px;border:2px solid #fff;border-radius:50%;display:inline-flex">${avatar(p[0],p[1],30)}</span>`).join('')}
-      <span style="margin-left:6px;width:30px;height:30px;border-radius:50%;background:#0b1d4f;border:2px solid #fff;display:grid;place-items:center;font-size:11px;font-weight:700">+24</span></div>
-      <div class="body"><p>Conecte-se com atletas, atléticas e novos amigos</p>${I.chev}</div></a>
-    <a class="card" href="#/chat"><h3>Chat</h3><div class="body">${I.chat}<p>Participe dos grupos e fique por dentro de tudo</p>${I.chev}</div></a>
+    <a class="card red" href="#/recharge"><h3>Red Bull Recharge</h3><div class="body">${I.bolt}<p>Sexta, 13h30–15h30 na Vila Intercampus</p>${I.chev}</div></a>
+    <a class="card" href="#/votacao"><h3>Votação</h3><div class="body">${I.qr}<p>Vote na bateria do jogo em que você está</p>${I.chev}</div></a>
   </div>
-  <div class="card wide friends">
-    <h3>Amigos online <a class="link" href="#/conexoes">Ver todos</a></h3>
-    <div class="list">${friends.map(f=>`<div class="friend">${avatar(f[0],f[2],34)}<div><b>${f[0]}</b><small>${f[1]}</small></div></div>`).join('')}</div>
-  </div>
-  <div class="sect">Destaques</div>
-  <div class="carousel">
-    <a class="banner" href="#/cronograma?tipo=ativ&dia=all"><b>FLY HIGH</b><span>Dentro e fora das quadras</span></a>
-    <a class="banner" href="#/cronograma?dia=3&tipo=jogo"><b>AS FINAIS</b><span>Sábado · 8 decisões</span></a>
-    <a class="banner alt" href="#/recharge"><b>RECHARGE</b><span>Sexta · 13h30 às 15h30</span></a>
-    <a class="banner" href="#/cronograma?tipo=festa"><b>22H–06H</b><span>Festa de encerramento</span></a>
-  </div>
+  <div class="sect">Fotos do evento <a class="link" href="#/fotos?dia=${NOW.dia}">Abrir galeria</a></div>
+  <div class="days3">${DIAS.map(d=>`<a class="daytile d${d.n}" href="#/fotos?dia=${d.n}"><span>📸</span><b>Dia ${d.n}</b><small>${d.tema}</small></a>`).join('')}</div>
+  <p class="note" style="margin-top:8px">🔒 Cada participante acessa só a pasta da própria faculdade</p>
   <p class="note">Protótipo com dados fictícios · ${NOW.nome.split(' — ')[0]}</p>`;
 };
 
@@ -767,7 +805,7 @@ function matches(e, ignoreDia){
   if (F.fav && !FAV.has(e.id)) return false;
   if (F.q){
     const q = F.q.toLowerCase();
-    const t = e.tipo==='jogo' ? [evTitle(e), faseNome(e), LOCAL[e.local].nome, ...(Object.values(teamsOf(e)).filter(Boolean).flatMap(id=>[FAC[id].sigla,FAC[id].atl,FAC[id].nome]))].join(' ') : [e.titulo,e.desc,LOCAL[e.local].nome].join(' ');
+    const t = e.tipo==='jogo' ? [evTitle(e), faseNome(e), localNome(e.local), ...(Object.values(teamsOf(e)).filter(Boolean).flatMap(id=>[FAC[id].sigla,FAC[id].atl,FAC[id].nome]))].join(' ') : [e.titulo,e.desc,LOCAL[e.local].nome].join(' ');
     if (!t.toLowerCase().includes(q)) return false;
   }
   return true;
@@ -911,7 +949,7 @@ function openEvent(id){
   if (e.tipo!=='jogo'){
     openSheet(`<div class="sh"><span class="typetag ${e.tipo}">${e.tipo==='ativ'?'⚡ ATIVAÇÃO':'🎉 FESTA'}</span><button class="iconbtn" data-close>${I.x}</button></div>
       <div class="sb"><div class="ptitle" style="font-size:26px;margin-bottom:6px">${esc(e.titulo)}</div><p style="color:#dbe4ff;line-height:1.45;margin:0 0 12px">${esc(e.desc)}</p>
-      <div class="kv"><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)}</b><span>Onde</span><b>${LOCAL[e.local].nome}</b><span>Status</span><div>${stLabel}</div></div></div>
+      <div class="kv"><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)}</b><span>Onde</span><b>${localNome(e.local)}</b><span>Status</span><div>${stLabel}</div></div></div>
       <div class="sf">${favBtn}${mapBtn}</div>`);
     return;
   }
@@ -922,7 +960,8 @@ function openEvent(id){
       <div style="text-align:center">${stLabel}</div>
       <div class="board">${tm(t.a,e.pa)}<div class="sc">${s?`${s.a}<i>×</i>${s.b}`:`<span style="font-size:22px;color:var(--muted)">${hhmm(e.ini)}</span>`}</div>${tm(t.b,e.pb)}</div>
       ${e.mod==='volei'&&s?'<p class="note" style="margin-top:-6px">Placar em sets (melhor de 3)</p>':''}
-      <div class="kv"><span>Fase</span><b>${faseNome(e)}${st==='fim'&&e.sc.extra?' · '+e.sc.extra:''}</b><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)}</b><span>Onde</span><b>${LOCAL[e.local].nome}</b><span>Código</span><b>${e.cod}</b></div>
+      <div class="kv"><span>Fase</span><b>${faseNome(e)}${st==='fim'&&e.sc.extra?' · '+e.sc.extra:''}</b><span>Quando</span><b>${diaLabel(e.dia)} · ${hhmm(e.ini)} – ${hhmm(e.ini+e.dur)}</b><span>Onde</span><b>${localNome(e.local)}</b><span>Código</span><b>${e.cod}</b></div>
+      ${st==='live'?`<p style="color:#dbe4ff;font-size:12.5px;margin:0 0 10px;text-align:center">🥁 Está na quadra? Escaneie o QR code da quadra para votar na melhor bateria.</p>`:''}
       ${e.fase==='grupos'?`<a class="btn ghost" style="margin-bottom:4px" href="#/ranking?v=grupos&mod=${e.mod}&gen=${e.gen}">${I.trophy.replace('class="ic"','')}Ver classificação do grupo</a>`:''}
     </div>
     <div class="sf">${favBtn}${mapBtn}</div>`);
@@ -970,56 +1009,52 @@ ROUTES['ranking'] = (sc, p) => {
 /* =========================================================
    MAPA
    ========================================================= */
-const MAP_SPOTS = [
-  ...MODS.flatMap((m,r)=>m.quadras.map((q,i)=>({ id:q, x:14+i*78, y:56+r*70, w:72, h:62, court:true }))),
-  { id:'rca',   x:254, y:56,  w:96,  h:100, label:'Recharge A', fill:'#8a6400' },
-  { id:'rcb',   x:254, y:162, w:96,  h:100, label:'Recharge B', fill:'#8a6400' },
-  { id:'palco', x:254, y:268, w:96,  h:64,  label:'Palco Central', fill:'#7a1222' },
-  { id:'vila1', loc:'vila', x:14,  y:344, w:164, h:56, label:'Vila Intercampus 1', fill:'#14325f' },
-  { id:'vila2', loc:'vila', x:186, y:344, w:164, h:56, label:'Vila Intercampus 2', fill:'#14325f' },
-  { id:'festa', x:14,  y:408, w:164, h:52, label:'Arena da Festa', fill:'#3d1160' },
-  { id:'food',  x:186, y:408, w:164, h:52, label:'Food trucks', fill:'#1d3d70' },
-];
-function courtSvg(s){
-  const m = MOD[LOCAL[s.id].mod];
-  const cx=s.x+s.w/2, cy=s.y+s.h/2;
-  return `<g class="spot" data-spot="${s.id}"><rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="6" fill="${m.cor}" fill-opacity=".85" stroke="rgba(255,255,255,.6)" stroke-width="1.2"/>
-    <rect x="${s.x+6}" y="${s.y+6}" width="${s.w-12}" height="${s.h-12}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1"/>
-    <line x1="${cx}" y1="${s.y+6}" x2="${cx}" y2="${s.y+s.h-6}" stroke="rgba(255,255,255,.7)"/>
-    <circle cx="${cx}" cy="${cy}" r="8" fill="none" stroke="rgba(255,255,255,.7)"/>
-    <text x="${s.x+10}" y="${s.y+22}" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="16">${s.id.toUpperCase()}</text>
-    <text x="${s.x+s.w-10}" y="${s.y+s.h-10}" text-anchor="end" fill="#fff" font-size="13">${m.emoji}</text></g>`;
-}
+let LMAP = null;
+function kmEntre(a,b){ const R=6371, r=x=>x*Math.PI/180, dl=r(b.lat-a.lat), dg=r(b.lng-a.lng); const h=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dg/2)**2; return 2*R*Math.asin(Math.sqrt(h)); }
+function distTxt(pl){ const km=kmEntre(PLACE.vila,pl); return km<3 ? `${km.toFixed(1).replace('.',',')} km da Vila · ~${Math.round(km/4.8*60)} min a pé` : `${km.toFixed(1).replace('.',',')} km da Vila · ~${Math.round(km/18*60)+5} min de carro/metrô`; }
 ROUTES['mapa'] = (sc, p) => {
-  const sel = p.get('local');
+  const sel = p.get('local'), selPlace = sel ? (LOCAL[sel]?.place || (PLACE[sel] && sel)) : null;
   sc.innerHTML = innerHead('Mapa do evento') + `
-    <div class="map"><svg viewBox="0 0 364 510" role="img" aria-label="Mapa do complexo">
-      <rect x="4" y="4" width="356" height="502" rx="14" fill="#0a1a44" stroke="rgba(120,170,255,.35)"/>
-      <text x="182" y="40" text-anchor="middle" fill="#B4C3E8" font-size="12" font-weight="600" letter-spacing="2">COMPLEXO ESPORTIVO INTERCAMPUS</text>
-      ${MAP_SPOTS.map(s=>s.court?courtSvg(s):`<g class="spot" data-spot="${s.id}"><rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="8" fill="${s.fill}" stroke="rgba(255,255,255,.45)"/><text x="${s.x+s.w/2}" y="${s.y+s.h/2+5}" text-anchor="middle" fill="#fff" font-family="Barlow Condensed" font-weight="800" font-style="italic" font-size="14">${s.label.toUpperCase()}</text></g>`).join('')}
-      <rect x="140" y="474" width="84" height="24" rx="12" fill="#F5B800"/><text x="182" y="490" text-anchor="middle" fill="#1a1200" font-size="11.5" font-weight="700">ENTRADA</text>
-      <text x="40" y="490" fill="#7F92C4" font-size="10">🚻 WC</text><text x="350" y="490" text-anchor="end" fill="#7F92C4" font-size="10">⛑️ Posto médico</text>
-    </svg></div>
-    <div class="legend">${MODS.map(m=>`<span><i style="background:${m.cor}"></i>${m.nome} (${m.quadras.join(', ').toUpperCase()})</span>`).join('')}</div>
-    <p class="note">Toque em uma quadra ou área para ver o que está rolando.</p>`;
-  sc.querySelectorAll('[data-spot]').forEach(g=>g.addEventListener('click',()=>openSpot(g.dataset.spot)));
-  if (sel) { const sp = MAP_SPOTS.find(s=>s.id===sel || s.loc===sel); if (sp){ sc.querySelector(`[data-spot="${sp.id}"]`).classList.add('sel'); setTimeout(()=>openSpot(sp.id),80); } }
+    <div class="mapbox" id="lmap"></div>
+    <div class="legend">${PLACES.map(pl=>`<span><i style="background:${pl.cor};border-radius:50%"></i>${pl.mod?MOD[pl.mod].nome:pl.short}</span>`).join('')}</div>
+    <div class="sect">Locais do evento</div>
+    <div class="panel">${PLACES.map(pl=>`<button class="row" data-place="${pl.id}"><span class="mk sm" style="--c:${pl.cor}">${pl.emoji}</span><div class="grow"><b>${pl.nome}</b><small>${pl.sub}</small><small style="display:block;color:var(--dim)">${pl.id==='vila'?'Ponto de encontro central · '+pl.end:pl.end+' · '+distTxt(pl)}</small></div>${I.chev}</button>`).join('')}</div>
+    <p class="note">Locais propostos para o Intercampus 2027 · sujeitos a confirmação</p>`;
+  sc.querySelectorAll('[data-place]').forEach(b=>b.addEventListener('click',()=>{ focusPlace(b.dataset.place); openPlace(b.dataset.place); }));
+  drawMap(selPlace);
+  if (selPlace) setTimeout(()=>openPlace(selPlace),150);
 };
-function openSpot(id){
-  if (id==='food'){ openSheet(`<div class="sh"><div class="ptitle">Food trucks</div><button class="iconbtn" data-close>${I.x}</button></div><div class="sb"><p style="color:#dbe4ff;line-height:1.5">Food trucks, barracas de bebidas e pontos de recarga do Energy Card, ao lado das Vilas Intercampus.</p></div>`); return; }
-  id = MAP_SPOTS.find(s=>s.id===id)?.loc || id;
-  const l = LOCAL[id];
-  const here = EVENTS.filter(e=>e.local===id && e.dia===NOW.dia);
-  const now = here.filter(e=>status(e)==='live'), next = here.filter(e=>status(e)==='prox').slice(0,2);
-  const line = e => e.tipo==='jogo' ? (()=>{ const t=teamsOf(e); return `${hhmm(e.ini)} · ${evTitle(e)} — ${t.a?FAC[t.a].sigla:e.pa} × ${t.b?FAC[t.b].sigla:e.pb}`; })() : `${hhmm(e.ini)} · ${esc(e.titulo)}`;
-  const m = l.tipo==='quadra' ? MOD[l.mod] : null;
-  openSheet(`<div class="sh"><div class="ptitle">${l.nome}</div><button class="iconbtn" data-close>${I.x}</button></div>
-    <div class="sb">${m?`<p style="color:var(--muted);margin:0 0 10px">${m.emoji} Quadra de ${m.nome}</p>`:''}
+const LBL_DIR = { ibira:'top', sesc:'right', vila:'left', cotp:'left', sirio:'right', anhang:'right' };
+function drawMap(sel){
+  if (LMAP){ LMAP.remove(); LMAP = null; }
+  const el = $('#lmap');
+  if (!window.L){ el.innerHTML = '<div class="empty"><b>Mapa offline</b>Conecte-se à internet para ver o mapa.</div>'; return; }
+  LMAP = L.map(el, { zoomControl:false, scrollWheelZoom:false });
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom:16, attribution:'Tiles © Esri — Esri, HERE, Garmin, © OpenStreetMap' }).addTo(LMAP);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom:16 }).addTo(LMAP);
+  L.control.zoom({ position:'bottomright' }).addTo(LMAP);
+  PLACES.filter(pl=>pl.id!=='vila').forEach(pl=>L.polyline([[PLACE.vila.lat,PLACE.vila.lng],[pl.lat,pl.lng]], { color:pl.id==='anhang'?'#b04cff':'#F5B800', weight:2, opacity:.7, dashArray:'4 7' }).addTo(LMAP));
+  PLACES.forEach(pl=>L.marker([pl.lat,pl.lng], { icon:L.divIcon({ className:'', html:`<div class="mk" style="--c:${pl.cor}">${pl.emoji}</div>`, iconSize:[34,34], iconAnchor:[17,17] }) })
+    .addTo(LMAP).bindTooltip(pl.short, { permanent:true, direction:LBL_DIR[pl.id], offset:{ left:[-14,0], right:[14,0], top:[0,-16], bottom:[0,16] }[LBL_DIR[pl.id]], className:'lbl' })
+    .on('click',()=>openPlace(pl.id)));
+  LMAP.fitBounds(PLACES.map(pl=>[pl.lat,pl.lng]), { padding:[30,30] });
+  if (sel) focusPlace(sel);
+  setTimeout(()=>LMAP && LMAP.invalidateSize(), 60);
+}
+function focusPlace(id){ const pl = PLACE[id]; if (LMAP && pl) LMAP.setView([pl.lat,pl.lng], 15, { animate:true }); }
+function openPlace(id){
+  const pl = PLACE[id]; if (!pl) return;
+  const locs = pl.mod ? MOD[pl.mod].quadras : [id];
+  const here = EVENTS.filter(e=>locs.includes(e.local) && e.dia===NOW.dia);
+  const now = here.filter(e=>status(e)==='live'), next = here.filter(e=>status(e)==='prox').slice(0,3);
+  const line = e => e.tipo==='jogo' ? (()=>{ const t=teamsOf(e); return `${hhmm(e.ini)} · ${e.local.toUpperCase()} · ${evTitle(e)} — ${t.a?FAC[t.a].sigla:e.pa} × ${t.b?FAC[t.b].sigla:e.pb}`; })() : `${hhmm(e.ini)} · ${esc(e.titulo)}`;
+  openSheet(`<div class="sh"><div class="ptitle">${pl.nome}</div><button class="iconbtn" data-close>${I.x}</button></div>
+    <div class="sb"><p style="color:#dbe4ff;margin:0 0 4px">${pl.emoji} ${pl.sub}</p><p style="color:var(--dim);margin:0 0 10px;font-size:12px">${pl.end}${id!=='vila'?' · '+distTxt(pl):''}</p>
       <div class="panel">
         <div class="row"><span class="st live">Agora</span><div class="grow"><b style="font-size:13px">${now.length?now.map(line).join('<br>'):'Nada acontecendo neste momento'}</b></div></div>
         <div class="row"><span class="st prox">Próximo</span><div class="grow"><b style="font-size:13px">${next.length?next.map(line).join('<br>'):'Sem mais eventos hoje'}</b></div></div>
       </div></div>
-    <div class="sf"><a class="btn primary" href="#/cronograma?dia=${NOW.dia}&local=${id}">${I.events.replace('<svg','<svg width="18" height="18"')}Ver cronograma deste local</a></div>`);
+    <div class="sf"><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${pl.lat},${pl.lng}">${I.pinS.replace('<svg','<svg width="18" height="18"')}Como chegar</a><a class="btn primary" href="#/cronograma?dia=${NOW.dia}&local=${locs.join(',')}">${I.events.replace('<svg','<svg width="18" height="18"')}Cronograma</a></div>`);
 }
 
 /* =========================================================
@@ -1029,57 +1064,199 @@ ROUTES['ingressos'] = sc => {
   sc.innerHTML = innerHead('Meu ingresso') + `
     <div class="ticket"><div class="tt"><small>Intercampus 2027 · Ingresso único</small><h2>Passaporte 3 dias</h2>
       <div class="kv" style="background:rgba(0,0,0,.18);border-color:rgba(255,255,255,.25);margin:10px 0 0">
-        <span>Titular</span><b>Maria</b><span>Atlética</span><b>Feras USP</b><span>Datas</span><b>${EVENTO.datas}</b><span>Acesso</span><b>Jogos, Vilas, Recharge e festa de encerramento</b><span>Local</span><b>${EVENTO.local}</b>
+        <span>Titular</span><b>Maria</b><span>Atlética</span><b>Feras USP</b><span>Datas</span><b>${EVENTO.datas}</b><span>Acesso</span><b>Jogos, Vila Intercampus, Recharge e festa de encerramento</b><span>Locais</span><b>Quadras em Moema e Vila Mariana · Vila no Ibirapuera · festa no Anhangabaú</b>
       </div></div>
       <div class="tb" style="flex-direction:column;gap:10px;padding:20px 16px"><div class="qr" id="tqr"></div><div style="text-align:center"><b style="font-size:16px">Nº IC-2027-04817</b><br><small style="color:#51608a">Apresente este QR code na entrada</small></div></div></div>`;
   makeQR(sc.querySelector('#tqr'), 'INTERCAMPUS-IC-2027-04817', 200);
 };
+/* Energy Card: só para atletas. O árbitro valida o card físico lendo o QR do app do atleta */
+const ATLETA = { codigo:'ATL-4817', nome:'Maria', fac:'usp', mod:'volei', gen:'f' };
 ROUTES['energy'] = sc => {
-  sc.innerHTML = innerHead('Energy Card') + `
-    <div class="ecard"><div class="brand">INTERCAMPUS</div><div class="nm">Energy Card</div>
-      <div class="bal"><small>Saldo</small><b>R$ 120,00</b></div><div class="num">•••• 2026</div></div>
-    <div style="display:flex;gap:8px;margin-bottom:12px">${['+ R$ 20','+ R$ 50','+ R$ 100'].map(v=>`<button class="btn gold" data-act="demo">${v}</button>`).join('')}</div>
-    <div class="sect">Benefícios</div>
-    <div class="panel">
-      <div class="row">${I.bolt}<div class="grow"><b>Pague tudo com aproximação</b><small>Vilas, food trucks, bebidas e quiosque de grifes</small></div></div>
-      <div class="row">${I.bolt}<div class="grow"><b>Prioridade no Recharge Challenge</b><small>Fila preferencial na barra fixa, touro e potência</small></div></div>
-      <div class="row">${I.bolt}<div class="grow"><b>Destaques ganham bônus</b><small>Melhores jogadores recebem crédito no Energy Card</small></div></div>
-    </div>
-    <div class="sect">Extrato</div>
-    <div class="panel">${[['Recarga','+ R$ 100,00','Dia 1 · 09:42'],['Food Truck Burger','− R$ 32,00','Dia 1 · 12:40'],['Vila Intercampus · bebida','− R$ 12,00','Dia 1 · 15:05'],['Recarga bônus','+ R$ 64,00','Dia 2 · 08:50']].map(x=>`<div class="row"><div class="grow"><b>${x[0]}</b><small>${x[2]}</small></div><b style="color:${x[1].startsWith('+')?'var(--ok)':'#fff'}">${x[1]}</b></div>`).join('')}</div>`;
-};
-ROUTES['conexoes'] = sc => {
-  const ppl = [['Lucas Andrade','Feras USP · Futsal','#2E7DF6',true],['Juliana Costa','Fúria Mackenzie · Vôlei','#E2242C',true],['Rafael Lima','R.A. São Judas · Basquete','#9A6234',true],['Ana Lima','Corujas PUC · Handebol','#7E3FBF',false],['Pedro Reis','Águias FGV · Futsal','#1446A0',false],['Bia Souza','Tritões Insper · Vôlei','#E6197A',false],['Gabriel Nunes','Furacão Unicamp · Basquete','#FF6B1A',false],['Larissa Melo','Raposas ESPM · Torcida','#00B7D4',false]];
-  sc.innerHTML = innerHead('Conexões') + `<p style="color:var(--muted);margin:0 2px 12px">Pessoas no evento com interesses em comum com você.</p>
-    <div class="panel">${ppl.map((x,i)=>`<div class="row">${avatar(x[0],x[2],40)}<div class="grow"><b>${x[0]} ${x[3]?'<span style="color:var(--ok);font-size:10px">● online</span>':''}</b><small>${x[1]}</small></div><button class="pill" data-conn="${i}">Conectar</button></div>`).join('')}</div>`;
-  sc.querySelectorAll('[data-conn]').forEach(b=>b.addEventListener('click',()=>{ const on=!b.classList.contains('on'); b.classList.toggle('on',on); b.textContent=on?'✓ Conectado':'Conectar'; if(on) toast('Conexão enviada!'); }));
-};
-const CHATS = [
-  { id:'geral', nome:'Intercampus · Geral', sub:'12.480 participantes', cor:'#F5B800', msgs:[['Organização','Bem-vindos ao Intercampus! Fiquem de olho no cronograma pelo app 🔥'],['Pedro','Que horas é o Recharge?'],['Organização','Sexta, das 13h30 às 15h30, nas Áreas A e B. Nenhum jogo acontece nesse horário. Inscreva-se no Challenge pelo app! ⚡']] },
-  { id:'usp', nome:'Feras USP', sub:'Atlética · 860 membros', cor:'#2E7DF6', msgs:[['Lucas','Bora lotar a quadra V1 no vôlei feminino!'],['Carol','Bateria concentra no portão às 14h 🥁']] },
-  { id:'volei', nome:'Vôlei Feminino', sub:'Modalidade · 340 membros', cor:'#E2242C', msgs:[['Juliana','Quem pega a final no sábado? 👀']] },
-  { id:'festa', nome:'Festa de Encerramento', sub:'Sábado, 22h às 06h', cor:'#b04cff', msgs:[['Organização','A festa Fly High começa às 22h de sábado e vai até as 06h de domingo. Planeje sua volta: ônibus fretados e pontos de embarque no app.']] },
-];
-ROUTES['chat'] = (sc, p) => {
-  const id = p.get('c');
-  if (!id){
-    sc.innerHTML = innerHead('Chat') + `<div class="panel">${CHATS.map(c=>`<a class="row" href="#/chat?c=${c.id}">${avatar(c.nome,c.cor,42)}<div class="grow"><b>${c.nome}</b><small>${esc(c.msgs[c.msgs.length-1][1]).slice(0,48)}…</small></div>${I.chev}</a>`).join('')}</div>`;
+  if (!store.get('atleta', false)){
+    sc.innerHTML = innerHead('Energy Card') + `
+      <div class="ecard locked"><div class="brand">INTERCAMPUS · ATLETAS</div><div class="nm">Energy Card</div><div class="lock">🔒</div></div>
+      <div class="ptitle" style="font-size:22px;margin:0 2px 6px">Exclusivo para atletas</div>
+      <p style="color:#dbe4ff;line-height:1.5;margin:0 2px 12px;font-size:13.5px">Os destaques de cada jogo ganham um <b>Energy Card</b> físico. O atleta entrega o card ao árbitro, que valida pelo QR code desta área, e a contagem fica registrada no app.</p>
+      <form class="panel" id="ecf" style="padding:12px;display:flex;flex-direction:column;gap:10px">
+        <label for="ecc" style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Código de atleta</label>
+        <input id="ecc" class="field" placeholder="ATL-0000" autocomplete="off" autocapitalize="characters">
+        <button class="btn primary">Desbloquear</button>
+      </form>
+      <p class="note">O código é entregue pela atlética na inscrição · demonstração: <b style="color:var(--gold2)">ATL-4817</b></p>`;
+    sc.querySelector('#ecf').addEventListener('submit', ev=>{
+      ev.preventDefault();
+      const v = sc.querySelector('#ecc').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+      if (v==='ATL4817' || v==='4817'){ store.set('atleta', true); toast('Área de atleta desbloqueada ⚡'); ROUTES['energy'](sc); }
+      else toast('Código inválido. Peça o seu à sua atlética.');
+    });
     return;
   }
-  const c = CHATS.find(x=>x.id===id) || CHATS[0];
-  const draw = () => {
-    sc.innerHTML = innerHead(c.nome,'#/chat') + `<div class="chatlog">${c.msgs.map(m=>`<div class="msg ${m[0]==='Você'?'me':''}">${m[0]==='Você'?'':`<small>${esc(m[0])}</small>`}${esc(m[1])}</div>`).join('')}</div>
-      <form class="chatbar" id="cf"><input id="ci" placeholder="Mensagem..." autocomplete="off"><button aria-label="Enviar">${I.send}</button></form>`;
-    sc.scrollTop = sc.scrollHeight;
-    sc.querySelector('#cf').addEventListener('submit', ev=>{ ev.preventDefault(); const v=sc.querySelector('#ci').value.trim(); if(!v) return; c.msgs.push(['Você',v]); draw(); sc.querySelector('#ci').focus(); });
-  };
-  draw();
+  const cards = store.get('ec', []);
+  sc.innerHTML = innerHead('Energy Card') + `
+    <div class="ecard"><div class="brand">INTERCAMPUS · ATLETA</div><div class="nm">Energy Card</div>
+      <div class="bal"><small>Energy Cards conquistados</small><b>${cards.length}</b></div><div class="num">${ATLETA.nome} · ${ATLETA.codigo}</div></div>
+    <div class="panel" style="padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+      <div class="qr" id="ecqr"></div>
+      <b style="margin-top:4px">QR de validação do árbitro</b>
+      <small style="color:var(--muted)">${MOD[ATLETA.mod].nome} ${GEN[ATLETA.gen].nome} · ${FAC[ATLETA.fac].atl}</small>
+    </div>
+    <div class="sect">Como validar</div>
+    <div class="panel steps">
+      <div class="row"><span class="stepn">1</span><div class="grow"><b>Ganhou um Energy Card no jogo?</b><small>Os destaques recebem o card físico em quadra.</small></div></div>
+      <div class="row"><span class="stepn">2</span><div class="grow"><b>Entregue o card ao árbitro</b><small>Ele recolhe o card físico ao fim da partida.</small></div></div>
+      <div class="row"><span class="stepn">3</span><div class="grow"><b>Mostre este QR code</b><small>O árbitro escaneia e o card entra na sua contagem.</small></div></div>
+    </div>
+    <button class="btn gold" id="ecsim" style="width:100%;margin:2px 0 4px">${I.qr.replace('class="ic"','width="18" height="18"')}Simular leitura do árbitro (demo)</button>
+    <div class="sect">Cards validados</div>
+    <div class="panel">${cards.length ? cards.slice().reverse().map(c=>`<div class="row"><span class="mk sm" style="--c:var(--gold);color:#1a1200">⚡</span><div class="grow"><b>${esc(c.jogo)}</b><small>${esc(c.quando)} · validado pelo árbitro</small></div></div>`).join('') : '<div class="row"><div class="grow"><small>Nenhum Energy Card validado ainda.</small></div></div>'}</div>
+    <p class="note">Atletas com mais Energy Cards são reconhecidos na premiação de sábado<br><button id="ecout" style="text-decoration:underline;color:var(--dim);margin-top:6px">Sair da área de atleta</button></p>`;
+  makeQR(sc.querySelector('#ecqr'), `INTERCAMPUS-EC|${ATLETA.codigo}|${ATLETA.fac}`, 190);
+  sc.querySelector('#ecsim').addEventListener('click', ()=>{
+    const jogos = EVENTS.filter(e=>e.tipo==='jogo' && status(e)!=='prox' && known(e) && (e.a===ATLETA.fac || e.b===ATLETA.fac));
+    const g = jogos.filter(e=>e.mod===ATLETA.mod && e.gen===ATLETA.gen).pop() || jogos.pop();
+    const jogo = g ? `${MOD[g.mod].emoji} ${evTitle(g)} · ${FAC[g.a].sigla} × ${FAC[g.b].sigla}` : 'Jogo de demonstração';
+    const quando = g ? `Dia ${g.dia} · ${hhmm(g.ini+g.dur)} · ${LOCAL[g.local].nome}` : diaLabel(NOW.dia)+' · '+hhmm(NOW.min);
+    store.set('ec', [...cards, { jogo, quando }]);
+    toast('+1 Energy Card validado! ⚡');
+    ROUTES['energy'](sc);
+  });
+  sc.querySelector('#ecout').addEventListener('click', ()=>{ store.set('atleta', false); ROUTES['energy'](sc); });
 };
+/* Galeria por dia e por faculdade, protegida por senha da faculdade (mostrada no Perfil) */
+const MINHA_FAC = 'usp', FOTO_PRECO = 'R$ 4,90';
+const NOMES = { f:['Ana','Bia','Larissa','Juliana','Carol','Marina','Gabriela','Luiza'], m:['Lucas','Pedro','Gabriel','Rafael','Thiago','Felipe','Bruno','Mateus'] };
+const SOBRENOMES = ['Andrade','Lima','Reis','Souza','Nunes','Melo','Costa','Alves','Rocha','Prado'];
+const UPLOADS = {};
+const senhaGaleria = id => FAC[id].atl.split(' ')[0].normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Za-z]/g,'').toUpperCase()+'-27';
+function fotosDe(dia, fac){
+  const r = rng(hashStr('foto'+dia+fac)), n = 6 + Math.floor(r()*5), out = [];
+  for (let i=0;i<n;i++){
+    const torcida = r()<.35, m = MODS[Math.floor(r()*4)], g = r()<.5?'f':'m';
+    const nome = NOMES[g][Math.floor(r()*8)]+' '+SOBRENOMES[Math.floor(r()*SOBRENOMES.length)];
+    out.push({ id:`${dia}-${fac}-${i}`, dia, fac, torcida, mod:m.id, gen:g, nome, seed:Math.floor(r()*1e9) });
+  }
+  return out.concat(UPLOADS[dia+'-'+fac] || []);
+}
+function fotoArt(p){
+  const c = FAC[p.fac].cor, r = rng(p.seed), id = 'g'+p.seed;
+  let scene = '';
+  if (p.torcida){
+    for (let row=0; row<3; row++) for (let i=0; i<8; i++){ const x=-6+i*30+(row%2)*14+r()*6, y=168+row*30+r()*6; scene += `<circle cx="${x}" cy="${y}" r="11" fill="#050b1f" opacity="${.75+row*.1}"/><rect x="${x-14}" y="${y+8}" width="28" height="40" rx="11" fill="#050b1f" opacity="${.75+row*.1}"/>`; }
+    for (let i=0;i<4;i++){ const x=20+i*48+r()*10; scene += `<line x1="${x}" y1="170" x2="${x+6}" y2="${95+r()*20}" stroke="#ddd" stroke-width="2"/><rect x="${x+6}" y="${92+r()*20}" width="34" height="22" fill="${c}" stroke="#fff" stroke-width="1.5"/>`; }
+    scene += `<text x="100" y="80" text-anchor="middle" font-size="46">🥁</text>`;
+  } else {
+    for (let i=0;i<6;i++) scene += `<line x1="${10+r()*60}" y1="${60+i*22}" x2="${70+r()*40}" y2="${60+i*22}" stroke="#fff" stroke-opacity=".25" stroke-width="3" stroke-linecap="round"/>`;
+    scene += `<path d="M0 205 L200 185 L200 250 L0 250Z" fill="#050b1f" opacity=".55"/><text x="118" y="150" text-anchor="middle" font-size="86">${MOD[p.mod].emoji}</text>`;
+  }
+  return `<svg viewBox="0 0 200 250" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="${id}" cx="${30+r()*40}%" cy="25%" r="85%"><stop offset="0" stop-color="${c}"/><stop offset=".55" stop-color="#14286a"/><stop offset="1" stop-color="#050b1f"/></radialGradient></defs><rect width="200" height="250" fill="url(#${id})"/>${scene}</svg>`;
+}
+const comprada = id => store.get('compradas', []).includes(id);
+function fotoHtml(p){
+  return `<button class="foto" data-foto="${p.id}">${p.url?`<img src="${p.url}" alt="">`:fotoArt(p)}${comprada(p.id)?'<span class="ok">✓ Sua</span>':'<div class="wm"></div>'}<div class="cap">${p.upload?'📤 Enviada pela atlética':p.torcida?'🥁 Torcida':MOD[p.mod].emoji+' '+p.nome}</div></button>`;
+}
+function openSenha(fac, dia){
+  openSheet(`<div class="sh"><div class="ptitle">Pasta protegida</div><button class="iconbtn" data-close>${I.x}</button></div>
+    <form class="sb" id="gsf"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">${badge(fac,40)}<div><b>${FAC[fac].atl}</b><br><small style="color:var(--muted)">Fotos do Dia ${dia}</small></div></div>
+      <p style="color:#dbe4ff;font-size:13px;line-height:1.45;margin:0 0 10px">Cada participante acessa só a pasta da própria faculdade. A senha está no seu <a href="#/perfil" style="color:var(--gold2);text-decoration:underline">Perfil</a>.</p>
+      <input id="gsi" class="field" placeholder="Senha da galeria" autocomplete="off" autocapitalize="characters">
+      <button class="btn primary" style="width:100%;margin-top:10px">Abrir pasta</button></form>`);
+  const f = $('#gsf'), inp = $('#gsi');
+  setTimeout(()=>inp.focus(), 250);
+  f.addEventListener('submit', ev=>{
+    ev.preventDefault();
+    if (inp.value.trim().toUpperCase() === senhaGaleria(fac)){ store.set('gal', [...new Set([...store.get('gal',[]), fac])]); closeSheet(); const h = `#/fotos?dia=${dia}&fac=${fac}`; location.hash===h ? route() : (location.hash = h); }
+    else toast('Senha incorreta: essa pasta é de outra faculdade');
+  });
+}
+function openFoto(p){
+  const ok = comprada(p.id), quem = p.torcida || p.upload ? FAC[p.fac].atl : p.nome;
+  const legenda = p.upload ? 'Foto enviada pela atlética' : p.torcida ? `Torcida ${FAC[p.fac].atl}` : `${p.nome} · ${MOD[p.mod].nome} ${GEN[p.gen].nome}`;
+  const src = p.url || 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(fotoArt(p));
+  openSheet(`<div class="sh"><span style="font-weight:700;color:var(--muted)">Dia ${p.dia} · ${FAC[p.fac].atl}</span><button class="iconbtn" data-close>${I.x}</button></div>
+    <div class="sb"><div class="foto big">${p.url?`<img src="${p.url}" alt="">`:fotoArt(p)}${ok?'':'<div class="wm"></div>'}</div>
+      <b style="display:block;text-align:center">${esc(legenda)}</b>
+      <p style="color:var(--muted);font-size:12.5px;text-align:center;margin:4px 0 0">${ok?'Versão sem marca d’água liberada para você.':`Prévia com marca d’água · versão original por ${FOTO_PRECO}. O valor vai para ${p.torcida||p.upload?'a atlética':'o atleta da foto'}.`}</p></div>
+    <div class="sf">${ok?`<a class="btn gold" href="${src}" download="intercampus-${p.id}.${p.url?'jpg':'svg'}">Baixar original</a>`:`<button class="btn gold" data-buy="${p.id}">Comprar sem marca · ${FOTO_PRECO}</button>`}</div>`);
+  const b = $('#sheet [data-buy]');
+  if (b) b.addEventListener('click', ()=>{ store.set('compradas', [...store.get('compradas',[]), p.id]); toast(`Compra simulada ✓ ${FOTO_PRECO} para ${quem}`); openFoto(p); ROUTES['fotos']($('#screen'), parseHash().params); });
+}
+ROUTES['fotos'] = (sc, p) => {
+  const dia = Math.min(3, Math.max(1, +(p.get('dia')||NOW.dia))), fac = p.get('fac');
+  const abertas = new Set(store.get('gal', []));
+  const tabs = `<div class="days" style="grid-template-columns:repeat(3,1fr)">${DIAS.map(d=>`<a class="day ${d.n===dia?'on':''}" href="#/fotos?dia=${d.n}${fac?'&fac='+fac:''}"><span class="today">${d.tema.toUpperCase()}</span><b>Dia ${d.n}</b><small>${d.sem} ${d.dm}</small></a>`).join('')}</div>`;
+  if (!fac || !abertas.has(fac)){
+    sc.innerHTML = innerHead('Fotos do evento') + tabs + `
+      <p style="color:var(--muted);font-size:12.5px;margin:0 2px 10px">As atléticas publicam aqui as fotos de atletas e torcedores. 🔒 Você só acessa a pasta da sua faculdade, com a senha do seu Perfil.</p>
+      <div class="panel">${FACS.map(f=>`<button class="row folder" data-pasta="${f.id}">${badge(f.id,32)}<div class="grow"><b>${f.atl}</b><small>${fotosDe(dia,f.id).length} fotos · Dia ${dia}</small></div>${f.id===MINHA_FAC?'<span class="st prox">Sua faculdade</span>':''}<span class="lockic">${abertas.has(f.id)?'📂':'🔒'}</span></button>`).join('')}</div>`;
+    sc.querySelectorAll('[data-pasta]').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.pasta; abertas.has(id) ? (location.hash=`#/fotos?dia=${dia}&fac=${id}`) : openSenha(id, dia); }));
+    if (fac && !abertas.has(fac)) setTimeout(()=>openSenha(fac, dia), 60);
+    return;
+  }
+  const fotos = fotosDe(dia, fac);
+  sc.innerHTML = innerHead(FAC[fac].sigla+' · Fotos', `#/fotos?dia=${dia}`) + tabs + `
+    <div style="display:flex;align-items:center;gap:10px;margin:0 2px 10px">${badge(fac,36)}<div><b>${FAC[fac].atl}</b><br><small style="color:var(--muted)">${fotos.length} fotos · Dia ${dia} — ${DIAS[dia-1].tema.toUpperCase()}</small></div></div>
+    <p style="color:var(--muted);font-size:12px;margin:0 2px 10px">Prévias com marca d’água. Toque numa foto para comprar a original por ${FOTO_PRECO}: o valor vai para o atleta.</p>
+    <div class="pgrid">${fotos.map(fotoHtml).join('')}</div>
+    <label class="btn ghost" style="width:100%;cursor:pointer">📤 Área da atlética: enviar fotos<input type="file" id="up" accept="image/*" multiple hidden></label>`;
+  sc.querySelectorAll('[data-foto]').forEach(b=>b.addEventListener('click',()=>openFoto(fotos.find(x=>x.id===b.dataset.foto))));
+  sc.querySelector('#up').addEventListener('change', ev=>{
+    const k = dia+'-'+fac; UPLOADS[k] = UPLOADS[k] || [];
+    [...ev.target.files].forEach((f,i)=>UPLOADS[k].push({ id:`up-${k}-${Date.now()}-${i}`, dia, fac, upload:true, url:URL.createObjectURL(f) }));
+    toast(ev.target.files.length+' foto(s) publicada(s) com marca d’água'); ROUTES['fotos'](sc, p);
+  });
+};
+
+/* Votação da bateria: só pelo QR code fixado na quadra, durante o jogo */
+const voteToken = cod => hashStr('IC-VOTO|'+cod).toString(36).slice(0,6);
+const voteUrl = e => `${appUrl()}#/votar?jogo=${e.cod}&t=${voteToken(e.cod)}&now=${NOW.id}`;
+function voteCounts(e, meu){ const r=rng(hashStr('vc'+e.cod)); return { a:60+Math.floor(r()*180)+(meu===e.a?1:0), b:60+Math.floor(r()*180)+(meu===e.b?1:0) }; }
+ROUTES['votar'] = (sc, p) => {
+  const cod = p.get('jogo'), pr = NOW_PRESETS.find(x=>x.id===p.get('now'));
+  if (pr && pr.id!==NOW.id){ NOW = pr; store.set('now', pr.id); F.dia = pr.dia; }
+  const e = EVENTS.find(x=>x.cod===cod), head = innerHead('Votação da bateria','#/votacao');
+  const msg = (t,d) => head + `<div class="empty"><b>${t}</b>${d}<br><br><a class="pill" href="#/votacao">Como funciona</a></div>`;
+  if (!e || p.get('t')!==voteToken(cod)){ sc.innerHTML = msg('Escaneie o QR da quadra','A votação só abre pelo QR code fixado na quadra, durante o jogo.'); return; }
+  const st = status(e), t = teamsOf(e);
+  if (st==='prox' || !t.a){ sc.innerHTML = msg('A votação ainda não abriu','Ela começa junto com o jogo, às '+hhmm(e.ini)+'.'); return; }
+  if (st==='fim' && nowAbs() > e.dia*1440+e.ini+e.dur+30){ sc.innerHTML = msg('Votação encerrada','A votação fecha 30 minutos após o fim do jogo.'); return; }
+  const votos = store.get('votos', {}), meu = votos[cod], c = voteCounts(e, meu), tot = c.a+c.b;
+  const opt = (id, n) => `<button class="vbtn ${meu===id?'me':''}" data-v="${id}" ${meu?'disabled':''}>${badge(id,58)}<small>Bateria</small><b>${FAC[id].atl}</b>${meu?`<div class="bar"><i style="width:${Math.round(n/tot*100)}%"></i></div><small style="color:#fff">${Math.round(n/tot*100)}% · ${n} votos</small>`:''}</button>`;
+  sc.innerHTML = head + `
+    <div class="ev" style="margin-bottom:12px"><div class="meta"><span>${MOD[e.mod].emoji} ${evTitle(e)}</span><span class="sp"></span>${st==='live'?'<span class="st live">● Ao vivo</span>':'<span class="st fim">Encerrado</span>'}</div>
+      <div class="phase" style="margin-top:6px">${faseNome(e)} · ${localNome(e.local)}</div></div>
+    <div class="ptitle" style="font-size:22px;margin:0 2px 4px">Qual bateria voa mais alto? 🥁</div>
+    <p style="color:var(--muted);font-size:12.5px;margin:0 2px 12px">${meu?'Seu voto foi registrado. Parcial deste jogo:':'Escolha uma das duas baterias presentes neste jogo. Um voto por jogo.'}</p>
+    <div class="vopts">${opt(t.a, c.a)}${opt(t.b, c.b)}</div>
+    <p class="note">O resultado da melhor bateria é anunciado na premiação de sábado.</p>`;
+  sc.querySelectorAll('[data-v]').forEach(b=>b.addEventListener('click',()=>{ if (meu) return; votos[cod] = b.dataset.v; store.set('votos', votos); toast('Voto registrado: '+FAC[b.dataset.v].atl); ROUTES['votar'](sc, p); }));
+};
+ROUTES['votacao'] = (sc, p) => {
+  const live = EVENTS.filter(e=>e.tipo==='jogo' && status(e)==='live' && known(e));
+  const sel = live.find(e=>e.cod===p.get('jogo')) || live[0];
+  const votos = store.get('votos', {});
+  sc.innerHTML = innerHead('Votação') + `
+    <div class="ptitle" style="font-size:22px;margin:4px 2px 4px">Torcida que voa mais alto 🥁</div>
+    <p style="color:#dbe4ff;margin:0 2px 12px;font-size:13px;line-height:1.45">Só vota quem está na quadra: em cada jogo, QR codes espalhados pela arena levam à votação entre as <b>duas baterias daquele jogo</b>. Assim ninguém vota por favoritismo sem estar presente.</p>
+    <div class="panel steps">
+      <div class="row"><span class="stepn">1</span><div class="grow"><b>Vá ao jogo</b><small>A votação abre quando a partida começa.</small></div></div>
+      <div class="row"><span class="stepn">2</span><div class="grow"><b>Aponte a câmera para o QR da quadra</b><small>Ele abre o app direto na votação daquele jogo.</small></div></div>
+      <div class="row"><span class="stepn">3</span><div class="grow"><b>Escolha uma das duas baterias</b><small>Um voto por jogo, até 30 min após o fim.</small></div></div>
+    </div>
+    <div class="sect">Seus votos</div>
+    <div class="panel">${Object.keys(votos).length ? Object.entries(votos).map(([cod,f])=>{ const e=EVENTS.find(x=>x.cod===cod); return `<div class="row">${badge(f,28)}<div class="grow"><b>${FAC[f].atl}</b><small>${MOD[e.mod].emoji} ${evTitle(e)} · ${LOCAL[e.local].nome} · Dia ${e.dia}</small></div></div>`; }).join('') : '<div class="row"><div class="grow"><small>Você ainda não votou em nenhum jogo.</small></div></div>'}</div>
+    <div class="sect">Modo apresentação · QR da quadra</div>
+    ${live.length ? `<p style="color:var(--muted);font-size:12.5px;margin:0 2px 8px">Projete o QR de um jogo ao vivo: quem escanear vota como se estivesse na quadra.</p>
+      <div class="chips">${live.map(e=>`<a class="pill ${e===sel?'on':''}" href="#/votacao?jogo=${e.cod}">${e.local.toUpperCase()} · ${MOD[e.mod].emoji} ${FAC[e.a].sigla}×${FAC[e.b].sigla}</a>`).join('')}</div>
+      <div class="bigqr"><div class="qr" id="vqr"></div><b>${MOD[sel.mod].emoji} ${evTitle(sel)} · ${localNome(sel.local)}</b><small style="color:var(--muted)">Bateria ${FAC[sel.a].atl} × Bateria ${FAC[sel.b].atl}</small></div>`
+    : `<div class="empty"><b>Nenhum jogo ao vivo agora</b>Mude o momento em <a href="#/mais" style="color:var(--gold2);text-decoration:underline">Mais → Modo demonstração</a> para gerar o QR de uma quadra.</div>`}`;
+  if (sel) makeQR(sc.querySelector('#vqr'), voteUrl(sel), 220);
+};
+
 ROUTES['noticias'] = sc => {
-  const n = [['⚡','Red Bull Recharge: inscrições abertas no app','Sexta, 13h30–15h30: barra fixa, touro mecânico e potência nas Áreas A e B. Nenhum jogo nas quadras durante o Recharge.','há 20 min','linear-gradient(135deg,#F5B800,#C58500)'],
+  const n = [['⚡','Red Bull Recharge: inscrições abertas no app','Sexta, 13h30–15h30: barra fixa, touro mecânico e potência nas Áreas A e B da Vila Intercampus. Nenhum jogo nas quadras durante o Recharge.','há 20 min','linear-gradient(135deg,#F5B800,#C58500)'],
     ['🚗','Encontre o Mini Bull!','Ache o Mini Cooper Red Bull, poste uma foto marcando a Red Bull e concorra a pins, bucket hats e pochetes.','há 1 h','linear-gradient(135deg,#E5283F,#A30D24)'],
-    ['📺','Semis e finais ao vivo no YouTube','Transmissão com narração no sábado, também no telão das Vilas Intercampus.','há 3 h','linear-gradient(135deg,#2E7DF6,#0b1d4f)'],
-    ['🥁','Vote na torcida que voa mais alto','A melhor bateria do Intercampus é escolhida pelo público. Vote pelo app!','ontem','linear-gradient(135deg,#b04cff,#E5283F)']];
+    ['📺','Semis e finais ao vivo no YouTube','Transmissão com narração no sábado, também no telão da Vila Intercampus.','há 3 h','linear-gradient(135deg,#2E7DF6,#0b1d4f)'],
+    ['🥁','Torcida que voa mais alto: como votar','Só quem está no jogo vota: escaneie o QR code da quadra e escolha uma das duas baterias.','ontem','linear-gradient(135deg,#b04cff,#E5283F)']];
   sc.innerHTML = innerHead('Notícias') + `<div class="panel">${n.map(x=>`<button class="news" data-act="demo" style="text-align:left;width:100%"><div class="th" style="background:${x[4]}">${x[0]}</div><div><b>${x[1]}</b><small>${x[2]}<br>${x[3]}</small></div></button>`).join('')}</div>`;
 };
 ROUTES['perfil'] = sc => {
@@ -1087,13 +1264,16 @@ ROUTES['perfil'] = sc => {
     <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin:6px 0 16px">${avatar('Maria Sophia','#E5283F',84)}<div class="ptitle" style="font-size:26px">Maria</div><div style="display:flex;align-items:center;gap:6px;color:var(--muted)">${badge('usp',22)} Feras USP · Vôlei Feminino</div></div>
     <div class="grid" style="margin-bottom:12px">
       <a class="card" href="#/cronograma?fav=1&dia=all" style="min-height:0"><h3>Minha agenda</h3><div class="ptitle" style="font-size:30px;color:var(--gold)">${FAV.size}</div><p style="margin:0;font-size:11.5px;color:var(--muted)">eventos salvos</p></a>
-      <a class="card" href="#/conexoes" style="min-height:0"><h3>Conexões</h3><div class="ptitle" style="font-size:30px;color:var(--gold)">27</div><p style="margin:0;font-size:11.5px;color:var(--muted)">amigos no evento</p></a>
+      <a class="card" href="#/fotos" style="min-height:0"><h3>Fotos</h3><div class="ptitle" style="font-size:30px;color:var(--gold)">📸</div><p style="margin:0;font-size:11.5px;color:var(--muted)">pasta da Feras USP</p></a>
     </div>
     <div class="panel">
       <a class="row" href="#/ingressos">${I.ticket}<div class="grow"><b>Meu ingresso</b><small>Passaporte 3 dias</small></div>${I.chev}</a>
-      <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card</b><small>Saldo R$ 120,00</small></div>${I.chev}</a>
+      <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card</b><small>Área exclusiva de atletas</small></div>${I.chev}</a>
       <a class="row" href="#/cronograma?fac=usp&dia=all">${I.cal}<div class="grow"><b>Jogos da minha atlética</b><small>Feras USP em todas as modalidades</small></div>${I.chev}</a>
-    </div>`;
+    </div>
+    <div class="sect">Galeria de fotos</div>
+    <div class="panel"><div class="row">🔒<div class="grow"><b>Senha da pasta Feras USP</b><small>Use para abrir as fotos da sua faculdade</small></div><b style="font-family:var(--head);font-size:20px;color:var(--gold2);letter-spacing:1px">${senhaGaleria(MINHA_FAC)}</b></div>
+      <a class="row" href="#/fotos">📸<div class="grow"><b>Abrir galeria</b><small>Fotos por dia, só da sua faculdade</small></div>${I.chev}</a></div>`;
 };
 ROUTES['mais'] = sc => {
   sc.innerHTML = innerHead('Mais') + `
@@ -1101,8 +1281,10 @@ ROUTES['mais'] = sc => {
       <a class="row" href="#/qr">${I.qr}<div class="grow"><b>Compartilhar o app</b><small>QR code para projetar na apresentação</small></div>${I.chev}</a>
       <a class="row" href="#/cronograma">${I.cal}<div class="grow"><b>Cronograma</b><small>160 jogos, ativações e festa</small></div>${I.chev}</a>
       <a class="row" href="#/recharge">${I.bolt}<div class="grow"><b>Red Bull Recharge</b><small>Sexta, 13h30–15h30 · inscrições no Challenge</small></div>${I.chev}</a>
-      <a class="row" href="#/votacao">${I.users}<div class="grow"><b>Votação</b><small>Torcida que voa mais alto</small></div>${I.chev}</a>
-      <a class="row" href="#/mapa">${I.pin}<div class="grow"><b>Mapa do evento</b><small>12 quadras, Vilas e Recharge</small></div>${I.chev}</a>
+      <a class="row" href="#/votacao">${I.qr}<div class="grow"><b>Votação da bateria</b><small>Pelo QR code da quadra · modo apresentação</small></div>${I.chev}</a>
+      <a class="row" href="#/fotos">${I.users}<div class="grow"><b>Fotos do evento</b><small>Por dia e por faculdade</small></div>${I.chev}</a>
+      <a class="row" href="#/energy">${I.bolt}<div class="grow"><b>Energy Card</b><small>Exclusivo para atletas</small></div>${I.chev}</a>
+      <a class="row" href="#/mapa">${I.pin}<div class="grow"><b>Mapa do evento</b><small>4 polos de quadras, Vila e Anhangabaú</small></div>${I.chev}</a>
       <a class="row" href="#/ranking">${I.trophy}<div class="grow"><b>Ranking das atléticas</b><small>Geral, grupos e Recharge</small></div>${I.chev}</a>
       <a class="row" href="#/regulamento">${I.book}<div class="grow"><b>Formato e regulamento</b><small>Como funciona a competição</small></div>${I.chev}</a>
     </div>
@@ -1119,6 +1301,7 @@ ROUTES['regulamento'] = sc => {
       <b style="color:var(--gold2)">Fase de grupos · 96 jogos</b><br>8 torneios (4 modalidades × 2 categorias). Cada torneio tem 4 grupos de 3 equipes. 64 jogos na quinta e 32 na sexta de manhã.<br><br>
       <b style="color:var(--gold2)">Mata-mata · 64 jogos</b><br>2 classificados por grupo. Quartas na sexta após o Recharge (1A×2B, 1C×2D, 1B×2A, 1D×2C); semis, 3º lugar e finais no sábado.<br><br>
       <b style="color:var(--gold2)">Quadras e tempos</b><br>12 quadras, 3 por modalidade (F, H, B, V). Blocos de 90 min nos grupos e 3º lugar, 105 min nas quartas e semis e 120 min nas finais.<br><br>
+      <b style="color:var(--gold2)">Locais (propostos)</b><br>Futsal no Ginásio do Ibirapuera, handebol no Centro Olímpico (COTP), basquete no E.C. Sírio e vôlei no Sesc Vila Mariana: 4 polos próximos, com 3 quadras cada. Vila Intercampus e Recharge no Parque Ibirapuera; cerimônias e festa no Vale do Anhangabaú.<br><br>
       <b style="color:var(--gold2)">Red Bull Recharge</b><br>Sexta, 13h30–15h30: momento exclusivo, sem jogos em nenhuma quadra.<br><br>
       <b style="color:var(--gold2)">Pontuação geral</b><br>Vitória 3 · empate 1 · ouro +15 · prata +10 · bronze +6.
     </div></div>`;
@@ -1142,7 +1325,7 @@ ROUTES['recharge'] = sc => {
   const exp = [['Challenge','Barra fixa, touro mecânico e potência (soco)'],['Degustação','Balcão supervisionado de drinks Red Bull'],['Quiosque','Grifes das faculdades e seleção Red Bull'],['Cabine fotográfica','Fotos impressas e digitais'],['Ranking','Telão com placares sincronizados'],['Convivência','Mesas, água, sombra e monitores']];
   sc.innerHTML = innerHead('Red Bull Recharge') + `
     <div class="banner alt" style="height:auto;padding:18px;margin-bottom:12px"><b style="font-size:38px">RECHARGE</b><span>Sexta, 28/05 · 13h30 às 15h30</span>
-      <span style="font-family:var(--body);font-style:normal;font-weight:500;font-size:12.5px;text-transform:none;margin-top:6px;max-width:62%">Momento exclusivo: nenhum jogo nas 12 quadras. Todo o público nas Áreas A e B.</span></div>
+      <span style="font-family:var(--body);font-style:normal;font-weight:500;font-size:12.5px;text-transform:none;margin-top:6px;max-width:62%">Momento exclusivo na Vila Intercampus (Parque Ibirapuera): nenhum jogo nas 12 quadras, todo o público nas Áreas A e B.</span></div>
     <div style="margin-bottom:12px">${st==='live'?'<span class="st live">● Acontecendo agora</span>':st==='fim'?'<span class="st fim">Encerrado</span>':'<span class="st prox">Sexta às 13h30</span>'}
       <span style="color:var(--muted);font-size:12.5px;margin-left:6px">Sua área: <b style="color:#fff">Área ${RC_AREA.usp}</b> (Feras USP)</span></div>
     <div class="sect" style="margin-top:4px">Inscrição no Challenge</div>
@@ -1153,15 +1336,6 @@ ROUTES['recharge'] = sc => {
     <div class="sect">Programação</div>
     <div class="panel">${prog.map(([h,t])=>`<div class="row"><b style="font-family:var(--head);font-size:17px;font-style:italic;width:48px">${h}</b><div class="grow"><small style="color:#e5ecff;font-size:13px">${t}</small></div></div>`).join('')}</div>`;
   sc.querySelectorAll('[data-rc]').forEach(b=>b.addEventListener('click',()=>{ const id=b.dataset.rc; insc.has(id)?insc.delete(id):insc.add(id); store.set('rc',[...insc]); if (insc.has(id)) toast('Inscrição confirmada! Área '+RC_AREA.usp+' ⚡'); ROUTES['recharge'](sc); }));
-};
-ROUTES['votacao'] = sc => {
-  const voto = store.get('voto', null);
-  sc.innerHTML = innerHead('Votação','#/mais') + `
-    <div class="ptitle" style="font-size:22px;margin:4px 2px 4px">Torcida que voa mais alto 🥁</div>
-    <p style="color:var(--muted);margin:0 2px 12px;font-size:13px">Escolha a melhor bateria do Intercampus. Resultado anunciado na premiação de sábado.</p>
-    <div class="panel">${FACS.map(f=>`<button class="row" data-vote="${f.id}">${badge(f.id,30)}<div class="grow"><b>${f.atl}</b><small>${f.nome}</small></div>${voto===f.id?'<span class="st prox">Seu voto</span>':''}</button>`).join('')}</div>
-    <p class="note">Melhor jogador ofensivo e defensivo: votação abre após as semifinais.</p>`;
-  sc.querySelectorAll('[data-vote]').forEach(b=>b.addEventListener('click',()=>{ store.set('voto', b.dataset.vote); toast('Voto registrado: '+FAC[b.dataset.vote].atl); ROUTES['votacao'](sc); }));
 };
 ROUTES['qr'] = sc => {
   const url = appUrl();
